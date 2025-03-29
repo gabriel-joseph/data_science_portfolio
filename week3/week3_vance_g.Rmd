@@ -1,0 +1,98 @@
+---
+title: "Gabriel Vance Week 2 Assignment - Data Visualization"
+output: html_document
+date: "2025-03-23"
+---
+
+
+### Show the distributions of values visually. Explain, in comments, what those distributions mean statistically. Be thorough.
+```{r}
+# path is hard coded to dataset, can easily replace with your path
+data <- read.csv("/Users/gvance67/GitHub/data_science_classes/term 2/DSC520 - Statistics for Data Science/week 2/sales_data_sample.csv") 
+library(dplyr)
+
+
+# display the first 6 rows of the data
+head(data)
+
+# print each column with its type - str is structure of data
+str(data)
+
+# This task is fairly open ended, but we can do a few things. We can loop through all regions and show products. This would merely give us product rows. Then we can weight the rows by multiplying the quantity. This would show to what degree the products are purchased throughout the regions
+
+
+south_data <- data %>% filter(Region == "South")
+north_data <- data %>% filter(Region == "North")
+east_data <- data %>% filter(Region == "East")
+west_data <- data %>% filter(Region == "West")
+
+south_products <- table(south_data$Product)
+north_products <- table(north_data$Product)
+east_products <- table(east_data$Product)
+west_products <- table(west_data$Product)
+
+
+
+pie(south_products, 
+    labels = names(south_products), 
+    col = rainbow(length(south_products)), 
+    main = "Southern Region Product Distribution")
+
+pie(north_products, 
+    labels = names(north_products), 
+    col = rainbow(length(north_products)), 
+    main = "Northern Region Product Distribution")
+
+pie(east_products, 
+    labels = names(east_products), 
+    col = rainbow(length(east_products)), 
+    main = "Eastern Region Product Distribution")
+
+```
+
+Show the values of central tendency, both numerically and visually. Interpret those values in your own words in Markdown.
+
+```{r}
+
+# central tendencies 
+# mean - average of all values
+# median - sort values and search for middle
+# mode - most common value
+
+
+# visual representation - a bar chart shows all of these.
+# the middle box shows 
+
+```
+
+Show the measures of dispersion, visually and numerically (where appropriate). Interpret those values in Markdown.
+
+```{r}
+
+# Measures of Dispersion - 
+
+```
+
+Visually depict the Interquartile range. Interpret the IQR for the dataset (in Markdown).
+
+```{r}
+
+# Measures of Dispersion - 
+
+```
+
+Create the statistics moments for the dataset.
+
+```{r}
+
+# Measures of Dispersion - 
+
+```
+
+Experiment with histogram binning for the categorical data in R. This is open-ended intentionally because this dataset isn’t ideal for binning, but I want you to build something using binning just to see how it works.
+
+```{r}
+
+# Measures of Dispersion - 
+
+```
