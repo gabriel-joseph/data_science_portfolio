@@ -4,12 +4,21 @@ output: html_document
 date: "2025-03-23"
 ---
 
+### Load imports 
+```{r}
+# might have to install this install.packages("tidyverse", repos = "https://cloud.r-project.org")
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+
+```
 
 ### Show the distributions of values visually. Explain, in comments, what those distributions mean statistically. Be thorough.
 ```{r}
 # path is hard coded to dataset, can easily replace with your path
-data <- read.csv("/Users/gvance67/GitHub/data_science_classes/term 2/DSC520 - Statistics for Data Science/week 2/sales_data_sample.csv") 
-library(dplyr)
+data <- read.csv(
+  "C:\\Users\\Gabe\\Documents\\GitHub\\data_science_classes_windows\\data\\sales_data_sample.csv"
+)
 
 
 # display the first 6 rows of the data
@@ -18,35 +27,45 @@ head(data)
 # print each column with its type - str is structure of data
 str(data)
 
-# This task is fairly open ended, but we can do a few things. We can loop through all regions and show products. This would merely give us product rows. Then we can weight the rows by multiplying the quantity. This would show to what degree the products are purchased throughout the regions
+
+# aes() - Aesthetic mapping. It defines how data variables are represented visually in the plot.
+# For example, mapping X to dates and Y to sales values.
+
+# Another use of aes() is mapping y to ..density.., which shows the density of the data
+# rather than the raw counts in the histogram.
+
+# Density is calculated as a normalized value, not simply the proportion of a bin's count.
+# The formula for density is:
+
+# Density = Count of items in bin / (Bin width * Total number of items)
+
+# Sets TotalSales as the variable on the X-axis.
+
+# geom_histogram() uses aes() to map data variables to the visual components of the histogram.
+
+#! Remember, ggplot takes the first arg as data, then we reference individual columns, similar to data$Column
 
 
-south_data <- data %>% filter(Region == "South")
-north_data <- data %>% filter(Region == "North")
-east_data <- data %>% filter(Region == "East")
-west_data <- data %>% filter(Region == "West")
-
-south_products <- table(south_data$Product)
-north_products <- table(north_data$Product)
-east_products <- table(east_data$Product)
-west_products <- table(west_data$Product)
+# Get the number of rows
+number_of_rows <- nrow(data)
+sqrt_number_of_rows <- round(sqrt(number_of_rows))
+sqrt_number_of_rows
 
 
+#! We use plus operator to add layers
+ggplot(data, aes(x = TotalSales)) +
+  #! Histogram takes 2 portions: the density (usually on the y), and then bins. Bins are subjective, but a good rule is to make them relative to the number of data points. More specifically, square root of the data. 
+  geom_histogram(
+    aes(y = ..density..),
+    bins = sqrt_number_of_rows,
+    fill = "skyblue",
+    color = "black"
+  ) +
+  geom_density(alpha = 0.3, fill = "red") + # add density layer for a smooth curve.  alpha is just opacity, but I noticed that when we change bin number, we can get the curve to appear above the bars
+  labs(title = "Distribution of Total Sales", x = "Total Sales", y = "Density")
+# Again, the y-axis should display # Density = Count of items in bin / (Bin width * Total number of items)
 
-pie(south_products, 
-    labels = names(south_products), 
-    col = rainbow(length(south_products)), 
-    main = "Southern Region Product Distribution")
-
-pie(north_products, 
-    labels = names(north_products), 
-    col = rainbow(length(north_products)), 
-    main = "Northern Region Product Distribution")
-
-pie(east_products, 
-    labels = names(east_products), 
-    col = rainbow(length(east_products)), 
-    main = "Eastern Region Product Distribution")
+# We can invert the graphs
 
 ```
 
@@ -54,22 +73,30 @@ Show the values of central tendency, both numerically and visually. Interpret th
 
 ```{r}
 
-# central tendencies 
-# mean - average of all values
-# median - sort values and search for middle
-# mode - most common value
+
+# Measures of Central Tendency:
+# - Mean: The average of all values.
+# - Median: The middle value when the data is sorted.
+# - Mode: The most frequently occurring value.
 
 
-# visual representation - a bar chart shows all of these.
-# the middle box shows 
 
-```
 
-Show the measures of dispersion, visually and numerically (where appropriate). Interpret those values in Markdown.
+library(tidyverse)
 
-```{r}
+# Calculate key metrics
+central_tendency <- data %>%
+  summarise(
+    Mean = mean(TotalSales, na.rm = TRUE),
+    Median = median(TotalSales, na.rm = TRUE),
+    Mode = {
+      freq_table <- table(TotalSales)
+      as.numeric(names(freq_table)[which.max(freq_table)])
+    }
+  )
 
-# Measures of Dispersion - 
+# Print results
+central_tendency
 
 ```
 
@@ -77,7 +104,22 @@ Visually depict the Interquartile range. Interpret the IQR for the dataset (in M
 
 ```{r}
 
-# Measures of Dispersion - 
+# Convert OrderDate to Date format (optional, for other analyses)
+data$OrderDate <- as.Date(data$OrderDate, format = "%m/%d/%Y")
+
+# Boxplot for TotalSales
+boxplot(
+  data$TotalSales,
+  main = "Boxplot of Total Sales",
+  ylab = "Total Sales",
+  col = "lightblue",
+  border = "darkblue"
+)
+
+# Calculate IQR
+iqr_value <- IQR(data$TotalSales)
+iqr_value
+
 
 ```
 
@@ -85,14 +127,30 @@ Create the statistics moments for the dataset.
 
 ```{r}
 
-# Measures of Dispersion - 
+
+# Statistical moments are numerical values that describe the shape and characteristics of a distribution.
+# While the concept may be less familiar outside of statistics, they're quite intuitive:
+#
+# - Mean: The average of the values (1st moment)
+# - Variance: The spread of the data around the mean (2nd moment)
+# - Skewness: The asymmetry of the distribution (3rd moment)
+# - Kurtosis: The "fatness" of the tails — tells us whether the distribution has heavier or lighter tails
+#             compared to a normal (Gaussian) distribution. This is often easier to interpret visually using line charts.
+
 
 ```
 
 Experiment with histogram binning for the categorical data in R. This is open-ended intentionally because this dataset isn’t ideal for binning, but I want you to build something using binning just to see how it works.
 
 ```{r}
+# Binning is the process of grouping continuous data into discrete intervals, or "bins."
+# For example, if values range from 0 to 100, counting each individual value may not be useful.
+# Instead, binning groups similar values into categories to better understand the distribution.
+#
+# We can experiment with different numbers of bins—such as 5, 10, 20, or 30—to see how it affects the shape
+# of the distribution. Does increasing or decreasing the number of bins reveal new patterns or obscure important details?
+# Understanding this can help in choosing the most effective binning strategy for analysis and visualization.
 
-# Measures of Dispersion - 
+
 
 ```
