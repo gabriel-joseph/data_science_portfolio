@@ -1,5 +1,5 @@
 ---
-title: "Gabriel Vance Week 2 Assignment - Data Visualization"
+title: "Gabriel Vance Week 3 Assignment - Descriptive Statistics"
 output: html_document
 date: "2025-03-23"
 ---
@@ -10,7 +10,9 @@ date: "2025-03-23"
 library(tidyverse)
 library(dplyr)
 library(ggplot2)
-
+library(e1071)
+library(psych)
+library(moments)
 ```
 
 ### Show the distributions of values visually. Explain, in comments, what those distributions mean statistically. Be thorough.
@@ -43,101 +45,30 @@ str(data)
 
 # geom_histogram() uses aes() to map data variables to the visual components of the histogram.
 
-#! Remember, ggplot takes the first arg as data, then we reference individual columns, similar to data$Column
+# ! Remember, ggplot takes the first arg as data, then we reference individual columns, similar to data$Column
 
 
 # Get the number of rows
 number_of_rows <- nrow(data)
 sqrt_number_of_rows <- round(sqrt(number_of_rows))
+# This is used for binning
 sqrt_number_of_rows
 
+# Add layers using the + operator
+# Histogram uses density on the y-axis and bins on the x-axis
+# A good rule for the number of bins is the square root of the number of data points
+# The density curve adds a smooth outline of the distribution
+# 'alpha' controls the transparency of the density fill
 
-#! We use plus operator to add layers
 ggplot(data, aes(x = TotalSales)) +
-  #! Histogram takes 2 portions: the density (usually on the y), and then bins. Bins are subjective, but a good rule is to make them relative to the number of data points. More specifically, square root of the data. 
-  geom_histogram(
-    aes(y = ..density..),
+  geom_histogram(aes(y = ..density..),
     bins = sqrt_number_of_rows,
-    fill = "skyblue",
-    color = "black"
+    fill = "skyblue", color = "black"
   ) +
-  geom_density(alpha = 0.3, fill = "red") + # add density layer for a smooth curve.  alpha is just opacity, but I noticed that when we change bin number, we can get the curve to appear above the bars
-  labs(title = "Distribution of Total Sales", x = "Total Sales", y = "Density")
-# Again, the y-axis should display # Density = Count of items in bin / (Bin width * Total number of items)
+  geom_density(alpha = 0.3, fill = "red") +
+  labs(title = "Distribution of Sales (sqrt Density)", x = "Sales", y = "Density")
 
-# We can invert the graphs
-
-```
-
-Show the values of central tendency, both numerically and visually. Interpret those values in your own words in Markdown.
-
-```{r}
-
-
-# Measures of Central Tendency:
-# - Mean: The average of all values.
-# - Median: The middle value when the data is sorted.
-# - Mode: The most frequently occurring value.
-
-
-
-
-library(tidyverse)
-
-# Calculate key metrics
-central_tendency <- data %>%
-  summarise(
-    Mean = mean(TotalSales, na.rm = TRUE),
-    Median = median(TotalSales, na.rm = TRUE),
-    Mode = {
-      freq_table <- table(TotalSales)
-      as.numeric(names(freq_table)[which.max(freq_table)])
-    }
-  )
-
-# Print results
-central_tendency
-
-```
-
-Visually depict the Interquartile range. Interpret the IQR for the dataset (in Markdown).
-
-```{r}
-
-# Convert OrderDate to Date format (optional, for other analyses)
-data$OrderDate <- as.Date(data$OrderDate, format = "%m/%d/%Y")
-
-# Boxplot for TotalSales
-boxplot(
-  data$TotalSales,
-  main = "Boxplot of Total Sales",
-  ylab = "Total Sales",
-  col = "lightblue",
-  border = "darkblue"
-)
-
-# Calculate IQR
-iqr_value <- IQR(data$TotalSales)
-iqr_value
-
-
-```
-
-Create the statistics moments for the dataset.
-
-```{r}
-
-
-# Statistical moments are numerical values that describe the shape and characteristics of a distribution.
-# While the concept may be less familiar outside of statistics, they're quite intuitive:
-#
-# - Mean: The average of the values (1st moment)
-# - Variance: The spread of the data around the mean (2nd moment)
-# - Skewness: The asymmetry of the distribution (3rd moment)
-# - Kurtosis: The "fatness" of the tails — tells us whether the distribution has heavier or lighter tails
-#             compared to a normal (Gaussian) distribution. This is often easier to interpret visually using line charts.
-
-
+# Again, the y-axis should display Density = Count of items in bin / (Bin width * Total number of items)
 ```
 
 Experiment with histogram binning for the categorical data in R. This is open-ended intentionally because this dataset isn’t ideal for binning, but I want you to build something using binning just to see how it works.
@@ -151,6 +82,122 @@ Experiment with histogram binning for the categorical data in R. This is open-en
 # of the distribution. Does increasing or decreasing the number of bins reveal new patterns or obscure important details?
 # Understanding this can help in choosing the most effective binning strategy for analysis and visualization.
 
+# Previovusly we used the sqrt() for bins, but we can adjust half and twice the sqrt to see how the distriubtion changes
+half_Sqrt <- round(sqrt_number_of_rows / 2)
+twice_Sqrt <- sqrt_number_of_rows * 2
+
+ggplot(data, aes(x = TotalSales)) +
+  geom_histogram(
+    aes(y = ..density..),
+    bins = half_Sqrt,
+    fill = "skyblue",
+    color = "black"
+  ) +
+  geom_density(alpha = 0.3, fill = "red") +
+  labs(title = "Distribution of Sales (sqrt Density /2)", x = "Sales", y = "Density")
 
 
+ggplot(data, aes(x = TotalSales)) +
+  geom_histogram(
+    aes(y = ..density..),
+    bins = twice_Sqrt,
+    fill = "skyblue",
+    color = "black"
+  ) +
+  geom_density(alpha = 0.3, fill = "red") +
+  labs(title = "Distribution of Sales (sqrt Density x2)", x = "Sales", y = "Density")
+
+print("Compared to the original distribution, halving the bins leads to a more nuanced distriubtion. The density line is less bumpy and erratic. By comparison, the larger number of bins. The sqrt /2 density also had the geom density curve bending above the bars whereas the 2x density kept the curve below the bars.")
+```
+
+Show the values of central tendency, both numerically and visually. Interpret those values in your own words in Markdown.
+
+```{r}
+# Measures of Central Tendency:
+# - Mean: The average of all values.
+# - Median: The middle value when the data is sorted.
+# - Mode: The most frequently occurring value.
+
+# Calculate statistics
+Mean <- mean(data$TotalSales, na.rm = TRUE)
+Median <- median(data$TotalSales, na.rm = TRUE)
+Mode <- as.numeric(names(which.max(table(data$TotalSales)))) # Ensure numeric, but this was sufficient as a string
+
+# Print results
+cat("Mean is:", Mean, "\nMedian is:", Median, "\nMode is:", Mode, "\n")
+
+# ! Data shows the
+ggplot(data, aes(x = TotalSales)) +
+  geom_histogram(binwidth = 10, fill = "skyblue") +
+  geom_vline(
+    aes(
+      xintercept = Mean,
+      color = "Mean",
+      linetype = "Mean"
+    ),
+    linewidth = 0.5
+  ) +
+  geom_vline(
+    aes(
+      xintercept = Median,
+      color = "Median",
+      linetype = "Median"
+    ),
+    linewidth = 0.5
+  ) +
+  scale_color_manual(
+    name = "Central Tendencies",
+    values = c("Mean" = "red", "Median" = "black")
+  ) +
+  scale_linetype_manual(
+    values = c("Mean" = "solid", "Median" = "solid"),
+    guide = "none"
+  )
+labs(title = "Total Sales Distribution", x = "Total Sales", y = "Frequency")
+
+print(
+  "As we can see, the mode is displayed with the largest bar (22). This histogram shows the mean and median."
+)
+```
+
+Visually depict the Interquartile range. Interpret the IQR for the dataset (in Markdown).
+
+```{r}
+# Boxplot for TotalSales
+boxplot(
+  data$TotalSales,
+  main = "Boxplot of Total Sales",
+  ylab = "Total Sales",
+  col = "lightblue",
+  border = "darkblue"
+)
+
+# Calculate IQR using native IQR function. As a reminder, IQR simply means how wide the 50% of your data is. Box charts are BEST for they display the IQR. As a bonus, we also get to see the mean again.
+iqr_value <- IQR(data$TotalSales)
+iqr_value
+```
+
+Create the statistics moments for the dataset.
+
+```{r}
+# Statistical moments are numerical values that describe the shape and characteristics of a distribution.
+# While the concept may be less familiar outside of statistics, they're quite intuitive:
+#
+# - Mean: The average of the values (1st moment)
+# - Variance: The spread of the data around the mean (2nd moment)
+# - Skewness: The asymmetry of the distribution (3rd moment)
+# - Kurtosis: The "fatness" of the tails — tells us whether the distribution has heavier or lighter tails
+#             compared to a normal (Gaussian) distribution. This is often easier to interpret visually using line charts.
+
+variance <- var(data$TotalSales)
+skewness <- skewness(data$TotalSales)
+kurtosis_val <- kurtosis(data$TotalSales)
+
+cat("Mean is still :", Mean, "\nVariance is:", variance, "\nSkewness is:", skewness, "\nKurtosis is:", kurtosis_val)
+# Also....I just found out you can get all of these from a library called psych
+
+
+description <- describe(data$TotalSales)
+# note, psych library gives us excess kurtosis whereas moments gives us regular kurtosis. Moments typically refers to the regular.
+description
 ```

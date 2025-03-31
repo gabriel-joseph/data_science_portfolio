@@ -1,0 +1,33 @@
+---
+title: "week4_vance_g"
+output: html_document
+---
+# Imports 
+```{r}
+```
+
+# Scale the numerical data.
+```{r}
+data <- read.csv("week4_data.csv")
+head(data) # print first few lines
+str(data) # print structure
+
+# get only numeric data
+numeric_data <- data[sapply(data, is.numeric)]
+scaled_data <- scale(numeric_data)
+# It transforms each numerical variable (column) to have a mean of 0 and a standard deviation of 1.
+scaled_data
+```
+
+# Fix any skew as best you can.
+```{r}
+```
+
+# Normalize any columns not normalized using any of the available techniques (don’t use the same technique twice).
+```{r}
+```
+
+# Using data simulation, fill in the missing values for the release_date variable (not the others).
+```{r}
+```
+
