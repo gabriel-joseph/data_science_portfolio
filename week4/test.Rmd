@@ -1,0 +1,21 @@
+---
+title: "test"
+output: html_document
+---
+```{r}
+# Load necessary library
+library(ggplot2)
+
+# Generate left-skewed data using a transformation
+set.seed(123) # For reproducibility
+left_skewed_data <- rbeta(1000, shape1 = 5, shape2 = 2) * 50 # Adjusting range
+
+# Create a histogram
+ggplot(data.frame(x = left_skewed_data), aes(x)) +
+  geom_histogram(bins = 30, fill = "blue", color = "black", alpha = 0.7) +
+  ggtitle("Histogram of Left-Skewed Data") +
+  xlab("Values") +
+  ylab("Frequency") +
+  theme_minimal()
+```
+

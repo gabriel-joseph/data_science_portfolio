@@ -1,30 +1,93 @@
 ---
 title: "week4_vance_g"
+author: "Gabriel Vance"
+date: "March 30, 2025"
 output: html_document
 ---
+
+
 # Imports 
 ```{r}
+library(e1071)
 ```
 
-# Scale the numerical data.
+# Scale the numerical data. 
 ```{r}
 data <- read.csv("week4_data.csv")
 head(data) # print first few lines
 str(data) # print structure
+# ! Note: this data has NA! So we're going to drop those values
 
 # get only numeric data
 numeric_data <- data[sapply(data, is.numeric)]
 scaled_data <- scale(numeric_data)
 # It transforms each numerical variable (column) to have a mean of 0 and a standard deviation of 1.
-scaled_data
+head(scaled_data)
 ```
 
 # Fix any skew as best you can.
 ```{r}
+# This is fairly open ended, but from our book we determine that skewness pushes a normal distribution to the left or the right. We can clean up skewness by dropping outliers or using a log transformation.
+
+
+# As a reminder, skew looks like this:
+# Close to 0 - Perfect!
+# Above 0 - Right skewed
+# Below 0 - Left skewed
+
+# Another way to view skew is to say "Which way does the tail go? Tail left = left skewed, tail right = right skewed
+
+# First, we can check the overall skewness of the data
+# ! This was my first attempt, but we can loop through the cols in a vector, seen below
+# skewed_critic_score <- skewness(data$critic_score, na.rm = TRUE)
+# skewed_total_sales <- skewness(data$total_sales, na.rm = TRUE)
+# skewed_na_sales <- skewness(data$na_sales, na.rm = TRUE)
+
+skewness_cols <- c("critic_score", "total_sales", "na_sales", "jp_sales", "pal_sales", "other_sales")
+skewed_values <- sapply(data[skewness_cols], skewness, na.rm = TRUE)
+skewed_values
+
+# This was not what I expected...our skewness shows critics skewed left skewed, but the rest are heavily right skewed. To double check, we're going to visualize it with a histogram
+hist(data$critic_score, breaks = 30, main = "Critic Score", col = "lightblue") # critic was -.9 and showed a weak tail on the left, about what we expected
+hist(data$total_sales, breaks = 30, main = "Total Sales", col = "lightblue") # sales was massively skewed in comparison at 8.0, so the very small right tail was expected
+
+right_skewed_cols <- c("total_sales", "na_sales", "jp_sales", "pal_sales", "other_sales")
+left_skewed_cols <- c("critic_score")
+
+data$total_sales_log <- log(data$total_sales + 1)
+data$critic_score_log <- data$critic_score^2
+
+hist(data$total_sales_log, breaks = 30, main = "Total Sales", col = "lightblue") # this improved some skewness but the overall shape is still right skewed
+hist(data$critic_score_log, breaks = 30, main = "Total Scores", col = "lightblue") # this shows an improvement in skewness and the shape is slightly better
+
+skewed_critic_score <- skewness(data$critic_score_log, na.rm = TRUE)
+skewed_critic_score # this went from -.9 to -.3, so we improved the skewness, but the graph shows a much larger improvement
 ```
 
 # Normalize any columns not normalized using any of the available techniques (don’t use the same technique twice).
 ```{r}
+# There are several ways to standardize:
+#   - Z-score normalization - subtract the mean and divide by the standard deviation
+#   - Min-max normalization - subtract the min and divide by the range
+#   - Decimal scaling - divide by 10^j, where j is the number of digits in the max value
+#   - Robust normalization - subtract the median and divide by the interquartile range
+
+# We have several cols to use for scaling. Currently, none of them are normalized to 0-1, so let's use each of the normalization techniques on a different column
+
+# Z-score normalization
+data$z_score_normalized <- (data$critic_score - mean(data$critic_score, na.rm = TRUE)) / sd(data$critic_score, na.rm = TRUE)
+
+# Min-max normalization
+data$min_max_normalized <- (data$critic_score - min(data$critic_score, na.rm = TRUE)) / (max(data$critic_score, na.rm = TRUE) - min(data$critic_score, na.rm = TRUE))
+
+# Decimal scaling
+j <- ceiling(log10(max(data$critic_score, na.rm = TRUE)))
+data$decimal_scaled <- data$critic_score / (10^j)
+
+# Robust normalization
+data$robust_normalized <- (data$critic_score - median(data$critic_score, na.rm = TRUE)) / IQR(data$critic_score, na.rm = TRUE)
+
+head(data)
 ```
 
 # Using data simulation, fill in the missing values for the release_date variable (not the others).
