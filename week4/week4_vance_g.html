@@ -363,7 +363,10 @@ display: none;
 </div>
 <div id="scale-the-numerical-data." class="section level1">
 <h1>Scale the numerical data.</h1>
-<pre class="r"><code>data &lt;- read.csv(&quot;week4_data.csv&quot;)
+<pre class="r"><code># Scaling numerical data refers to transforming numerical features to a common scale, which stops features from dominating others
+
+# ! This was much easier to easier to do using the scale function
+data &lt;- read.csv(&quot;week4_data.csv&quot;)
 head(data) # print first few lines</code></pre>
 <pre><code>##                                                                    img
 ## 1                        /games/boxart/full_6510540AmericaFrontccc.jpg
@@ -426,7 +429,9 @@ head(scaled_data)</code></pre>
 </div>
 <div id="fix-any-skew-as-best-you-can." class="section level1">
 <h1>Fix any skew as best you can.</h1>
-<pre class="r"><code># This is fairly open ended, but from our book we determine that skewness pushes a normal distribution to the left or the right. We can clean up skewness by dropping outliers or using a log transformation.
+<pre class="r"><code>#! Note: I might have done this part wrong because I used data instead of the scaled data.
+
+# This is fairly open ended, but from our book we determine that skewness pushes a normal distribution to the left or the right. We can clean up skewness by dropping outliers or using a log transformation.
 
 
 # As a reminder, skew looks like this:

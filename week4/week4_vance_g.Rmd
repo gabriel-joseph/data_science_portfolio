@@ -13,6 +13,9 @@ library(e1071)
 
 # Scale the numerical data. 
 ```{r}
+# Scaling numerical data refers to transforming numerical features to a common scale, which stops features from dominating others
+
+# ! This was much easier to easier to do using the scale function
 data <- read.csv("week4_data.csv")
 head(data) # print first few lines
 str(data) # print structure
@@ -27,6 +30,8 @@ head(scaled_data)
 
 # Fix any skew as best you can.
 ```{r}
+#! Note: I might have done this part wrong because I used data instead of the scaled data.
+
 # This is fairly open ended, but from our book we determine that skewness pushes a normal distribution to the left or the right. We can clean up skewness by dropping outliers or using a log transformation.
 
 
@@ -63,6 +68,7 @@ hist(data$critic_score_log, breaks = 30, main = "Total Scores", col = "lightblue
 skewed_critic_score <- skewness(data$critic_score_log, na.rm = TRUE)
 skewed_critic_score # this went from -.9 to -.3, so we improved the skewness, but the graph shows a much larger improvement
 ```
+
 
 # Normalize any columns not normalized using any of the available techniques (don’t use the same technique twice).
 ```{r}
