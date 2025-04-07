@@ -1,5 +1,5 @@
 ---
-title: "week4_vance_g"
+title: "Week 4: Simulating Data and Data Transformations"
 author: "Gabriel Vance"
 date: "March 30, 2025"
 output: html_document
@@ -40,14 +40,10 @@ head(scaled_data)
 # Above 0 - Right skewed
 # Below 0 - Left skewed
 
+
 # Another way to view skew is to say "Which way does the tail go? Tail left = left skewed, tail right = right skewed
 
 # First, we can check the overall skewness of the data
-# ! This was my first attempt, but we can loop through the cols in a vector, seen below
-# skewed_critic_score <- skewness(data$critic_score, na.rm = TRUE)
-# skewed_total_sales <- skewness(data$total_sales, na.rm = TRUE)
-# skewed_na_sales <- skewness(data$na_sales, na.rm = TRUE)
-
 skewness_cols <- c("critic_score", "total_sales", "na_sales", "jp_sales", "pal_sales", "other_sales")
 skewed_values <- sapply(data[skewness_cols], skewness, na.rm = TRUE)
 skewed_values
@@ -59,14 +55,33 @@ hist(data$total_sales, breaks = 30, main = "Total Sales", col = "lightblue") # s
 right_skewed_cols <- c("total_sales", "na_sales", "jp_sales", "pal_sales", "other_sales")
 left_skewed_cols <- c("critic_score")
 
-data$total_sales_log <- log(data$total_sales + 1)
+# left skew fixes
 data$critic_score_log <- data$critic_score^2
-
-hist(data$total_sales_log, breaks = 30, main = "Total Sales", col = "lightblue") # this improved some skewness but the overall shape is still right skewed
 hist(data$critic_score_log, breaks = 30, main = "Total Scores", col = "lightblue") # this shows an improvement in skewness and the shape is slightly better
 
 skewed_critic_score <- skewness(data$critic_score_log, na.rm = TRUE)
 skewed_critic_score # this went from -.9 to -.3, so we improved the skewness, but the graph shows a much larger improvement
+
+# right skew fixes
+# There are a few here, so we'll start with total sales first
+data$total_sales_log <- log(data$total_sales + 1)
+hist(data$total_sales_log, breaks = 30, main = "Total Sales", col = "lightblue") # this improved some skewness but the overall shape is still right skewed
+
+# Lets try similar fixes to the other right skews
+data$na_sales_log <- log(data$na_sales + 1)
+hist(data$na_sales_log, breaks = 30, main = "na_sales", col = "lightblue") # This was the same as the total sales in terms of distribution.
+
+data$jp_sales_log <- log(data$jp_sales + 1)
+hist(data$jp_sales_log, breaks = 30, main = "jp_sales", col = "lightblue") # This was the same as the total sales in terms of distribution.
+
+# Do the same for pal_sales and other_sales
+data$pal_sales_log <- log(data$pal_sales + 1)
+hist(data$pal_sales_log, breaks = 30, main = "pal_sales", col = "lightblue")
+
+data$other_sales_log <- log(data$other_sales + 1)
+hist(data$other_sales_log, breaks = 30, main = "other_sales", col = "lightblue")
+
+# This other_sales_log is still HEAVILY skewed, but it has been improved
 ```
 
 
@@ -98,5 +113,19 @@ head(data)
 
 # Using data simulation, fill in the missing values for the release_date variable (not the others).
 ```{r}
+# There are several ways to do data simulation. I chose to use the mean of the release_date column, which ended up being november 14, 2006
+
+# First, got get all dates where the date is na. I also checked for empty because that's what I kept seeing
+data_missing <- data[data$release_date == "", ]
+head(data_missing) # print to make sure we found them
+
+# filter to only use data where dates have a value
+data_with_dates <- data$release_date[data$release_date != ""]
+
+# get the mean date. We could've made another dataframe, but i just filtered the original data WITHOUT
+mean_date <- mean(as.Date(data_with_dates, origin = "1970-01-01"), na.rm = TRUE)
+
+data_missing$release_date <- mean_date
+head(data_missing)
 ```
 
