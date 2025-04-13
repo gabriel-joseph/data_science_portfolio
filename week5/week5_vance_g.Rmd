@@ -18,7 +18,7 @@ library(tidyr)
 # In Markdown at the start of your .r file, describe probability theory.
 ```{r}
 # Probability theory is the study of random events and the likelihood of their occurrence. It aims to predict an events as they relate to overall outcomes.
-# The outcomes are not guaranteed, but can be based on possibilities. For example, regardless of which side a dice lands it, it can only land on 1 side and the maximum number of sides is capped at 6. Porbability theory also assess the likeliness of an event occurring. Coin flips and dice rolls give an equal chance to each side.
+# The outcomes are not guaranteed, but can be based on possibilities. For example, regardless of which side a dice lands it, it can only land on 1 side and the maximum number of sides is capped at 6. Probability theory also assess the likeliness of an event occurring. Coin flips and dice rolls give an equal chance to each side.
 ```
 
 
@@ -41,18 +41,18 @@ chances_of_heads_3
 
 # We can use the ggplot's bar chart. First we need a dataframe.
 probabilities <- data.frame(
-    flip = c(1, 2, 3), # where these are 1st, 2nd, and 3rd flips
-    probability = c(chances_of_heads, chances_of_heads^2, chances_of_heads^3) # last one ought to be 12.5%
+  flip = c(1, 2, 3), # where these are 1st, 2nd, and 3rd flips
+  probability = c(chances_of_heads, chances_of_heads^2, chances_of_heads^3) # last one ought to be 12.5%
 )
 # Create a bar plot
 ggplot(probabilities, aes(x = factor(flip), y = probability)) +
-    geom_bar(stat = "identity") +
-    labs(
-        title = "Probability of Getting Heads in Coin Flips",
-        x = "Number of Flips",
-        y = "Probability"
-    ) +
-    scale_y_continuous(limits = c(0, 1)) # this is adjusted to 1 to show the complete range of possibilities. This makes the expected outcomes to appear more realistic.
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Probability of Getting Heads in Coin Flips",
+    x = "Number of Flips",
+    y = "Probability"
+  ) +
+  scale_y_continuous(limits = c(0, 1)) # this is adjusted to 1 to show the complete range of possibilities. This makes the expected outcomes to appear more realistic.
 ```
 
 
@@ -107,10 +107,10 @@ fourth_place_prize <- 10
 ticket_cost <- 2
 # Calculate the expected value
 expected_value <- (prob_grand_prize * grand_prize) +
-    (prob_winner_prize * winner_prize) +
-    (prob_third_place_prize * third_place_prize) +
-    (prob_fourth_place_prize * fourth_place_prize) -
-    ticket_cost
-expected_value
+  (prob_winner_prize * winner_prize) +
+  (prob_third_place_prize * third_place_prize) +
+  (prob_fourth_place_prize * fourth_place_prize) -
+  ticket_cost
+expected_value # this came out to -1.95. The good news is our losses are capped at $2!
 sprintf("The expected value of entering this contest is $%.2f. This means that on average, you would lose money by entering the contest.", expected_value)
 ```
