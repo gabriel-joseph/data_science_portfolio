@@ -15,10 +15,11 @@ library(tidyr)
 
 
 
-# In Markdown at the start of your .r file, describe probability theory.
+# A six-sided die is rolled repeatedly. What is the expected value average as the die is rolled more and more? The expected value for a single roll is 1+2+3+4+5+6 / 6 = 3.5. What’s wrong with the answer, just in logical terms? Create this in R (i.e., simulate many rolls and visualize the results).
 ```{r}
-# Probability theory is the study of random events and the likelihood of their occurrence. It aims to predict an events as they relate to overall outcomes.
-# The outcomes are not guaranteed, but can be based on possibilities. For example, regardless of which side a dice lands it, it can only land on 1 side and the maximum number of sides is capped at 6. Probability theory also assess the likeliness of an event occurring. Coin flips and dice rolls give an equal chance to each side.
+rolls < -10000 # number of rolls
+die_rolls <- sample(1:6, rolls, replace = TRUE) # simulate rolling a die 10,000 times
+die_rolls_df <- data.frame(roll = die_rolls) # create a dataframe for visualization
 ```
 
 
