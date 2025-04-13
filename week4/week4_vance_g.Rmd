@@ -57,7 +57,7 @@ left_skewed_cols <- c("critic_score")
 
 # left skew fixes
 data$critic_score_log <- data$critic_score^2
-hist(data$critic_score_log, breaks = 30, main = "Total Scores", col = "lightblue") # this shows an improvement in skewness and the shape is slightly better
+hist(data$critic_score_log, breaks = 30, main = "critic_score", col = "lightblue") # this shows an improvement in skewness and the shape is slightly better
 
 skewed_critic_score <- skewness(data$critic_score_log, na.rm = TRUE)
 skewed_critic_score # this went from -.9 to -.3, so we improved the skewness, but the graph shows a much larger improvement
@@ -65,7 +65,7 @@ skewed_critic_score # this went from -.9 to -.3, so we improved the skewness, bu
 # right skew fixes
 # There are a few here, so we'll start with total sales first
 data$total_sales_log <- log(data$total_sales + 1)
-hist(data$total_sales_log, breaks = 30, main = "Total Sales", col = "lightblue") # this improved some skewness but the overall shape is still right skewed
+hist(data$total_sales_log, breaks = 30, main = "total_sales", col = "lightblue") # this improved some skewness but the overall shape is still right skewed
 
 # Lets try similar fixes to the other right skews
 data$na_sales_log <- log(data$na_sales + 1)
