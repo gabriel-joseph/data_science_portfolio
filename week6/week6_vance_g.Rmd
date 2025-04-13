@@ -1,0 +1,116 @@
+---
+title: "Week 6: Probability Theory"
+author: "Gabriel Vance"
+date: "April 15, 2025"
+output: html_document
+---
+
+
+# Imports
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+```
+
+
+
+# In Markdown at the start of your .r file, describe probability theory.
+```{r}
+# Probability theory is the study of random events and the likelihood of their occurrence. It aims to predict an events as they relate to overall outcomes.
+# The outcomes are not guaranteed, but can be based on possibilities. For example, regardless of which side a dice lands it, it can only land on 1 side and the maximum number of sides is capped at 6. Probability theory also assess the likeliness of an event occurring. Coin flips and dice rolls give an equal chance to each side.
+```
+
+
+# How many different license plates can be made from six digits?
+
+```{r}
+# There are 10 digits (0-9)
+num_digits <- 10
+factor_of_combinations <- 6 # because we want 6 digits
+num_combinations <- num_digits^factor_of_combinations
+num_combinations # should be 10^6
+```
+
+# When flipping a coin, what is the probability you will get heads three times in a row? Create a visualization of this. There are code examples in the book’s GitHub.
+```{r}
+# Heads from a single flip is 0.5 or 50% but 3 heads in a row is 0.5^3 or 12.5%
+chances_of_heads <- 0.5
+chances_of_heads_3 <- (chances_of_heads^3) * 100
+chances_of_heads_3
+
+# We can use the ggplot's bar chart. First we need a dataframe.
+probabilities <- data.frame(
+  flip = c(1, 2, 3), # where these are 1st, 2nd, and 3rd flips
+  probability = c(chances_of_heads, chances_of_heads^2, chances_of_heads^3) # last one ought to be 12.5%
+)
+# Create a bar plot
+ggplot(probabilities, aes(x = factor(flip), y = probability)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Probability of Getting Heads in Coin Flips",
+    x = "Number of Flips",
+    y = "Probability"
+  ) +
+  scale_y_continuous(limits = c(0, 1)) # this is adjusted to 1 to show the complete range of possibilities. This makes the expected outcomes to appear more realistic.
+```
+
+
+# Given a standard 52 card deck of cards, what is the probability you’ll randomly draw an Ace of Spades and then Two of Hearts in a row?
+```{r}
+# the probability of drawing 2 cars is 1 out of 52 and then 51. We can multiple the two fractions to get to the cumulative/total probabilty
+prob_ace_of_spades <- 1 / 52 # first card is from all 52
+prob_two_of_hearts <- 1 / 51 # second card is from the remaining 51
+prob_both <- (prob_ace_of_spades * prob_two_of_hearts) * 100
+prob_both #  0.38 percent
+```
+
+
+# Given two fair dice are rolled where each of the 36 possible outcomes is equally likely. Knowing that the first die shows a 6, what is the probability that the sum of the two dice equals 9?
+```{r}
+# The sum must be 9, but the first die is already a 6. The only possibility that ends in a 9 is if the 2nd die is a 3. All other combinations are not 9.
+# The probability is simply 1 of 6, as 3 has the same chance as all of the other undesirable outcomes (1,2,4,5,6)
+probability_the_second_die_is_3 <- (1 / 6) * 100 # 16.67 percent
+probability_the_second_die_is_3
+```
+
+# You want to invest, and you have a 30% chance of making $70,000 and 70% chance of losing $ 40,000. Should you invest? Explain.
+```{r}
+# Expected value formula: EV = Sum of (Probability of outcome * Value of outcome)
+
+# Assuming we have 1 chance to invest, we have to compare risk vs reward.
+# 70k makes up 30% of the outcomes whereas -40k makes up 70% of the outcomes
+expected_value <- (0.3 * 70000) + (0.7 * -40000)
+expected_value
+sprintf("Although the positive payout is quite high, it is unlikely to occur at 30%%. The expected value is %.2f, which is negative. Therefore, I would not invest.", expected_value)
+```
+
+
+# A $2 lottery ticket offers a grand prize of $200,000; 5 losers are winners prizes each pay $1000; 15 third-place prizes each pay $300; and 25 fourth-place prizes each pay $10. Find the expected value of entering this contest if 5 million tickets are sold.
+
+```{r}
+# Expected value formula: EV = Sum of (Probability of outcome * Value of outcome)
+
+# The total number of tickets sold is 5 million
+total_tickets_sold <- 5000000
+# The probabilities of winning each prize
+prob_grand_prize <- 1 / total_tickets_sold # example, 1 in 5 million
+prob_winner_prize <- 5 / total_tickets_sold
+prob_third_place_prize <- 15 / total_tickets_sold
+prob_fourth_place_prize <- 25 / total_tickets_sold
+# total prize values for each threshold
+grand_prize <- 200000
+winner_prize <- 1000
+third_place_prize <- 300
+fourth_place_prize <- 10
+# The cost of the ticket, only $2!
+ticket_cost <- 2
+# Calculate the expected value
+expected_value <- (prob_grand_prize * grand_prize) +
+  (prob_winner_prize * winner_prize) +
+  (prob_third_place_prize * third_place_prize) +
+  (prob_fourth_place_prize * fourth_place_prize) -
+  ticket_cost
+expected_value # this came out to -1.95. The good news is our losses are capped at $2!
+sprintf("The expected value of entering this contest is $%.2f. This means that on average, you would lose money by entering the contest.", expected_value)
+```
