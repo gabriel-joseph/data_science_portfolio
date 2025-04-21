@@ -64,74 +64,92 @@ cat(paste(
 
 # Do Exercise 1 from the text (in Chapter 9). You can use the author’s code, and it is strongly suggested that instead of copying/pasting, you re-write the code. Explain each line in the code both in programming (i.e., what the R is doing) and statistics terms.
 ```{r}
-library(ggplot2) # plotting
-library(cowplot) # plot_grid()
-library(emg) # remg() : exGaussian distribution
-library(pracma) # logspace()
-library(tidyr) # gather()
+# Cohen's imports
+library(ggplot2)
+library(cowplot)
+library(emg)
+library(pracma)
+library(tidyr)
 
 theme_set(theme_classic(base_size = 14))
 options(scipen = 999)
 
-# The main goal of the exercise is to explore LLN, abd wgt sanoke neabs gave kess variabilkity than indivuial samples.
 
+N <- 500 # number of iterations
+nSamples <- 50 # number of samples
+kHistBins <- 20 # number of histogram bins, this is useful for limiting the values we plot
 
-N <- 500
-nSamples <- 50
-kHistBins <- 20
+# creates a sequence of numbers from -3 to 3
+edges <- seq(-3, 3, length.out = kHistBins + 1) # create edges for the histogram bins
 
-# bins for histograms
-edges <- seq(-3, 3, length.out = kHistBins + 1)
-
-# declare matrices
+# creates matrix of 0 with samples and bins
 allHistY <- matrix(0, nrow = nSamples, ncol = kHistBins)
-allMeans <- rep(0, nSamples)
-ldatall <- data.frame(mids = NULL, Count = NULL)
+allMeans <- rep(0, nSamples) # create a vector to store means of each sample
+ldatall <- data.frame(mids = NULL, Count = NULL) # empty data frame with two column
 
-
-for (sampi in 1:nSamples) {
-  # create data (same parameters in all simulations!)
-  data <- rnorm(N, mean = 0, sd = 1)
-
-  # histograms
-  histY <- hist(data[abs(data) <= 3.0], breaks = edges, plot = FALSE)
-  allHistY[sampi, ] <- histY$counts
-
-  ldat <- data.frame(mids = histY$mids, Count = histY$counts)
-
-  # get means
-  allMeans[sampi] <- mean(data)
-  ldatall <- rbind(ldatall, ldat)
+for (sampi in 1:nSamples) { # this was much cleaner for looping
+  data <- rnorm(N, mean = 0, sd = 1) # generate random normal data
+  histY <- hist(data[abs(data) <= 3.0], breaks = edges, plot = FALSE) # create histogram data
+  allHistY[sampi, ] <- histY$counts # store histogram counts
+  ldat <- data.frame(mids = histY$mids, Count = histY$counts) # create a dataframe for the histogram
+  allMeans[sampi] <- mean(data) # calculate the mean of the data
+  ldatall <- rbind(ldatall, ldat) # combine all histograms into one dataframe
 }
 
-# plots
-titleA <- expression(paste(bold("A)"), " Histograms of each sample"))
-titleB <- bquote(bold("B)") ~ "Scatter of sample means (mean=" ~ .(sprintf("%.3g", mean(allMeans))) * ")")
-
+titleA <- expression(paste(bold("A)"), " Histograms")) # title for the first plot
+titleB <- bquote(bold("B)") ~ "Scatter of means (mean=" ~ .(sprintf("%.3g", mean(allMeans))) * ")") # title for the second plot
+# generates 50 random numbers from a uniform distribution between 0.5 and 0.9.
 c <- runif(50, min = 0.5, max = 0.9)
 
-ggp1 <- ggplot(data = ldatall) +
-  aes(x = mids, y = Count) +
-  theme(legend.position = "none") +
-  geom_point(colour = rgb(rep(c, 20), rep(c, 20), rep(c, 20)), size = 3.5) +
-  # plot the average histogram
-  geom_line(stat = "summary", fun = "mean", linewidth = 1.5) +
-  labs(x = "Data value", y = "Count", title = titleA) +
-  theme(axis.text = element_text(size = 14), plot.title = element_text(vjust = -1))
+# create the first plot showing all histogram points from all samples
+ggp1 <- ggplot(data = ldatall) + # use the combined histogram data
+  aes(x = mids, y = Count) + # set x to bin midpoints and y to counts
+  theme(legend.position = "none") + # remove legend for a cleaner look
+  geom_point( # plot each point as a dot
+    colour = rgb(rep(c, 20), rep(c, 20), rep(c, 20)), # use grayscale colors for each sample
+    size = 3.5 # set point size
+  ) +
+  geom_line( # add a line summarizing all samples
+    stat = "summary", # use summary statistics (mean by default)
+    fun = "mean", # plot the mean count at each x
+    linewidth = 1.5 # set line thickness
+  ) +
+  labs( # add axis labels and title
+    x = "Data value",
+    y = "Count",
+    title = titleA
+  ) +
+  theme( # more custom theming?
+    axis.text = element_text(size = 14),
+    plot.title = element_text(vjust = -1)
+  )
 
-
-# plot the means, and the mean of the means
-
-
+# create the second plot showing the sample means from all 50 samples
 ggp2 <- ggplot() +
-  geom_point(aes(x = 1:50, y = allMeans), shape = 22, size = 5, fill = rgb(c, c, c), stroke = 1.0) +
-  geom_hline(yintercept = mean(allMeans), linetype = 2, linewidth = .8) +
-  labs(x = "Sample number", y = "Sample mean", title = titleB) +
-  theme(legend.position = "none", axis.text = element_text(size = 14), plot.title = element_text(vjust = -1))
+  geom_point( # plot each sample mean as a filled square
+    aes(x = 1:50, y = allMeans), # x-axis: sample number, y-axis: sample mean
+    shape = 22, # use filled square shape
+    size = 5, # set size of the squares?
+    fill = rgb(c, c, c), # use same grayscale values as in ggp1
+    stroke = 1.0
+  ) +
+  geom_hline( # add a horizontal dashed line at the overall mean of sample means
+    yintercept = mean(allMeans), # position at the mean of all sample means
+    linetype = 2,
+    linewidth = 0.8
+  ) +
+  labs( # add axis labels and title
+    x = "Sample number",
+    y = "Sample mean",
+    title = titleB
+  ) +
+  theme( # adjust visual appearance
+    legend.position = "none", # no legend
+    axis.text = element_text(size = 14), # larger axis text
+    plot.title = element_text(vjust = -1) # adjust vertical title position
+  )
 
-# setup figure
+# combine the two plots vertically into one figure
 plot_grid(ggp1, ggp2, ncol = 1, align = "v")
-# save the figure as 'png'
-ggsave("sample_exampleWithRandom.png", device = "png", width = 7, height = 6)
 ```
 
