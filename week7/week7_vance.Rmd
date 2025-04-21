@@ -1,0 +1,81 @@
+---
+title: "Week 7: Hypothesis Testing"
+author: "Gabriel Vance"
+date: "April 21, 2025"
+output: html_document
+---
+
+
+# Imports
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+```
+
+```{r}
+data =("
+COLUMN  COLUMN COLUMN
+Value   VAL    VAL
+Value   VAL    VAL
+")
+data_as_matric as.matrix(read.table(textConnection(Input),
+                             header=TRUE,
+                             row.names=1))
+fisher.test(data_as_matrix)
+
+```
+
+Given that information, complete the following two examples. You’ll need R code along with Markdown.
+An experiment is executed to determine if spending too much time on social media hurts cognitive ability. The following data is a summary of that experiment.
+
+Social | Higher | Lower
+Y      |    1   | 120
+N      |   118  |  2
+
+
+Assuming the null hypothesis is that using social results in lower cognitive ability, and alpha is .05:
+What is the alternative hypothesis?
+```{r}
+# alternative hypothesis - This is the statement that contradcits the null hypothesis.
+print("The alternative hypothesis to 'social media results in lower cognitive ability' is 'social media does not result in lower cognitive ability or results in higher cognitive ability'")
+```
+What is the p-value?
+```{r}
+# p-value -  measure probability of taining the observed results, assuming null hypotthesis is true. Low p-value = greater statistical signficance. 0.05 or lower is considered signficant
+
+```
+Is the null hypothesis proven or disproven and why?
+```{r}
+# alternative hypothesis - 
+```
+Is this a one-sided or two-sided test?
+```{r}
+# alternative hypothesis - 
+```
+
+
+You toss a two-sided coin 100 times. Assuming the null hypothesis is that the coin is a fair coin and alpha is .05:
+What’s the alternative hypothesis?
+Is this a one-sided or two-sided test?
+```{r}
+print("The alternative hypothesis to 'the coin is a fair coin' is 'the coin is not a fair coin' and that it will land on heads or tails disporitaionally ")
+```
+If the coin is heads 95 times, what is the p-value?
+```{r}
+# hello
+```
+Is the null hypothesis proven or disproven and why?
+```{r}
+# hello
+```
+Is this a one-sided or two-sided test, and why?
+```{r}
+# hello
+```
+
+Complete Exercise #1 from the text (at the end of Chapter 10).
+
+```{r}
+# hello
+```
