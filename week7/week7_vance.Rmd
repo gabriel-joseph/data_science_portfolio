@@ -53,3 +53,29 @@ Is this a one-sided or two-sided test?
 ```{r}
 # alternative hypothesis - 
 ```
+
+
+You toss a two-sided coin 100 times. Assuming the null hypothesis is that the coin is a fair coin and alpha is .05:
+What’s the alternative hypothesis?
+Is this a one-sided or two-sided test?
+```{r}
+print("The alternative hypothesis to 'the coin is a fair coin' is 'the coin is not a fair coin' and that it will land on heads or tails disporitaionally ")
+```
+If the coin is heads 95 times, what is the p-value?
+```{r}
+# hello
+```
+Is the null hypothesis proven or disproven and why?
+```{r}
+# hello
+```
+Is this a one-sided or two-sided test, and why?
+```{r}
+# hello
+```
+
+Complete Exercise #1 from the text (at the end of Chapter 10).
+
+```{r}
+# hello
+```
