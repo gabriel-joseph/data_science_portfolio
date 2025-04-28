@@ -15,14 +15,12 @@ library(tidyr)
 
 ```{r}
 data <- ("
-COLUMN  COLUMN COLUMN
-Value   VAL    VAL
-Value   VAL    VAL
+        Higher  Lower
+Value1      1      120
+Value2      118      2
 ")
-data_as_matric <- as.matrix(read.table(textConnection(Input),
-    header = TRUE,
-    row.names = 1
-))
+
+data_as_matrix <- as.matrix(read.table(textConnection(data), header = TRUE))
 fisher.test(data_as_matrix)
 ```
 
@@ -37,20 +35,24 @@ N      |   118  |  2
 Assuming the null hypothesis is that using social results in lower cognitive ability, and alpha is .05:
 What is the alternative hypothesis?
 ```{r}
-# alternative hypothesis - This is the statement that contradcits the null hypothesis.
-print("The alternative hypothesis to 'social media results in lower cognitive ability' is 'social media does not result in lower cognitive ability or results in higher cognitive ability'")
+# alternative hypothesis - This is the statement that contradicts the null hypothesis.
+print("The alternative hypothesis to 'social media results in lower cognitive ability' is 'social media does not result in lower cognitive ability or results in higher cognitive ability'. However, NH is usually that 'nothing happened' or 'no difference'., so maybe the null hypothesis is that social media doesn't affect cognitive abiliy? We're going to press forward with the original definition and the way this was phrashed.")
 ```
 What is the p-value?
 ```{r}
+test_result <- fisher.test(data_as_matrix)
+
 # p-value -  measure probability of taining the observed results, assuming null hypotthesis is true. Low p-value = greater statistical signficance. 0.05 or lower is considered signficant
+p_value <- test_result$p.value
+cat("The p-value is: ", p_value)
 ```
 Is the null hypothesis proven or disproven and why?
 ```{r}
-# alternative hypothesis -
+cat("The null hypothesis is disproven because the p-value is less than 0.05. We reject the null hypothesis and accept the alterative hypothesis")
 ```
 Is this a one-sided or two-sided test?
 ```{r}
-# alternative hypothesis -
+cat("Because we used fisher.test() and did not specify the alternative parameter, the test is two-sided by default.")
 ```
 
 
@@ -59,22 +61,194 @@ What’s the alternative hypothesis?
 Is this a one-sided or two-sided test?
 ```{r}
 print("The alternative hypothesis to 'the coin is a fair coin' is 'the coin is not a fair coin' and that it will land on heads or tails disporitaionally ")
+print("This is a two-sided test because we are looking for any difference in the distribution of heads and tails, not just one side.")
 ```
 If the coin is heads 95 times, what is the p-value?
 ```{r}
-# hello
+p_val <- 2 * pbinom(5, size = 100, prob = 0.5)
+print(p_val) #  1.252325e-22
 ```
 Is the null hypothesis proven or disproven and why?
 ```{r}
-# hello
+cat("The null hypothesis is disproven because the p-value is less than 0.05. We reject the null hypothesis and accept the alterative hypothesis")
 ```
 Is this a one-sided or two-sided test, and why?
 ```{r}
-# hello
+print("Because we are looking for any difference in the distribution of heads and tails, not just one side, this is a two-sided test. We are looking for any difference in the distribution of heads and tails, not just one side.")
 ```
 
 Complete Exercise #1 from the text (at the end of Chapter 10).
 
 ```{r}
-# hello
+# 10.1 says to copy code and modify it
+
+# import libraries
+library(cowplot)
+library(ggplot2)
+library(glue)
+library(pracma)
+library(reshape)
+library(scales)
+library(truncnorm)
+
+
+#-------- Figure 10.2: Empirical distribution under H0 ---------#
+#---------------------------------------------------------------#
+N <- 1e2 # per group per sample
+numExps <- 1e3
+meandiff <- numeric(numExps)
+
+# run the experiment
+for (i in 1:numExps) {
+  pre <- rtruncnorm(N, a = -5, b = 10, mean = 6, sd = 2)
+  pst <- rtruncnorm(N, a = -5, b = 10, mean = 6, sd = 2)
+  meandiff[i] <- mean(pst) - mean(pre)
+}
+
+df <- data.frame(x = meandiff)
+fig <- ggplot(df, aes(x = x)) +
+  geom_histogram(bins = 20, color = "black", fill = "gray50") +
+  scale_x_continuous(breaks = seq(-1, 1, .25), limits = c(-1, 1)) +
+  scale_y_continuous(breaks = seq(0, 150, 25), expand = c(0, 0)) +
+  labs(x = expression(paste("Difference value (", Delta, ")")), y = "Count") +
+  theme_classic()
+
+fig
+ggsave(filename = "hyp_empH0.png", width = 8, height = 4, units = "in", dpi = 300)
+
+# write.csv(df, "experiment_results.csv", row.names = FALSE)
+
+
+p <- t.test(meandiff, mu = 0)$p.value
+
+# Print the p-value
+cat("The p-value from the t-test is:", p, "\n")
+```
+
+Run tests 100 times and record the number of times the p-value is below threshold
+```{r}
+# Initialize variables to track false alarm rate
+threshold <- 0.05 # Set the p-value threshold
+false_alarm_count <- 0
+num_repeats <- 100 # Number of times to run the t-test
+
+# Run the t-test 100 times and count false alarms
+for (i in 1:num_repeats) {
+  # Perform the t-test on 'meandiff' values, assuming the null hypothesis mean is 0
+  p_value <- t.test(meandiff, mu = 0)$p.value
+
+  # Check if p-value is below the threshold
+  if (p_value < threshold) {
+    false_alarm_count <- false_alarm_count + 1
+  }
+}
+
+# Calculate the false alarm rate
+false_alarm_rate <- false_alarm_count / num_repeats
+
+# Print the results
+cat("The false alarm rate (p-value < 0.05) after 100 t-tests is:", false_alarm_rate, "\n")
+```
+
+Embed this into a for loop that uses a threshold ranging from .001 to .9
+Plot empirical false alarm rate.
+```{r}
+#-------- Figure 10.2: Empirical distribution under H0 ---------#
+#---------------------------------------------------------------#
+N <- 1e2 # per group per sample
+numExps <- 1e3 # number of experiments
+meandiff <- numeric(numExps)
+p_values <- numeric(numExps) # To store p-values from each t-test
+empirical_means <- numeric(numExps) # To store empirical means for plotting
+
+# Run the experiment to generate 'meandiff' and capture p-values from t-tests
+for (i in 1:numExps) {
+  pre <- rtruncnorm(N, a = -5, b = 10, mean = 6, sd = 2)
+  pst <- rtruncnorm(N, a = -5, b = 10, mean = 6, sd = 2)
+  meandiff[i] <- mean(pst) - mean(pre)
+  empirical_means[i] <- mean(meandiff[i]) # Capture the empirical mean
+
+  # Perform a t-test on the full samples (pre and pst) to calculate p-value
+  p_values[i] <- t.test(pst, pre)$p.value
+}
+
+# Create a data frame for plotting p-values vs empirical means
+df_empirical <- data.frame(
+  empirical_mean = empirical_means,
+  p_value = p_values
+)
+
+# Create the plot for p-values vs empirical means
+fig_empirical <- ggplot(df_empirical, aes(x = empirical_mean, y = p_value)) +
+  geom_point(color = "blue", size = 1) +
+  labs(x = "Empirical Mean of Differences", y = "P-value", title = "P-value vs Empirical Mean of Differences") +
+  theme_minimal()
+
+# Display the plot
+print(fig_empirical)
+
+# Optionally, save the plot to a file
+ggsave(filename = "p_value_vs_empirical_mean.png", width = 8, height = 4, units = "in", dpi = 300)
+```
+
+
+```{r}
+#-------- Figure 10.3: Distribution assuming H0 is true ---------#
+#----------------------------------------------------------------#
+fig <- ggplot(df, aes(x = x)) +
+  geom_histogram(aes(linetype = "H"), bins = 20, color = "black", fill = "gray90", show.legend = FALSE) +
+  geom_vline(aes(xintercept = .1, linetype = "b"), lwd = 1, key_glyph = "path") +
+  geom_vline(aes(xintercept = .7, linetype = "c"), lwd = 1, key_glyph = "path") +
+  scale_x_continuous(breaks = seq(-1, 1, .25), limits = c(-1, 1)) +
+  scale_y_continuous(breaks = seq(0, 140, 20), expand = c(0, 0)) +
+  scale_linetype_manual(
+    labels = c(
+      expression(paste('"A" (', Delta, " = .1)")),
+      expression(paste('"B" (', Delta, " = .7)")),
+      expression(paste("H"[0], " dist."))
+    ),
+    values = c(H = "solid", b = "dashed", c = "dotted")
+  ) +
+  labs(x = "Difference value", y = "Count") +
+  theme_classic() +
+  guides(linetype = guide_legend(override.aes = list(
+    linetype = c("dashed", "dotted", "solid"),
+    size = 10, linewidth = c(.75, .75, 3),
+    color = c("black", "black", "gray")
+  ))) +
+  theme(
+    legend.title = element_blank(),
+    legend.position = c(.12, .75),
+    legend.text.align = 0,
+    legend.background = element_blank(),
+    legend.box.background = element_rect(colour = "black"),
+    legend.box.margin = margin(-7, 2, -2, 2)
+  ) # top, right, bottom, left
+
+fig
+ggsave(filename = "hyp_empH0_withAs.png", width = 8, height = 4, units = "in", dpi = 300)
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
 ```
