@@ -114,7 +114,7 @@ fig <- ggplot(df, aes(x = x)) +
   theme_classic()
 
 fig
-ggsave(filename = "hyp_empH0.png", width = 8, height = 4, units = "in", dpi = 300)
+
 
 # write.csv(df, "experiment_results.csv", row.names = FALSE)
 
