@@ -14,16 +14,16 @@ library(tidyr)
 ```
 
 ```{r}
-data =("
+data <- ("
 COLUMN  COLUMN COLUMN
 Value   VAL    VAL
 Value   VAL    VAL
 ")
-data_as_matric as.matrix(read.table(textConnection(Input),
-                             header=TRUE,
-                             row.names=1))
+data_as_matric <- as.matrix(read.table(textConnection(Input),
+    header = TRUE,
+    row.names = 1
+))
 fisher.test(data_as_matrix)
-
 ```
 
 Given that information, complete the following two examples. You’ll need R code along with Markdown.
@@ -43,15 +43,14 @@ print("The alternative hypothesis to 'social media results in lower cognitive ab
 What is the p-value?
 ```{r}
 # p-value -  measure probability of taining the observed results, assuming null hypotthesis is true. Low p-value = greater statistical signficance. 0.05 or lower is considered signficant
-
 ```
 Is the null hypothesis proven or disproven and why?
 ```{r}
-# alternative hypothesis - 
+# alternative hypothesis -
 ```
 Is this a one-sided or two-sided test?
 ```{r}
-# alternative hypothesis - 
+# alternative hypothesis -
 ```
 
 
