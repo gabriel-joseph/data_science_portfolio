@@ -186,9 +186,6 @@ fig_empirical <- ggplot(df_empirical, aes(x = empirical_mean, y = p_value)) +
 
 # Display the plot
 print(fig_empirical)
-
-# Optionally, save the plot to a file
-ggsave(filename = "p_value_vs_empirical_mean.png", width = 8, height = 4, units = "in", dpi = 300)
 ```
 
 
