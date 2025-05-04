@@ -36,14 +36,12 @@ With TV	Without TV
 10	8
 
 ```{r}
-
 # Make two vectors with different columns
 with_tv <- c(12, 7, 3, 11, 8, 5, 14, 7, 9, 10)
 without_tv <- c(8, 7, 4, 14, 6, 7, 12, 5, 5, 8)
 
 # Run a paired t-test
 t.test(with_tv, without_tv, paired = TRUE)
-
 ```
 
 
@@ -52,7 +50,6 @@ Mean =	Mean =
 S =	S =
 S2 =	S2 =
 ```{r}
-
 mean(with_tv)
 mean(without_tv)
 
@@ -83,7 +80,7 @@ cat("The alternative hypothesis in this study is that TV does make a difference 
 What probability level did you choose and why?
 
 ```{r}
-cat("The probability level we are using is \alpha = 0.05. This means we're willing to accept a 5% chance of incorrectly rejecting null hypothesis, which is a standard value. Low alpha such as 0.01 would make it harder to detect real effects where as a alpha such as 0.1 would increase the risk of false positives.")
+cat("The probability level we are using is alpha = 0.05. This means we're willing to accept a 5% chance of incorrectly rejecting null hypothesis, which is a standard value. Low alpha such as 0.01 would make it harder to detect real effects where as a alpha such as 0.1 would increase the risk of false positives.")
 ```
 
 What are your degrees of freedom?
@@ -96,5 +93,8 @@ cat("Degrees of freedom follows this formula: df = n - 1. Since we have 10 rows,
 Is there a significant difference between the two testing conditions? Interpret your answer.
 
 ```{r}
+# Just to test again
+t.test(with_tv, without_tv, paired = TRUE)
 
+cat("There is no statistically significant difference between the number of candy corn eaten with TV stimulation and without it (p = 0.2208 > 0.05). This means we fail to reject the null hypothesis. In this sample, watching TV does not appear to significantly affect candy corn consumption.")
 ```

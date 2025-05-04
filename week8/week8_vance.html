@@ -446,13 +446,28 @@ the table above? Mean = Mean = S = S = S2 = S2 =</p>
 <pre class="r"><code>cat(&quot;The alternative hypothesis in this study is that TV does make a difference on the number of candy corn eaten.&quot;)</code></pre>
 <pre><code>## The alternative hypothesis in this study is that TV does make a difference on the number of candy corn eaten.</code></pre>
 <p>What probability level did you choose and why?</p>
-<pre class="r"><code>cat(&quot;The probability level we are using is \alpha = 0.05. This means we&#39;re willing to accept a 5% chance of incorrectly rejecting null hypothesis, which is a standard value. Low alpha such as 0.01 would make it harder to detect real effects where as a alpha such as 0.1 would increase the risk of false positives.&quot;)</code></pre>
-<pre><code>## The probability level we are using is lpha = 0.05. This means we&#39;re willing to accept a 5% chance of incorrectly rejecting null hypothesis, which is a standard value. Low alpha such as 0.01 would make it harder to detect real effects where as a alpha such as 0.1 would increase the risk of false positives.</code></pre>
+<pre class="r"><code>cat(&quot;The probability level we are using is alpha = 0.05. This means we&#39;re willing to accept a 5% chance of incorrectly rejecting null hypothesis, which is a standard value. Low alpha such as 0.01 would make it harder to detect real effects where as a alpha such as 0.1 would increase the risk of false positives.&quot;)</code></pre>
+<pre><code>## The probability level we are using is alpha = 0.05. This means we&#39;re willing to accept a 5% chance of incorrectly rejecting null hypothesis, which is a standard value. Low alpha such as 0.01 would make it harder to detect real effects where as a alpha such as 0.1 would increase the risk of false positives.</code></pre>
 <p>What are your degrees of freedom?</p>
 <pre class="r"><code>cat(&quot;Degrees of freedom follows this formula: df = n - 1. Since we have 10 rows, our df would be 10-1. Therefore our degrees of freedom is 9.&quot;)</code></pre>
 <pre><code>## Degrees of freedom follows this formula: df = n - 1. Since we have 10 rows, our df would be 10-1. Therefore our degrees of freedom is 9.</code></pre>
 <p>Is there a significant difference between the two testing conditions?
 Interpret your answer.</p>
+<pre class="r"><code># Just to test again
+t.test(with_tv, without_tv, paired = TRUE)</code></pre>
+<pre><code>## 
+##  Paired t-test
+## 
+## data:  with_tv and without_tv
+## t = 1.3156, df = 9, p-value = 0.2208
+## alternative hypothesis: true mean difference is not equal to 0
+## 95 percent confidence interval:
+##  -0.719504  2.719504
+## sample estimates:
+## mean difference 
+##               1</code></pre>
+<pre class="r"><code>cat(&quot;There is no statistically significant difference between the number of candy corn eaten with TV stimulation and without it (p = 0.2208 &gt; 0.05). This means we fail to reject the null hypothesis. In this sample, watching TV does not appear to significantly affect candy corn consumption.&quot;)</code></pre>
+<pre><code>## There is no statistically significant difference between the number of candy corn eaten with TV stimulation and without it (p = 0.2208 &gt; 0.05). This means we fail to reject the null hypothesis. In this sample, watching TV does not appear to significantly affect candy corn consumption.</code></pre>
 </div>
 
 
