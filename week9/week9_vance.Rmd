@@ -1,0 +1,169 @@
+---
+title: "Week 9: Correlations and Confidence Intervals"
+author: "Gabriel Vance"
+date: "May 9, 2025"
+output: html_document
+---
+
+
+# Imports
+```{r}
+# Load necessary libraries
+library(dplyr)
+library(GGally)
+library(lsa)
+library(tidyverse)
+
+# Load data
+travel_insurance_df <- read.csv("travel_insurance.csv")
+# Read the head
+head(travel_insurance_df)
+```
+
+Compute the correlation coefficient between any two variables.
+```{r}
+# Compute correlations
+correlation <- cor(travel_insurance_df$Commission, travel_insurance_df$Age, use = "complete.obs")
+correlation_duration_to_age <- cor(travel_insurance_df$Duration, travel_insurance_df$Age, use = "complete.obs")
+
+# Print results
+cat("Correlation coefficient between Commission and Age:", correlation, "\n")
+cat("Correlation coefficient between Duration and Age:", correlation_duration_to_age, "\n")
+cat("The Comission to Age correlation is 0.11 whereas the Duration to Age correlation is 0.002. We'll remember these correlations for future work.")
+```
+Compute the Pearson, Spearman, and Kendall correlations between any two variables.
+
+
+```{r}
+# Pearson correlation (default)
+cor_pearson <- cor(travel_insurance_df$Commission, travel_insurance_df$Age, method = "pearson", use = "complete.obs")
+cor_pearson_dur_to_age <- cor(travel_insurance_df$Duration, travel_insurance_df$Age, method = "pearson", use = "complete.obs")
+
+# Spearman correlation (based on ranked values)
+cor_spearman <- cor(travel_insurance_df$Commission, travel_insurance_df$Age, method = "spearman", use = "complete.obs")
+cor_spearman_dur_to_age <- cor(travel_insurance_df$Duration, travel_insurance_df$Age, method = "spearman", use = "complete.obs")
+
+# Kendall correlation (based on concordant/discordant pairs)
+cor_kendall <- cor(travel_insurance_df$Commission, travel_insurance_df$Age, method = "kendall", use = "complete.obs")
+cor_kendall_dur_to_age <- cor(travel_insurance_df$Duration, travel_insurance_df$Age, method = "kendall", use = "complete.obs")
+
+# Print the results
+cat("Pearson correlation between Commission and Age:", cor_pearson, "\n")
+cat("Pearson correlation between Duration and Age:", cor_pearson_dur_to_age, "\n==============\n")
+
+cat("Spearman correlation between Commission and Age:", cor_spearman, "\n")
+cat("Spearman correlation between Duration and Age:", cor_spearman_dur_to_age, "\n==============\n")
+
+cat("Kendall correlation between Commission and Age:", cor_kendall, "\n")
+cat("Kendall correlation between Duration and Age:", cor_kendall_dur_to_age, "\n")
+```
+
+
+Create a correlation matrix for all variables.
+```{r}
+# For this, I chose to only do numeric to numeric
+travel_insurance_df <- read.csv("travel_insurance.csv")
+
+# Select only numeric columns
+numeric_df <- travel_insurance_df %>%
+  select_if(is.numeric)
+
+
+cor_matrix <- cor(numeric_df, use = "pairwise.complete.obs", method = "pearson")
+print(cor_matrix)
+```
+
+Compute the covariance between any two variables.
+```{r}
+# Compute covariance
+covariance <- cov(travel_insurance_df$Commission, travel_insurance_df$Age, use = "complete.obs")
+covariance_duration_to_age <- cov(travel_insurance_df$Duration, travel_insurance_df$Age, use = "complete.obs")
+
+
+cat(
+  "Covariance between Commission and Age:", covariance, "\n",
+  "Covariance between Duration and Age:", covariance_duration_to_age, "\n"
+)
+```
+
+
+Compute the Cosine Similarity between the same two variables as you use for #2. Plot the two together.
+```{r}
+# Again, we're going to use commission to age and then duration and age
+cos_commission_age <- cosine(as.vector(travel_insurance_df$Commission), as.vector(travel_insurance_df$Age))
+cat("Cosine Similarity (Commission vs Age):", round(cos_commission_age, 4), "\n")
+
+cos_duration_age <- cosine(as.vector(travel_insurance_df$Duration), as.vector(travel_insurance_df$Age))
+cat("Cosine Similarity (Duration vs Age):", round(cos_duration_age, 4))
+# This was 32.8 for Commission/Age and 3.52 for Duration/Age. Keep in mind that the correlations run earlier showed higher correlations between Commission/Age than Duration/Age.
+
+
+# Create a data frame
+similarity_df <- data.frame(
+  Pair = c("Commission vs Age", "Duration vs Age"),
+  CosineSimilarity = c(32.8, 3.52)
+)
+
+# Plot
+ggplot(similarity_df, aes(x = Pair, y = CosineSimilarity, fill = Pair)) +
+  geom_bar(stat = "identity", width = 0.6) +
+  scale_fill_manual(values = c(
+    "Commission vs Age" = "steelblue",
+    "Duration vs Age" = "darkorange"
+  )) +
+  labs(
+    title = "Cosine Similarity Comparison",
+    y = "Cosine Similarity",
+    x = NULL
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+
+Compute the average confidence interval for each numeric feature.
+```{r}
+# A confidence interval (CI) is a range of values that is used to estimate the true value of a population parameter, such as a mean or proportion, based on sample data. It is accompanied by a confidence level, which indicates how confident we are that the interval contains the true parameter.
+
+# Function to compute confidence intervals (CI)
+ci_func <- function(data_column) {
+  ci <- t.test(data_column)
+  return(ci$conf.int) # Return only the confidence interval
+}
+
+# Loop through numeric columns and compute CI
+numeric_columns <- c("Duration", "NetSales", "Commission", "Age")
+for (col in numeric_columns) {
+  cat("Confidence Interval for", col, ":\n")
+  ci_result <- ci_func(travel_insurance_df[[col]])
+  cat("Lower Bound:", ci_result[1], "\n")
+  cat("Upper Bound:", ci_result[2], "\n\n")
+}
+```
+
+Compute the t-scores for each numeric feature.
+
+```{r}
+# Function to compute t-scores (z-scores)
+compute_t_scores <- function(df, columns) {
+  t_scores <- sapply(df[columns], function(x) {
+    (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
+  })
+  return(t_scores)
+}
+
+# Compute the t-scores for the specified numeric columns
+t_scores <- compute_t_scores(travel_insurance_df, numeric_columns)
+
+# Print the t-scores
+head(t_scores)
+```
+
+What do those values mean logically?
+
+```{r}
+cat("Cosine Similarity of .454 means that the two variables are moderately similar. A value of 1 would mean they are identical, while a value of 0 would mean they are completely dissimilar.\n")
+cat("Confidence interval for Comission is 9.655 for lower bound and 9.964 for upper bound. This means that we are 95% confident that the true mean of the population lies within this range.\n")
+cat("T-scores measure how far from the mean a data point is in terms of standard deviations. A t-score of 0 means the data point is at the mean, while a t-score of 1 means it is one standard deviation above the mean.\n")
+cat("Our lower bound for Age was 39.86, and the upper bound was 40.07, which gives us the range in which we expect the true population mean for Age to fall with 95% confidence. This aligns with our data, because the first two rows have ages of 81 and 71, and their t-scores are 2.92 and 2.21, indicating that these ages are significantly higher than the mean (greater than 2 standard deviations above the mean).")
+```
