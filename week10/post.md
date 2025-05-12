@@ -1,0 +1,10 @@
+Compare dependent versus independent variables. How do these terms relate to supervised learning machine learning models?
+
+Variables can best be thought of as dependent or indepent based on how they are framed inside a machine learning model. Independent variables are features which can stand alone and won't depend on the features. These are rarely "acted" on or influenced. By comparison, dependent variables occurr as a result of the independent variables. 
+
+In traditional machine learning, the dependent variable is the target we try to predict, such as home prices. Home prices are dependent on a number of factors, such as the number of bathrooms, bedrooms, zip-code, year built, and so on. The house price reflects the value of the property, and value is dependent on the factors or metadata of a home. 
+
+If we trained a model on predicing home prices, we would give the machine some tabular data and try to understand what features influence the hom prices. Of course, not all independent variables share equal influence of dependent variables. For example, suppose each home, regardless of the other columns, had a value over $3,000,000 when inside zip code 90210 (Beverly Hills). We might see homes with 3 bathrooms or 30 bathrooms. Correlation scores would likely give the zip code a much higher value over bathrooms when determining the dependency of features for price value. However if we were to examine zip code 68123 where the location is relatively the same as the surrounding efforts, we would likley find square foot, number of bedrooms, and year built to be more relevant for determining the independent variable. Numerically, all independent variables could influence the dependent variable, but it's reasonable to hypothesize that only a handful of independent variables truly influence the dependent variable, so importance testing is a must.
+
+
+In summation, independent variables are raw forms of standalone data. Dependent variables are influenced by the independent variables. In a machine learning context, we should use EDA to test which indpenedent features are most relevant to the dependent varaibles.
