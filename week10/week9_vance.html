@@ -11,9 +11,9 @@
 
 <meta name="author" content="Gabriel Vance" />
 
-<meta name="date" content="2025-05-09" />
+<meta name="date" content="2025-05-12" />
 
-<title>Week 9: Correlations and Confidence Intervals</title>
+<title>Week 10: Correlations and Confidence Intervals</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -350,10 +350,10 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Week 9: Correlations and Confidence
+<h1 class="title toc-ignore">Week 10: Correlations and Confidence
 Intervals</h1>
 <h4 class="author">Gabriel Vance</h4>
-<h4 class="date">May 9, 2025</h4>
+<h4 class="date">May 12, 2025</h4>
 
 </div>
 
@@ -405,170 +405,9 @@ head(travel_insurance_df)</code></pre>
 ## 4    No       60     AUSTRALIA    -39.6      23.76         32
 ## 5    No       79         ITALY    -19.8      11.88         41
 ## 6    No       66 UNITED STATES   -121.0      42.35      F  44</code></pre>
-<p>Compute the correlation coefficient between any two variables.</p>
-<pre class="r"><code># Compute correlations
-correlation &lt;- cor(travel_insurance_df$Commission, travel_insurance_df$Age, use = &quot;complete.obs&quot;)
-correlation_duration_to_age &lt;- cor(travel_insurance_df$Duration, travel_insurance_df$Age, use = &quot;complete.obs&quot;)
-
-# Print results
-cat(&quot;Correlation coefficient between Commission and Age:&quot;, correlation, &quot;\n&quot;)</code></pre>
-<pre><code>## Correlation coefficient between Commission and Age: 0.1183483</code></pre>
-<pre class="r"><code>cat(&quot;Correlation coefficient between Duration and Age:&quot;, correlation_duration_to_age, &quot;\n&quot;)</code></pre>
-<pre><code>## Correlation coefficient between Duration and Age: 0.002468406</code></pre>
-<pre class="r"><code>cat(&quot;The Comission to Age correlation is 0.11 whereas the Duration to Age correlation is 0.002. We&#39;ll remember these correlations for future work.&quot;)</code></pre>
-<pre><code>## The Comission to Age correlation is 0.11 whereas the Duration to Age correlation is 0.002. We&#39;ll remember these correlations for future work.</code></pre>
-<p>Compute the Pearson, Spearman, and Kendall correlations between any
-two variables.</p>
-<pre class="r"><code># Pearson correlation (default)
-cor_pearson &lt;- cor(travel_insurance_df$Commission, travel_insurance_df$Age, method = &quot;pearson&quot;, use = &quot;complete.obs&quot;)
-cor_pearson_dur_to_age &lt;- cor(travel_insurance_df$Duration, travel_insurance_df$Age, method = &quot;pearson&quot;, use = &quot;complete.obs&quot;)
-
-# Spearman correlation (based on ranked values)
-cor_spearman &lt;- cor(travel_insurance_df$Commission, travel_insurance_df$Age, method = &quot;spearman&quot;, use = &quot;complete.obs&quot;)
-cor_spearman_dur_to_age &lt;- cor(travel_insurance_df$Duration, travel_insurance_df$Age, method = &quot;spearman&quot;, use = &quot;complete.obs&quot;)
-
-# Kendall correlation (based on concordant/discordant pairs)
-cor_kendall &lt;- cor(travel_insurance_df$Commission, travel_insurance_df$Age, method = &quot;kendall&quot;, use = &quot;complete.obs&quot;)
-cor_kendall_dur_to_age &lt;- cor(travel_insurance_df$Duration, travel_insurance_df$Age, method = &quot;kendall&quot;, use = &quot;complete.obs&quot;)
-
-# Print the results
-cat(&quot;Pearson correlation between Commission and Age:&quot;, cor_pearson, &quot;\n&quot;)</code></pre>
-<pre><code>## Pearson correlation between Commission and Age: 0.1183483</code></pre>
-<pre class="r"><code>cat(&quot;Pearson correlation between Duration and Age:&quot;, cor_pearson_dur_to_age, &quot;\n==============\n&quot;)</code></pre>
-<pre><code>## Pearson correlation between Duration and Age: 0.002468406 
-## ==============</code></pre>
-<pre class="r"><code>cat(&quot;Spearman correlation between Commission and Age:&quot;, cor_spearman, &quot;\n&quot;)</code></pre>
-<pre><code>## Spearman correlation between Commission and Age: 0.1460044</code></pre>
-<pre class="r"><code>cat(&quot;Spearman correlation between Duration and Age:&quot;, cor_spearman_dur_to_age, &quot;\n==============\n&quot;)</code></pre>
-<pre><code>## Spearman correlation between Duration and Age: -0.01590991 
-## ==============</code></pre>
-<pre class="r"><code>cat(&quot;Kendall correlation between Commission and Age:&quot;, cor_kendall, &quot;\n&quot;)</code></pre>
-<pre><code>## Kendall correlation between Commission and Age: 0.1154206</code></pre>
-<pre class="r"><code>cat(&quot;Kendall correlation between Duration and Age:&quot;, cor_kendall_dur_to_age, &quot;\n&quot;)</code></pre>
-<pre><code>## Kendall correlation between Duration and Age: -0.01127703</code></pre>
-<p>Create a correlation matrix for all variables.</p>
-<pre class="r"><code># For this, I chose to only do numeric to numeric
-travel_insurance_df &lt;- read.csv(&quot;travel_insurance.csv&quot;)
-
-# Select only numeric columns
-numeric_df &lt;- travel_insurance_df %&gt;%
-  select_if(is.numeric)
-
-
-cor_matrix &lt;- cor(numeric_df, use = &quot;pairwise.complete.obs&quot;, method = &quot;pearson&quot;)
-print(cor_matrix)</code></pre>
-<pre><code>##               Duration   NetSales Commission         Age
-## Duration   1.000000000 0.42923475  0.3447720 0.002468406
-## NetSales   0.429234748 1.00000000  0.6513147 0.037756011
-## Commission 0.344772012 0.65131472  1.0000000 0.118348277
-## Age        0.002468406 0.03775601  0.1183483 1.000000000</code></pre>
-<p>Compute the covariance between any two variables.</p>
-<pre class="r"><code># Compute covariance
-covariance &lt;- cov(travel_insurance_df$Commission, travel_insurance_df$Age, use = &quot;complete.obs&quot;)
-covariance_duration_to_age &lt;- cov(travel_insurance_df$Duration, travel_insurance_df$Age, use = &quot;complete.obs&quot;)
-
-
-cat(
-  &quot;Covariance between Commission and Age:&quot;, covariance, &quot;\n&quot;,
-  &quot;Covariance between Duration and Age:&quot;, covariance_duration_to_age, &quot;\n&quot;
-)</code></pre>
-<pre><code>## Covariance between Commission and Age: 32.85328 
-##  Covariance between Duration and Age: 3.521954</code></pre>
-<p>Compute the Cosine Similarity between the same two variables as you
-use for #2. Plot the two together.</p>
-<pre class="r"><code># Again, we&#39;re going to use commission to age and then duration and age
-cos_commission_age &lt;- cosine(as.vector(travel_insurance_df$Commission), as.vector(travel_insurance_df$Age))
-cat(&quot;Cosine Similarity (Commission vs Age):&quot;, round(cos_commission_age, 4), &quot;\n&quot;)</code></pre>
-<pre><code>## Cosine Similarity (Commission vs Age): 0.454</code></pre>
-<pre class="r"><code>cos_duration_age &lt;- cosine(as.vector(travel_insurance_df$Duration), as.vector(travel_insurance_df$Age))
-cat(&quot;Cosine Similarity (Duration vs Age):&quot;, round(cos_duration_age, 4))</code></pre>
-<pre><code>## Cosine Similarity (Duration vs Age): 0.4122</code></pre>
-<pre class="r"><code># This was 32.8 for Commission/Age and 3.52 for Duration/Age. Keep in mind that the correlations run earlier showed higher correlations between Commission/Age than Duration/Age.
-
-
-# Create a data frame
-similarity_df &lt;- data.frame(
-  Pair = c(&quot;Commission vs Age&quot;, &quot;Duration vs Age&quot;),
-  CosineSimilarity = c(32.8, 3.52)
-)
-
-# Plot
-ggplot(similarity_df, aes(x = Pair, y = CosineSimilarity, fill = Pair)) +
-  geom_bar(stat = &quot;identity&quot;, width = 0.6) +
-  scale_fill_manual(values = c(
-    &quot;Commission vs Age&quot; = &quot;steelblue&quot;,
-    &quot;Duration vs Age&quot; = &quot;darkorange&quot;
-  )) +
-  labs(
-    title = &quot;Cosine Similarity Comparison&quot;,
-    y = &quot;Cosine Similarity&quot;,
-    x = NULL
-  ) +
-  theme_minimal() +
-  theme(legend.position = &quot;none&quot;)</code></pre>
-<p><img role="img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABUAAAAPACAMAAADDuCPrAAABklBMVEUAAAAAADoAAGYAOjoAOmYAOpAAZrY6AAA6OgA6Ojo6OmY6OpA6ZmY6ZpA6ZrY6kJA6kLY6kNtGgrRNTU1NTW5NTY5Nbm5Nbo5NbqtNjshmAABmADpmOgBmOjpmOpBmZjpmZmZmZpBmkGZmkJBmkLZmkNtmtrZmtttmtv9uTU1ubk1ubm5ubo5ujo5ujqtujshuq8huq+SOTU2Obk2Obm6Ojk2Ojm6Oq6uOq8iOq+SOyOSOyP+QOgCQOjqQZjqQZmaQZpCQkGaQkLaQtraQttuQ29uQ2/+rbk2rbm6rjm6rq46rq8iryOSr5P+2ZgC2Zjq2Zma2kDq2kGa2kJC2tpC2tra2ttu229u22/+2///Ijk3Ijm7Iq27Iq47Iq6vIyI7I5OTI5P/I///bkDrbkGbbtmbbtpDbtrbbttvb27bb29vb2//b/7bb///kq27kq47kyI7kyKvkyMjk5Kvk5Mjk5P/k///r6+v/jAD/tmb/yI7/25D/27b/29v/5Kv/5Mj/5OT//7b//8j//9v//+T///+HH3WLAAAACXBIWXMAAB2HAAAdhwGP5fFlAAAgAElEQVR4nO3d/YNb9ZmecU0wDKZAl8oE2wuFNGxhultSnLS7G6jpbt24bBPT0CUhk227MIm3hNoL7a6p32PP6P+uzpEezdHr6Jx5bt3o6+vzA9hmPKPMrXNF0pE0vQEAoJOe+wIAwLYioADQEQEFgI4IKAB0REABoCMCCgAdEVAA6IiAAkBHBBQAOiKgANARAQWAjggoAHREQAGgIwIKAB0RUADoSB/Qw+uv7fZ6vade+GWbv/XoYm/nJx2/4H8bfcHnr9xo8cnGH7PW1+1w4bp9F07jFN9BAOtRB/Two97EmU/X/3udD//mF9z5o/U/WbeAXn9trQvZ9btwGgQUkBMH9O5ur2Hn7bX/YtfD//D95hfsPX1j3U/WJaDDL7bWhez8XTgNAgrIaQNal+PMlS+Hv/zichUPeTuuDb/Ic/V99/vXXx3++qWWf79Vdtb84M1/FwBshDSgw8D0dt6K390b/u47v1J+vVGrJs08HNa07Y0wQUA3/10AsBnSgM4EbKpuGgdxr71W3Z9v+QUFAd38dwHAZigDOpeK6bwpHEx/xeFvn2n3CfIDavguANgMZUAPZu+s3n3te78Y//KL6lk9Oy8cn5G+d/nZ5tN8ok3XqkcM710efvBTb95ofPDM3258yQXFPP5kw3/Vf/e5K9WfX3+tesT0l82PaTTx+uX6iUdvfjn51G8ffrTb23nuJ6MPilNDOz+ZCum1mcc4W3wXVl2+6tb08DvR+JO1LuSCb+3CL7zouwzgBMKAVof8ktt/x+fKXxwdr43n+Yye5tMMaPy3iNTxB784e7TfHv7hW4NZzYAejP/qS8ef5qXGx0yyc+/VmbPmVZuuNYN5HNDqUr50/LWmetnmu7Dq8tUBvT3+kxfG/7tPvpALvrULv/D8dxnAiYQBrU6eLH6wr/ovYXRv9trxH4z60wjo2ZmPbT5TaTZN9X87c+XG3NeLgP7F5K++Nfma9X+bCWjzIo6SchCX5OkbcwEd/jLuld+euVDtvgvLL1/1v+z7u9Mfv8aFXPCtXfztn/0uAziZMKBVYBY/Yac6pqu7j1/EE42qD32xuhd6/+fjP5k6/KuPrW9s1Z+uuo1WffD9j3rzbRrHYef5//jl1B9Of7Lr1Z3V3s5bNwaHPx9neCag1Zmf4X8eHH4cD2HWNw3/4Mbg/pfNyo66dfyE0NE97W7fhZWXb/R/G2d+OfPxJ17I+W/tqi98/F0GcDJhQG8vuzt4fFqleqJRdauo8dDlwVTP6kN79LFxU67699uTrzD3jKDDy5ObUi9cGf/Z/Ce7PbnNVv1hdZtrOqDTX6S+TXZwnOu5gB6fvBr+b5u+SC2+CysvXx3QZ240P36tCzn/rV35hZffYAYwxxHQa8d3E8cNGB7aZ6ZL2GheBOna6PhvnieaPWFTu//x5J7umStLPlmjE7cXBfT21EWMNsX/nPmATu7Dz53FavFdWHn5qoDGd2L88WtdyPlv7covHN9lAGvQ3oVfmI6pe7mj47U+ObLsXvfMDahmNG8vubl0eP2DZ0cJbZ4ganyyxo238W3GpS/ljLNCB1PdmQlo3Iefuwff5ruw8vJNPaf12uz/7uUXcu5bu/oLd3jmF/DkMjwGOtWo0a2oyXmh5/5yplGNVIwO7ZkXuy8/2g/rJwHVl2D+kzUuw6qAHv7urz/Y7U3aFF9rPqBxH75xNqn9d2Hl5Zvq3lTlVl/IuW/t6i9MQIEWDGfhFx3BjSyO7navHdBV54yrUyKNu+ftAvrF5WenTl6vDuj4PvTB3P/kNt+FEwI69fHPrHshZ7+1BBRIs9nngR489+anC4/g6tnek+N85ix8i4DOHv3j+88dAnr8DMv1Ajp6EvyCt2dq811YO6Djy7LWhZz91hJQIM1GX4k0ehxv6ghuHq/3R++EvKR5jYAufZ7N7Gn5+ecmrRnQ8bOhzj7//V/874trBbR+OHb+Hnyr70LLu/DrXcjZb+3qL0xAgRY2+lr40RnpRWcxJg5/Pn07af7QnjuBMvMVm3XtHNCD8TMsB1PnZ1YFtL4PP38PvtV34aSAzpxEWu9Czn5rV39hAgq0oH43pmbPqltM1cF5MPs8mtljemVAm+/FMRus6hM1bwIe9JpxbBHQxpe9vd5d+Oo+/H9a+AbL634XTg5ofPz4kYl1LuSCb+3KL0xAgRY2/H6gdRUWPpE+junxLa3lAW3copt/ilD1pJ2nJ+8xUr2g55lBh4A2bu7dXe8sfP2l/+nFRee01v4unBjQ+Pj3J09dOPlCzn9rV35hAgq0oH1H+vpJiKO3Cmq+F/vCl3KOXsFe/dHiG42TQ7v629VLGusXMM4e7KMXJf7yRjyNafaF9evfAq3vHdcvF115gvv47Zvf7/VmbhC3/C6cHNDjjx/fbjz5Qs5/a1d+YQIKtCD+mUi/nfppQI08zJxFP5j9qBUBbZ6Hn38lZ/O9M+JlOe0DOvNTjH4yWBrQ4/vnB4suT6vvwkkBPTv9Kda7kHPf2pVfmIACLah/KmfzmTZnJnd3H03+NN6Q7jeTGIzu7a4IaOPl7ot+wmWzVuM3vOzwNKZJdnb+5fhRxEXnZ243g3h3wQ3idt+FE8/Cj99yLn7a6HoXcvZbu/ILE1CgBf3Phb/3F2cX/ET0+sekP9V4S+T7H9e3r567Mv16mcWH9hf12wg/d2Ww0PXL9ac6G+8y3OmJ9KP3bK4uzvHJq/kT3L+tnsf+B6M/XfkEq7W+Cyc/jan6QXmTd09e90LOfGtXfmECCrSgD+gT49HFJffgU6zMMwALAppm9q2UcxFQ4NuHgGZZ8DLO5E9PQIFvGQKapPrRQ8ofhkFAgW8fAprh7uQ1/DIEFPj2IaAZRs+slP4oDAIKfPsQ0AzV/fen5n+ccuqXIKDAtw4BBYCOCCgAdERAAaAjAgoAHRFQAOiIgAJARwQUADoioADQEQEFgI4IKAB0REABoCMCCgAdEVAA6IiAAkBHBHRrfPON+xJg23CdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoIN/hmTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgap0C+vUP+/1zf3Zr9JujD/f6/Xc+y7xQm+XOTXnciyIQULUuAb3Zr73yefWbx5fq37z8efIF2xx3bsrjXhSBgKp1COiDvXM/Hgwe/rB/ofrdfv/8Z4OHV/vnb2VftE1x56Y87kURCKhah4Du99+t/vVgr7rVOfrn8HbouZ8lX7KNceemPO5FEQioWveTSI8vVem8ObodOvz3u1kXadPcuSmPe1EEAqrWPaAP9qp77fv99+rf3RmHdAu5c1Me96IIBFStc0C/2qvSeXR1fNd9lNOmb7aFOzflcS8KyOQEdL/fP/fTAQHFIu5FAZmUgB795z/e65/786mAbu0Tmdy5KY97UQTuwqt1fwz06+o+/IpboFvDnZvyuBdFIKBqp3gp553++VsEFPPciyIQULVTBLRuJmfhMce9KAIBVWsf0KOr42bWAY3nf/I8UEy4F0UgoGqdXol04fjfvBIJc9yLIhBQtU6vhe//4Nbg6Nf9qpnD26Ov8Fp4THEvikBA1bo8Bnpn9G5M5+p78g95NybMcC+KQEDVOp1EevijYT7jLUAffjjs5ztbe/uTgOZzL4pAQNV4R3oCms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUTRfQb7aFOzflcS8KyGwsoFvDnZvyuBdF4BaoGgEloOnciyIQUDUCSkDTuRdFIKBqBJSApnMvikBA1QgoAU3nXhSBgKoRUAKazr0oAgFVI6AENJ17UQQCqkZACWg696IIBFSNgBLQdO5FEQioGgEloOnciyIQUDUCSkDTuRdFIKBqBJSApnMvikBA1QgoAU3nXhSBgKoRUAKazr0oAgFVI6AENJ17UQQCqkZACWg696IIBFSNgBLQdO5FEQioGgEloOnciyIQUDUC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oGqdAvrKTwd3xuHc779X/zt+v4XcuSmPe1EEAqrW9STSOJhHV8d33R/szT4I+s22cOemPO5FARkCOsudm/K4FwVkZAHd2icyuXNTHveiCNyFV9PdAt0a7tyUx70oAgFVI6AENJ17UQQCqnbKgHIWHvPciyIQULXTBjSe/8nzQDHhXhSBgKqdNqC8Eglz3IsiEFC10wb06Gr/FV4LjynuRREIqNppAzp4yLsxYYZ7UQQCqnbqgA4efjjs5ztbe/uTgOZzL4pAQNV4R3oCms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqBoBJaDp3IsiEFA1AkpA07kXRSCgagSUgKZzL4pAQNUIKAFN514UgYCqEVACms69KAIBVSOgBDSde1EEAqpGQAloOveiCARUjYAS0HTuRREIqJouoN9sC3duyuNeFJDZWEC3hjs35XEvisAtUDUCSkDTuRdFIKBqBJSApnMvikBA1QgoAU3nXhSBgKoRUAKazr0oAgFVI6AENJ17UQQCqkZACWg696IIBFSNgBLQdO5FEQioGgEloOnciyIQUDUCSkDTuRdFIKBqBJSApnMvikBA1QgoAU3nXhSBgKoRUAKazr0oAgFVI6AENJ17UQQCqkZACWg696IIBFSNgBLQdO5FEQioGgEloOnciyIQUDUCSkDTuRdFIKBqBJSApnMvikBA1QgoAU3nXhSBgKoRUAKazr0oAgFVI6AENJ17UQQCqkZACWg696IIBFSNgBLQdO5FEQioGgEloOnciyIQUDUCSkDTuRdFIKBqBJSApnMvikBA1QgoAU3nXhSBgKoRUAKazr0oAgFVI6AENJ17UQQCqkZACWg696IIBFSNgBLQdO5FEQioGgEloOnciyIQUDUCSkDTuRdFIKBqBJSApnMvKvf/kM09aVcElICmcy8q565NgdyTdkVACWg696Jy7toUyD1pVwSUgKZzLyrnrk2B3JN2RUAJaDr3onLu2hTIPWlXBJSApnMvKueuTYHck3ZFQAloOveicu7aFMg9aVcElICmcy8q565NgdyTdkVACWg696Jy7toUyD1pVwSUgKZzLyrnrk2B3JN2RUAJaDr3onLu2hTIPWlXBJSApnMvKueuTYHck3ZFQAloOveicu7aFMg9aVcElICmcy8q565NgdyTdkVACWg696Jy7toUyD1pVwSUgKZzLyrnrk2B3JN2RUAJaDr3onLu2hTIPWlXBJSApnMvKueuTYHck3ZFQAloOveicu7aFMg9aVcElICmcy8q565NgdyTdkVACWg696Jy7toUyD1pVwSUgKZzLyrnrk2B3JN2RUAJaDr3onLu2hTIPWlXBJSApnMvKueuTYHck3ZFQAloOveicu7aFMg9aVcElICmcy8q565NgdyTdkVACWg696Jy7toUyD1pVwSUgKZzLyrnrk2B3JN2RUAJaDr3onLu2hTIPWlXBJSApnMvKueuTYHck3ZFQAloOveicu7aFMg9aVcElICmcy8q565NgdyTdkVACWg696Jy7toUyD1pVwSUgKZzLyrnrk2B3JN2RUAJaDr3onLu2hTIPWlXBJSApnMvKueuTYHck3ZFQAloOveicu7aFMg9aVcElICmcy8q565NgdyTdkVACWg696Jy7toUyD1pVwSUgKZzLyrnrk2B3JN2RUAJaDr3onLu2hTIPWlXBJSApnMvKueuTYHck3ZFQAloOveicu7aFMg9aVcElICmcy8q565NgdyTdkVACWg696Jy7toUyD1pVwSUgKZzLyrnrk2B3JN2RUAJaDr3onLu2hTIPWlXBJSApnMvKueuTYHck3ZFQAloOveicu7aFMg9aVcElICmcy8q565NgdyTdkVACWg696Jy7toUyD1pVwSUgKZzLyrnrk2B3JN2RUAJaDr3onLu2hTIPWlXBJSApnMvKueuTYHck3ZFQAloOveicu7aFMg9aVcElICmcy8q565NgdyTdkVACWg696Jy7toUyD1pVwSUgKZzLyrnrk2B3JN2RUAJaDr3onLu2hTIPWlXBJSApnMvKueuTYHck3ZFQAloOveicu7aFMg9aVcElICmcy8q565NgdyTdkVACWg696Jy7toUyD1pVwSUgKZzLyrnrk2B3JN2RUAJaDr3onLu2hTIPWlXBJSApnMvKueuTYHck3ZFQAloOveicu7aFMg9aVcElICmcy8q565NgdyTdkVACWg696Jy7toUyD1pVwSUgKZzLyrnrk2B3JN2RUAJaDr3onLu2hTIPWlXBJSApnMvKueuTYHck3ZFQAloOveicu7aFMg9aVcElICmcy8q565NgdyTdkVACWg696Jy7toUyD1pV6cP6NGHe/3+O58lXBYTd27K415Uzl2bArkn7erUAX18qV95+fOMS2Phzk153IvKuWtTIPekXZ06oPv9858NHl7tn7+VcXEc3Lkpj3tROXdtCuSetKvTBvTBXn3b8/Glcz/LuDgO7tyUx72onLs2BXJP2tVpA3qzf2H873dPf2E83Lkpj3tROXdtCuSetKvTBnS//1797zvjkG4hd27K415Uzl2bArkn7eqUAT26Or7r/mBv9kHQb7aFOzflcS8q565NgdyTro2AAkBHsoBu8ROZtsPcdsAJuM6o6W6BIhkHA9riOqNGQLcGBwPa4jqjxln4rcHBgLa4zqid/nmg7079GzIcDGiL64war0TaGhwMaIvrjNppA3p0tf/Klr8WfltwMKAtrjNqp34zkYdb/25M24KDAW1xnVE7/fuBPvxw2M93uP0px8GAtrjOqPGO9FuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgW4ODAW1xnVEjoFuDgwFtcZ1RI6Bbg4MBbXGdUSOgANARAQWAjggoAHREQAGgIwIKAB0RUADoiIACQEcEFAA6IqAA0BEBBYCOCCgAdERAAaAjAgoAHRFQAOiIgAJARwQ00T98uNfvn3vns25/+2b/3Y7/cV1HVzM+C4QeX+qP/PGf/eN6f+Pov/9gwPXDhoCmGV79xrpdC/UBfbDXP3/r9J8GOpOADv+f+Mdr/Y07/QsDrh82BDTL8Kr/3R8Pr36//3XXgsrtv/xvz/3MfSGwyuNLL39e/+IfPuz331vnb4wCmoLrR3sENMv+5P+9b/bHB8G3zONL57/KO9qgMAno2lejvIBy/eiAgCZ5sDe5usdDSQ+HNyL6o0dE9/vvPfhh/9yfDwZ/v9f/7k8X/snoXtjDH1UPgI3uvTV+fXPRp/zqX8Vvxn8wGH3ohelPE+703z0+Po+GN5Rf+Wzyaff6/T/p+NgtEjUCOrwavVetWi9Ujzoc8Ku9/ivDG4lfV/N+989ujR83usD1w4WAJtlv3G//fX1T9M7e6KGs9+r/+qf1797dr//oZ4v+pL6yPhj9pfqGQPPXo2vy9Kf84/o3kwNufFOkPu6af/X4Ig6/ShxFowPv3L+rP+2DxqeFVSOgo9JNB/RfD5ca3tH5dT/mnQ4o14+NI6A5RjcXmobXunf+sfo/8lEu+z+4dfQ39ZmBh1dHB8bsn1THwPDT/Jthfb/eG/6l5q8ndZ36lBduDYa3SOLrjo+96qbw1F89vkDDQ+/O+IGGm/1zPx08/GH9cO3jS8OLMhhelm/nIw9PlGZA68GmAzpa70413mDwVX09aJxE4vqxeQQ0x+NLsw+/3xz/3/v+KJfV9XJ4Ba9vJ/TrA2P2T6pjoPlppj5lfYAs+JTNW76jWw/VB81fmvgU4/8y7v3oy8enTTmTi1OZDujw19MBHc06/rPRiI2Acv3YPAKaY+4qOblJOs7lu8cftORPxrdAX/nb488w+XX8x6lPeWH0HyZ3w+pDqf6gqb86+XT1obk/vlM2uqGxX3/a8UWPP4TPCQE9Huj3/+evftifDijXDwMCmmNyLQuTotaHxLoBHf5j6JX/Mr4b1fz1uws/ZfMAqf94dDKr+VfHHuzVH3inviN2p3Gj4vj5q9xHs1svoNV969pUQLl+GBDQHHOPgU6OhPG1+b3BbEBn/2R0D6k6c9qvHh+d/vXoAJn+lLMHSH0WYPz75qcZuTk5DN6bPkAaz93mAHFrBrTxf7QR0NFq1Umdc3/yp397dTagXD82joAmaV5R7wyvmLM3B9YN6LDF/6N6isnMr9e5hVF90HHIm59mMPUSl8ZtmdnHXWF2wln4OI9+4dZg/jFQrh8GBDRJ43mg9cNPsw9IrR/QoaO/OX60a/TrRY9xzR0gD/bO/9/GxZj6NJPnWz+oTr1OP8a13ktesAGNgA6TNvc80Auj/zAq2ugDlj8GyvVjAwholuNXIn01flrn1CnR9QIaGa6uwM1fLzzLOneAHF0991fjZ5A2/mpcvLjlcfX4oBgegvWnHX1U8xwFPBoB/XU9x2jfo6sLAnqnvgG5/Cw8148NIKBZ4rXw1YtBxs8+fucfB7//cPykvPUCOrzinv9sMHpiaPPXzef5TT7l3AFSP45Vfdqpvzq+dI2XCNZfbPg5jp/nV3104ymDcImdjv7hR/3xVaNfP1F47i589RziUUDP3+L6YUNA00xOjY7vik+/LGTNu/DxEpFXPp/+9aJXmswfIMO/ETctjv/qYObDHuyNnshy/EqT8aft/0D9LcJJmu/GVOdqNNTL/7N5EunO6APO/031+wf1i5O4fpgQ0ERf/2jq/UCnX5g8WO8x0Pplx9WrnKd/vei1zvMHyNHkJkXz0wymnyQw+qDRa533m691/qnie4JWGu8HOt7u6MNqqDvNgA6+Hv5/9Xd/PL7x+fd7k4By/dg4AvpE2+deGVbg+nESAvpEGp9F4BkqWIjrx7oI6BNpeE+xOg+xz3lVLML1Y10E9Mn01fhEBTcwsAjXjzUR0CdU9Za8nX/+HYrH9WM9BBQAOiKgANARAQWAjggoAHREQAGgIwIKAB0RUADoiIACQEcEFAA6IqAA0BEBBYCOCCgAdERAAaAjAgoAHf1/dK4g7BT1wHoAAAAASUVORK5CYII=" width="672" /></p>
-<p>Compute the average confidence interval for each numeric feature.</p>
-<pre class="r"><code># A confidence interval (CI) is a range of values that is used to estimate the true value of a population parameter, such as a mean or proportion, based on sample data. It is accompanied by a confidence level, which indicates how confident we are that the interval contains the true parameter.
-
-# Function to compute confidence intervals (CI)
-ci_func &lt;- function(data_column) {
-  ci &lt;- t.test(data_column)
-  return(ci$conf.int) # Return only the confidence interval
-}
-
-# Loop through numeric columns and compute CI
-numeric_columns &lt;- c(&quot;Duration&quot;, &quot;NetSales&quot;, &quot;Commission&quot;, &quot;Age&quot;)
-for (col in numeric_columns) {
-  cat(&quot;Confidence Interval for&quot;, col, &quot;:\n&quot;)
-  ci_result &lt;- ci_func(travel_insurance_df[[col]])
-  cat(&quot;Lower Bound:&quot;, ci_result[1], &quot;\n&quot;)
-  cat(&quot;Upper Bound:&quot;, ci_result[2], &quot;\n\n&quot;)
-}</code></pre>
-<pre><code>## Confidence Interval for Duration :
-## Lower Bound: 48.52425 
-## Upper Bound: 50.1099 
-## 
-## Confidence Interval for NetSales :
-## Lower Bound: 40.32157 
-## Upper Bound: 41.08246 
-## 
-## Confidence Interval for Commission :
-## Lower Bound: 9.655741 
-## Upper Bound: 9.964242 
-## 
-## Confidence Interval for Age :
-## Lower Bound: 39.86081 
-## Upper Bound: 40.07916</code></pre>
-<p>Compute the t-scores for each numeric feature.</p>
-<pre class="r"><code># Function to compute t-scores (z-scores)
-compute_t_scores &lt;- function(df, columns) {
-  t_scores &lt;- sapply(df[columns], function(x) {
-    (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
-  })
-  return(t_scores)
-}
-
-# Compute the t-scores for the specified numeric columns
-t_scores &lt;- compute_t_scores(travel_insurance_df, numeric_columns)
-
-# Print the t-scores
-head(t_scores)</code></pre>
-<pre><code>##      Duration  NetSales  Commission         Age
-## [1,] 1.342773 -1.426986 -0.01211811  2.92715926
-## [2,] 1.342773 -1.426986 -0.01211811  2.21374033
-## [3,] 0.154069 -1.846675  1.00432327 -0.56859352
-## [4,] 0.104949 -1.643996  0.70438975 -0.56859352
-## [5,] 0.291605 -1.238637  0.10452270  0.07348352
-## [6,] 0.163893 -3.310470  1.64307059  0.28750920</code></pre>
-<p>What do those values mean logically?</p>
-<pre class="r"><code>cat(&quot;Cosine Similarity of .454 means that the two variables are moderately similar. A value of 1 would mean they are identical, while a value of 0 would mean they are completely dissimilar.\n&quot;)</code></pre>
-<pre><code>## Cosine Similarity of .454 means that the two variables are moderately similar. A value of 1 would mean they are identical, while a value of 0 would mean they are completely dissimilar.</code></pre>
-<pre class="r"><code>cat(&quot;Confidence interval for Comission is 9.655 for lower bound and 9.964 for upper bound. This means that we are 95% confident that the true mean of the population lies within this range.\n&quot;)</code></pre>
-<pre><code>## Confidence interval for Comission is 9.655 for lower bound and 9.964 for upper bound. This means that we are 95% confident that the true mean of the population lies within this range.</code></pre>
-<pre class="r"><code>cat(&quot;T-scores measure how far from the mean a data point is in terms of standard deviations. A t-score of 0 means the data point is at the mean, while a t-score of 1 means it is one standard deviation above the mean.\n&quot;)</code></pre>
-<pre><code>## T-scores measure how far from the mean a data point is in terms of standard deviations. A t-score of 0 means the data point is at the mean, while a t-score of 1 means it is one standard deviation above the mean.</code></pre>
-<pre class="r"><code>cat(&quot;Our lower bound for Age was 39.86, and the upper bound was 40.07, which gives us the range in which we expect the true population mean for Age to fall with 95% confidence. This aligns with our data, because the first two rows have ages of 81 and 71, and their t-scores are 2.92 and 2.21, indicating that these ages are significantly higher than the mean (greater than 2 standard deviations above the mean).&quot;)</code></pre>
-<pre><code>## Our lower bound for Age was 39.86, and the upper bound was 40.07, which gives us the range in which we expect the true population mean for Age to fall with 95% confidence. This aligns with our data, because the first two rows have ages of 81 and 71, and their t-scores are 2.92 and 2.21, indicating that these ages are significantly higher than the mean (greater than 2 standard deviations above the mean).</code></pre>
+<p>Create both one-way and two-way ANOVA. Use AIC to determine which one
+is better for the dataset.</p>
+<pre class="r"><code># First, let&#39;s determine the dependent and independent variable</code></pre>
 </div>
 
 
