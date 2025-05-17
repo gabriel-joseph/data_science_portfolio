@@ -387,27 +387,42 @@ library(dplyr)</code></pre>
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-<pre class="r"><code># Load data
-travel_insurance_df &lt;- read.csv(&quot;travel_insurance.csv&quot;)
-# Read the head
-head(travel_insurance_df)</code></pre>
-<pre><code>##   Agency   Agency.Type Distribution.Channel                    Product.Name
-## 1    CBH Travel Agency              Offline              Comprehensive Plan
-## 2    CBH Travel Agency              Offline              Comprehensive Plan
-## 3    CWT Travel Agency               Online Rental Vehicle Excess Insurance
-## 4    CWT Travel Agency               Online Rental Vehicle Excess Insurance
-## 5    CWT Travel Agency               Online Rental Vehicle Excess Insurance
-## 6    JZI      Airlines               Online                      Value Plan
-##   Claim Duration   Destination NetSales Commission Gender Age
-## 1    No      186      MALAYSIA    -29.0       9.57      F  81
-## 2    No      186      MALAYSIA    -29.0       9.57      F  71
-## 3    No       65     AUSTRALIA    -49.5      29.70         32
-## 4    No       60     AUSTRALIA    -39.6      23.76         32
-## 5    No       79         ITALY    -19.8      11.88         41
-## 6    No       66 UNITED STATES   -121.0      42.35      F  44</code></pre>
 <p>Create both one-way and two-way ANOVA. Use AIC to determine which one
 is better for the dataset.</p>
-<pre class="r"><code># First, let&#39;s determine the dependent and independent variable</code></pre>
+<pre class="r"><code># Load data
+travel_insurance_df &lt;- read.csv(&quot;travel_insurance.csv&quot;)
+names(travel_insurance_df)</code></pre>
+<pre><code>##  [1] &quot;Agency&quot;              &quot;AgencyType&quot;          &quot;DistributionChannel&quot;
+##  [4] &quot;ProductName&quot;         &quot;Claim&quot;               &quot;Duration&quot;           
+##  [7] &quot;Destination&quot;         &quot;NetSales&quot;            &quot;Commission&quot;         
+## [10] &quot;Gender&quot;              &quot;Age&quot;</code></pre>
+<pre class="r"><code># Check structure to ensure correct data types
+str(travel_insurance_df)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    63326 obs. of  11 variables:
+##  $ Agency             : chr  &quot;CBH&quot; &quot;CBH&quot; &quot;CWT&quot; &quot;CWT&quot; ...
+##  $ AgencyType         : chr  &quot;Travel Agency&quot; &quot;Travel Agency&quot; &quot;Travel Agency&quot; &quot;Travel Agency&quot; ...
+##  $ DistributionChannel: chr  &quot;Offline&quot; &quot;Offline&quot; &quot;Online&quot; &quot;Online&quot; ...
+##  $ ProductName        : chr  &quot;Comprehensive Plan&quot; &quot;Comprehensive Plan&quot; &quot;Rental Vehicle Excess Insurance&quot; &quot;Rental Vehicle Excess Insurance&quot; ...
+##  $ Claim              : chr  &quot;No&quot; &quot;No&quot; &quot;No&quot; &quot;No&quot; ...
+##  $ Duration           : int  186 186 65 60 79 66 47 63 57 186 ...
+##  $ Destination        : chr  &quot;MALAYSIA&quot; &quot;MALAYSIA&quot; &quot;AUSTRALIA&quot; &quot;AUSTRALIA&quot; ...
+##  $ NetSales           : num  -29 -29 -49.5 -39.6 -19.8 ...
+##  $ Commission         : num  9.57 9.57 29.7 23.76 11.88 ...
+##  $ Gender             : chr  &quot;F&quot; &quot;F&quot; &quot;&quot; &quot;&quot; ...
+##  $ Age                : int  81 71 32 32 41 44 32 29 44 37 ...</code></pre>
+<pre class="r"><code># Convert Product.Name to factor (important for ANOVA)
+travel_insurance_df$ProductName &lt;- as.factor(travel_insurance_df$ProductName)
+
+# One-way ANOVA: Commission ~ Product.Name
+model1 &lt;- aov(Commission ~ ProductName, data = travel_insurance_df)
+
+# Summary of the model
+summary(model1)</code></pre>
+<pre><code>##                Df   Sum Sq Mean Sq F value Pr(&gt;F)    
+## ProductName    25 18640389  745616    7617 &lt;2e-16 ***
+## Residuals   63300  6196550      98                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 </div>
 
 

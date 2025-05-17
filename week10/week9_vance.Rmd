@@ -13,15 +13,26 @@ library(dplyr)
 library(GGally)
 library(lsa)
 library(tidyverse)
-
-# Load data
-travel_insurance_df <- read.csv("travel_insurance.csv")
-# Read the head
-head(travel_insurance_df)
 ```
 Create both one-way and two-way ANOVA. Use AIC to determine which one is better for the dataset.
 
 
 ```{r}
-# First, let's determine the dependent and independent variable
+# Load data
+travel_insurance_df <- read.csv("travel_insurance.csv")
+names(travel_insurance_df)
+
+# columns Agency,AgencyType,DistributionChannel,ProductName,Claim,Duration,Destination,NetSales,Commission,Gender,Age
 ```
+
+
+
+
+```{r}
+# model1 <- aov(Commission ~ ProductName, data = travel_insurance_df)
+model2 <- aov(Commission ~ ProductName * Destination, data = travel_insurance_df)
+# model2_main <- aov(Commission ~ ProductName + Destination, data = travel_insurance_df)
+
+# AIC(model1, model2_main, model2)
+```
+
