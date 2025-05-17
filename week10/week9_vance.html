@@ -396,33 +396,54 @@ names(travel_insurance_df)</code></pre>
 ##  [4] &quot;ProductName&quot;         &quot;Claim&quot;               &quot;Duration&quot;           
 ##  [7] &quot;Destination&quot;         &quot;NetSales&quot;            &quot;Commission&quot;         
 ## [10] &quot;Gender&quot;              &quot;Age&quot;</code></pre>
-<pre class="r"><code># Check structure to ensure correct data types
-str(travel_insurance_df)</code></pre>
-<pre><code>## &#39;data.frame&#39;:    63326 obs. of  11 variables:
-##  $ Agency             : chr  &quot;CBH&quot; &quot;CBH&quot; &quot;CWT&quot; &quot;CWT&quot; ...
-##  $ AgencyType         : chr  &quot;Travel Agency&quot; &quot;Travel Agency&quot; &quot;Travel Agency&quot; &quot;Travel Agency&quot; ...
-##  $ DistributionChannel: chr  &quot;Offline&quot; &quot;Offline&quot; &quot;Online&quot; &quot;Online&quot; ...
-##  $ ProductName        : chr  &quot;Comprehensive Plan&quot; &quot;Comprehensive Plan&quot; &quot;Rental Vehicle Excess Insurance&quot; &quot;Rental Vehicle Excess Insurance&quot; ...
-##  $ Claim              : chr  &quot;No&quot; &quot;No&quot; &quot;No&quot; &quot;No&quot; ...
-##  $ Duration           : int  186 186 65 60 79 66 47 63 57 186 ...
-##  $ Destination        : chr  &quot;MALAYSIA&quot; &quot;MALAYSIA&quot; &quot;AUSTRALIA&quot; &quot;AUSTRALIA&quot; ...
-##  $ NetSales           : num  -29 -29 -49.5 -39.6 -19.8 ...
-##  $ Commission         : num  9.57 9.57 29.7 23.76 11.88 ...
-##  $ Gender             : chr  &quot;F&quot; &quot;F&quot; &quot;&quot; &quot;&quot; ...
-##  $ Age                : int  81 71 32 32 41 44 32 29 44 37 ...</code></pre>
-<pre class="r"><code># Convert Product.Name to factor (important for ANOVA)
-travel_insurance_df$ProductName &lt;- as.factor(travel_insurance_df$ProductName)
+<pre class="r"><code># columns Agency,AgencyType,DistributionChannel,ProductName,Claim,Duration,Destination,NetSales,Commission,Gender,Age
 
-# One-way ANOVA: Commission ~ Product.Name
-model1 &lt;- aov(Commission ~ ProductName, data = travel_insurance_df)
+# Assume travel_insurance_df is your full dataset
 
-# Summary of the model
-summary(model1)</code></pre>
+# Set a seed for reproducibility (optional)
+set.seed(123)
+
+# I have to limit this to 30% of the data because it won&#39;t work
+# ! Note, when I switched to agency and product name, i was able to improve rendering times
+subset_df &lt;- travel_insurance_df[sample(nrow(travel_insurance_df), size = 0.95 * nrow(travel_insurance_df)), ]</code></pre>
+<pre class="r"><code>one_way_test &lt;- aov(Commission ~ ProductName, data = subset_df)
+two_way_test_with_ineraction &lt;- aov(Commission ~ ProductName * AgencyType, data = subset_df)
+two_way_test_without_ineraction &lt;- aov(Commission ~ ProductName + AgencyType, data = subset_df)
+
+summary(one_way_test)</code></pre>
 <pre><code>##                Df   Sum Sq Mean Sq F value Pr(&gt;F)    
-## ProductName    25 18640389  745616    7617 &lt;2e-16 ***
-## Residuals   63300  6196550      98                   
+## ProductName    25 17699871  707995    7197 &lt;2e-16 ***
+## Residuals   60133  5915581      98                   
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>summary(two_way_test_with_ineraction)</code></pre>
+<pre><code>##                           Df   Sum Sq Mean Sq  F value   Pr(&gt;F)    
+## ProductName               25 17699871  707995 7199.438  &lt; 2e-16 ***
+## AgencyType                 1     1771    1771   18.004 2.21e-05 ***
+## ProductName:AgencyType     1      511     511    5.192   0.0227 *  
+## Residuals              60131  5913300      98                      
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>summary(two_way_test_without_ineraction)</code></pre>
+<pre><code>##                Df   Sum Sq Mean Sq F value   Pr(&gt;F)    
+## ProductName    25 17699871  707995    7199  &lt; 2e-16 ***
+## AgencyType      1     1771    1771      18 2.21e-05 ***
+## Residuals   60132  5913811      98                     
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>AIC(one_way_test, two_way_test_with_ineraction, two_way_test_without_ineraction)</code></pre>
+<pre><code>##                                 df      AIC
+## one_way_test                    27 446808.6
+## two_way_test_with_ineraction    29 446789.4
+## two_way_test_without_ineraction 28 446792.6</code></pre>
+<pre class="r"><code>##                                 df      AIC
+## one_way_test                    27 446808.6
+## two_way_test_with_ineraction    29 446789.4
+## two_way_test_without_ineraction 28 446792.6
+
+# AIC comparison
+cat(&quot;While two_way_test_with_ineraction had a lower AIC, the scores overall were fairly even. The more complex model (two_way_test_with_ineraction) was only slightly better than the same two way test without interaction&quot;)</code></pre>
+<pre><code>## While two_way_test_with_ineraction had a lower AIC, the scores overall were fairly even. The more complex model (two_way_test_with_ineraction) was only slightly better than the same two way test without interaction</code></pre>
 </div>
 
 
