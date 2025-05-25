@@ -398,13 +398,11 @@ names(travel_insurance_df)</code></pre>
 ## [10] &quot;Gender&quot;              &quot;Age&quot;</code></pre>
 <pre class="r"><code># columns Agency,AgencyType,DistributionChannel,ProductName,Claim,Duration,Destination,NetSales,Commission,Gender,Age
 
-# Assume travel_insurance_df is your full dataset
-
-# Set a seed for reproducibility (optional)
+# Set a seed for reproducibility
 set.seed(123)
 
 # I have to limit this to 30% of the data because it won&#39;t work
-# ! Note, when I switched to agency and product name, i was able to improve rendering times
+# ! Note, when I switched to agency and product name, I was able to improve rendering times
 subset_df &lt;- travel_insurance_df[sample(nrow(travel_insurance_df), size = 0.95 * nrow(travel_insurance_df)), ]</code></pre>
 <pre class="r"><code>one_way_test &lt;- aov(Commission ~ ProductName, data = subset_df)
 two_way_test_with_ineraction &lt;- aov(Commission ~ ProductName * AgencyType, data = subset_df)
@@ -442,8 +440,8 @@ summary(one_way_test)</code></pre>
 ## two_way_test_without_ineraction 28 446792.6
 
 # AIC comparison
-cat(&quot;While two_way_test_with_ineraction had a lower AIC, the scores overall were fairly even. The more complex model (two_way_test_with_ineraction) was only slightly better than the same two way test without interaction&quot;)</code></pre>
-<pre><code>## While two_way_test_with_ineraction had a lower AIC, the scores overall were fairly even. The more complex model (two_way_test_with_ineraction) was only slightly better than the same two way test without interaction</code></pre>
+cat(&quot;While two_way_test_with_ineraction had a lower AIC, the scores overall were fairly even. The more complex model (two_way_test_with_ineraction) was only slightly better than the same two way test without interaction. That being said&quot;)</code></pre>
+<pre><code>## While two_way_test_with_ineraction had a lower AIC, the scores overall were fairly even. The more complex model (two_way_test_with_ineraction) was only slightly better than the same two way test without interaction. That being said</code></pre>
 </div>
 
 

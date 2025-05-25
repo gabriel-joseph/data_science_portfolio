@@ -25,13 +25,11 @@ names(travel_insurance_df)
 
 # columns Agency,AgencyType,DistributionChannel,ProductName,Claim,Duration,Destination,NetSales,Commission,Gender,Age
 
-# Assume travel_insurance_df is your full dataset
-
-# Set a seed for reproducibility (optional)
+# Set a seed for reproducibility
 set.seed(123)
 
 # I have to limit this to 30% of the data because it won't work
-# ! Note, when I switched to agency and product name, i was able to improve rendering times
+# ! Note, when I switched to agency and product name, I was able to improve rendering times
 subset_df <- travel_insurance_df[sample(nrow(travel_insurance_df), size = 0.95 * nrow(travel_insurance_df)), ]
 ```
 
@@ -58,6 +56,6 @@ AIC(one_way_test, two_way_test_with_ineraction, two_way_test_without_ineraction)
 ## two_way_test_without_ineraction 28 446792.6
 
 # AIC comparison
-cat("While two_way_test_with_ineraction had a lower AIC, the scores overall were fairly even. The more complex model (two_way_test_with_ineraction) was only slightly better than the same two way test without interaction")
+cat("While two_way_test_with_ineraction had a lower AIC, the scores overall were fairly even. The more complex model (two_way_test_with_ineraction) was only slightly better than the same two way test without interaction. That being said, two_way_test_with_ineraction was the most accurate.")
 ```
 
