@@ -1,0 +1,192 @@
+---
+title: "Week 11: Linear Regression"
+author: "Gabriel Vance"
+date: "May 25, 2025"
+output: html_document
+---
+
+
+# Imports
+```{r}
+# Load necessary libraries
+library(dplyr)
+library(GGally)
+library(lsa)
+library(tidyverse)
+```
+
+
+
+# Create a linear regression model where “area” infers price (i.e., area is used to predict price).
+
+```{r}
+# Load housing data
+housing_df <- read.csv("housing.csv")
+
+# Convert price to $100k USD
+housing_df$price_usd_100k <- housing_df$price / 100000
+# Fit linear regression model
+lm_model <- lm(price_usd_100k ~ area, data = housing_df)
+# Plot: Area vs Price with regression line
+plot(
+  housing_df$area, housing_df$price_usd_100k,
+  main = "Housing Price vs Area (Linear Regression)",
+  xlab = "Area (sq ft)", ylab = "Price (in $100k USD)",
+  pch = 19, col = "blue"
+)
+
+abline(lm_model, col = "red", lwd = 2)
+```
+
+# Get a summary of your first model and explain your results (e.g., R2, adj R2, RMSE, MSE).
+
+
+```{r}
+# Display model summary
+summary(lm_model)
+# Get values
+r_squared <- summary(lm_model)$r.squared
+adj_r_squared <- summary(lm_model)$adj.r.squared
+rmse <- sqrt(mean(lm_model$residuals^2))
+mse <- mean(lm_model$residuals^2)
+# Print results
+cat("R-squared:", r_squared, "\n")
+cat("Adjusted R-squared:", adj_r_squared, "\n")
+cat("RMSE:", rmse, "\n")
+cat("MSE:", mse, "\n")
+
+
+cat(
+  "### Model Summary\n",
+  "R-squared - 28.73% of the variation in the outcome is explained by the model.\n",
+  "Adjusted R-squared - 28.59% close to R-squared, indicating added predictors may not be contributing much.\n",
+  "RMSE — 15.77 The models predictions are off by about 15.78 units on average.\n",
+  "MSE — 248.88 The average squared prediction error; useful for comparing models (lower is better).\n",
+  "\nOverall, the model has limited explanatory power and large prediction error.\n"
+)
+```
+
+# Get the residuals of your model (you can use ‘resid’ or ‘residuals’ functions) and plot them. What does the plot tell you about your predictions?
+```{r}
+# Get residuals
+residuals_lm <- resid(lm_model)
+# Plot residuals
+plot(
+  housing_df$area, residuals_lm,
+  main = "Residuals of Linear Regression Model",
+  xlab = "Area (sq ft)", ylab = "Residuals",
+  pch = 19, col = "blue"
+)
+
+cat("The residuals show more variance as area increases. This suggests that the model's predictions are less accurate for larger areas, indicating potential non-linearity or the need for additional predictors.")
+```
+
+# Use a qq plot to observe your residuals. Do your residuals meet the normality assumption?
+```{r}
+# Q-Q plot of residuals
+qqnorm(residuals_lm)
+qqline(residuals_lm, col = "red", lwd = 2)
+cat("Both the end and beginnig of the Q-Q plot show that the residuals do not meet the normality assumption. The residuals deviate from the diagonal line.")
+```
+
+
+# Create a linear regression model that uses multiple predictor variables to predict Sale Price (feel free to derive new predictors from existing ones). Explain why you think each of these variables may add explanatory value to the model.
+```{r}
+# Derive new predictors
+housing_df <- housing_df %>%
+  mutate(
+    total_rooms = bedrooms + bathrooms,
+    space_per_story = ifelse(stories == 0, NA, area / stories) # Avoid division by zero
+  )
+
+# Fit multiple linear regression model, this time only using the total rooms and space per story
+multi_lm_model <- lm(price_usd_100k ~ total_rooms + space_per_story, data = housing_df)
+
+# Using this for later
+all_variables_lm_model <- lm(price_usd_100k ~ total_rooms + space_per_story+ area+bedrooms+bathrooms+stories, data = housing_df)
+
+# Explain variables
+cat(
+  "New Predictors:\n",
+  "- Total Rooms: Combines bedrooms and bathrooms for overall living capacity.\n",
+  "- Space per Story: Multi story homes might be weighted differently given the average size.\n"
+)
+```
+
+Get a summary of this GLM and explain your results.
+```{r}
+# Display model summary
+summary(multi_lm_model)
+# Get values
+r_squared <- summary(multi_lm_model)$r.squared
+adj_r_squared <- summary(multi_lm_model)$adj.r.squared
+rmse <- sqrt(mean(multi_lm_model$residuals^2))
+mse <- mean(multi_lm_model$residuals^2)
+# Print results
+cat("R-squared:", r_squared, "\n") #  0.3088521
+cat("Adjusted R-squared:", adj_r_squared, "\n") # 0.3063018
+cat("RMSE:", rmse, "\n") # 15.53568
+cat("MSE:", mse, "\n") #  241.3575
+
+
+cat("R-squared -", round(r_squared, 3), ": About", round(r_squared * 100, 1), "% of the variation in sale price is explained by the model.\n")
+cat("Adjusted R-squared -", round(adj_r_squared, 3), ": Adjusts R-squared for the number of predictors; still shows a moderate fit.\n")
+cat("RMSE -", round(rmse, 2), ": On average, predictions are off by about $", round(rmse * 100000, 0), ".\n")
+cat("MSE -", round(mse, 2), ": This is the average squared error; lower values indicate better model performance.\n")
+
+
+# Do the same, but for all variables. Note! This is only to add a experiment with a third model, even though the assignment only calls for 2. For the major of tasks, this will model will be omitted, but we'll use it for the final ANOVA.
+all_r_squared <- summary(all_variables_lm_model)$r.squared
+all_adj_r_squared <- summary(all_variables_lm_model)$adj.r.squared
+all_rmse <- sqrt(mean(all_variables_lm_model$residuals^2))
+all_mse <- mean(all_variables_lm_model$residuals^2)
+
+```
+
+Get the residuals of your second model (you can use ‘resid’ or ‘residuals’ functions) and plot them. What does the plot tell you about your predictions?
+```{r}
+# Get residuals
+residuals_lm_multi <- resid(multi_lm_model)
+# Plot residuals
+plot(
+  housing_df$area, residuals_lm_multi,
+  main = "Residuals of Linear Regression Model",
+  xlab = "Area (sq ft)", ylab = "Residuals",
+  pch = 19, col = "blue"
+)
+
+cat("The residuals show more variance as area increases. This suggests that the model's predictions are less accurate for larger areas, indicating potential non-linearity or the need for additional predictors.")
+```
+Use a qq plot to observe your residuals. Do your residuals meet the normality assumption?
+```{r}
+# Q-Q plot of residuals
+qqnorm(residuals_lm_multi)
+qqline(residuals_lm_multi, col = "red", lwd = 2)
+cat("Both the end and beginnig of the Q-Q plot show that the residuals do not meet the normality assumption. The residuals deviate from the diagonal line. Similar to the first model, the residuals are not normally distributed, indicating that the assumptions of linear regression may not be fully met.")
+```
+
+```{r}
+# Since both failed, I'm going to try using all variables
+residuals_all_lm_multi <- resid(all_variables_lm_model)
+qqnorm(residuals_all_lm_multi)
+qqline(residuals_all_lm_multi, col = "red", lwd = 2)
+```
+
+
+Compare the results (e.g., R2, adj R2, RMSE, MSE) between your first and second model. Does your new model show an improvement over the first? To confirm a ‘significant’ improvement between the second and first model, use ANOVA to compare them. What are the results?
+```{r}
+# Compare models using ANOVA, but using 3 models. One contains only area, one contains only new features, the last contains both old and new
+anova(lm_model, multi_lm_model, all_variables_lm_model)
+
+
+##     bathrooms + stories
+##   Res.Df    RSS Df Sum of Sq      F    Pr(>F)    
+## 1    543 135643                                  
+## 2    542 131540  1      4103 25.022 7.682e-07 ***
+## 3    539  88385  3     43155 87.723 < 2.2e-16 ***
+
+
+cat("The ANOVA comparison shows that each step of adding variables significantly improves the model.\n")
+cat("Model 2, which adds one variable to the base model (bathrooms + stories), significantly reduces the residual sum of squares (RSS) with an F-statistic of 25.02 and a p-value of 7.68e-07.\n")
+cat("Model 3 adds three more variables, leading to a much larger drop in RSS and an F-statistic of 87.72 with a p-value less than 2.2e-16.\n")
+cat("This indicates that each additional set of predictors provides substantial explanatory power, and Model 3 is statistically the best-fitting model of the three.\n")
