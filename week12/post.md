@@ -1,10 +1,12 @@
 Distinguish unintentional and intentional bias using examples.
 Describe the sources of bias.
 
-Bias is a common problem in data science and analysis. Simply put, bias means a finding or conclusion is statistically wronged due to flawed judgement or decision-making by the scientist. Despite widespread knowledge, bias remains a persistent problem in data science, but where does it come from? What are its origins and how do we fight against it?
+Bias is a common problem in data science and analysis. It refers to systematic error that leads to inaccurate or misleading conclusions, often due to flawed judgment or decision-making. Despite widespread awareness, bias remains a persistent challenge—but where does it come from, and how can we address it?
 
-First, we must compre unintentional vs intentional bias. The difference lies in the motive. Imagine two data scientists work for a politicial campaign and are tasked withed analyzing voter data. Analyst A believes in the political candidate on an ideological level, and they've convinced themselves that everyone will love the candidate. Analyst B is more down-to-earth and doesn't care about politics, but does their job with the bare minimum. When analyzing voter polls, Analyst A notices that the politician polls poorly with some demographics, but they shrug these polls off as outliers, flukes, noisey data, etc.
+First, we must compare unintentional and intentional bias. The key difference lies in motive.
 
-On the other hand, Analyst B doesn't care about politics and views the job as a paycheck. However, B is a bit lazy. When Analyst B does feature importance, they often run a shallow test and only analyze simple patterns rather than considering deeper, complex relationships. They opt for dropping incomplete or missing data rather than imputing missing values.
+Imagine two data scientists working for a political campaign. Analyst A is ideologically aligned with the candidate and has convinced themselves that everyone will love them. When reviewing poll results, Analyst A notices poor performance with certain demographics but dismisses these findings as outliers or noisy data—this is intentional bias, influenced by personal belief.
 
-In this example, both analysts are biased in their work. Analyst A is ideologically driven, which influences their work. Because they are knowingly skewing the data, their bias is intentional. By comparison, Analyst B is simply "doing their job" and is not intending to skew the data. However their poor choice of actions (such as failing to clean data, scale data, test data) could also lower accuracy
+Analyst B, on the other hand, is indifferent and unmotivated. They perform shallow analyses, overlook complex patterns, and choose to drop missing data rather than address it. This leads to unintentional bias, caused by neglect rather than malice.
+
+Both analysts introduce bias, but the difference is intent. Recognizing both types is essential to producing trustworthy and ethical data science.
