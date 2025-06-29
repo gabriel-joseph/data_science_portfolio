@@ -1,0 +1,12 @@
+index,MeasureId,MeasureName,MeasureType,StratificationLevel,StateFips,StateName,CountyFips,CountyName,ReportYear,Value,Unit,UnitName,DataOrigin,MonitorOnly
+0,83,Number of days with maximum 8-hour average ozone concentration over the National Ambient Air Quality Standard,Counts,State x County,1,Alabama,1051,Elmore,1999,5.0,No Units,No Units,Monitor Only,1
+1,83,Number of days with maximum 8-hour average ozone concentration over the National Ambient Air Quality Standard,Counts,State x County,1,Alabama,1073,Jefferson,1999,39.0,No Units,No Units,Monitor Only,1
+2,83,Number of days with maximum 8-hour average ozone concentration over the National Ambient Air Quality Standard,Counts,State x County,1,Alabama,1079,Lawrence,1999,28.0,No Units,No Units,Monitor Only,1
+48,85,Percent of days with PM2.5 levels over the National Ambient Air Quality Standard (NAAQS),Percent,State x County,40,Oklahoma,40143,Tulsa,1999,0.0,%,Percent,Monitor Only,1
+586,84,Number of person-days with maximum 8-hour average ozone concentration over the National Ambient Air Quality Standard,Counts,State x County,1,Alabama,1027,Clay,1999,467742.0,No Units,No Units,Monitor Only,1
+39217,87,Annual average ambient concentrations of PM2.5 in micrograms per cubic meter (based on seasonal averages and daily measurement),Average,State x County,54,West Virginia,54081,Raleigh,2003,12.3490804597701,µg/m³,Micograms per cubic meter,Monitor Only,1
+8,83,Number of days with maximum 8-hour average ozone concentration over the National Ambient Air Quality Standard,Counts,State x County,2,Alaska,2068,Denali,1999,0.0,No Units,No Units,Monitor Only,1
+9,83,Number of days with maximum 8-hour average ozone concentration over the National Ambient Air Quality Standard,Counts,State x County,4,Arizona,4003,Cochise,1999,1.0,No Units,No Units,Monitor Only,1
+73,85,Percent of days with PM2.5 levels over the National Ambient Air Quality Standard (NAAQS),Percent,State x County,39,Ohio,39151,Stark,2013,0.0,%,Percent,Monitor Only,1
+318,85,Percent of days with PM2.5 levels over the National Ambient Air Quality Standard (NAAQS),Percent,State x County,35,New Mexico,35025,Lea,2002,0.0,%,Percent,Monitor Only,1
+40691,292,Number of days with maximum 8-hour average ozone concentration over the National Ambient Air Quality Standard (monitor and modeled data),Counts,State x County,1,Alabama,1001,Autauga,2005,0.0,No Units,No Units,Monitor & Modeled,0
