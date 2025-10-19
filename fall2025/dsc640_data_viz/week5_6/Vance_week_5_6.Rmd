@@ -32,7 +32,16 @@ MotherboardVICENewsKiaHyundaiTheftDataExcel <- read_excel("MotherboardVICENewsKi
 ```
 
 ```{r}
+# This is messy, we can rename these columns 
 names(MotherboardVICENewsKiaHyundaiTheftDataExcel)
+
+
+names(raw) <- c(
+  "Month",
+  "Location", "All", "Denver_Percent",
+  "El_Paso_Kia", "El_Paso_All", "El_Paso_Percent",
+  "Portland_Kia", "Portland_All", "Portland_Percent"
+)
 ```
 
 
