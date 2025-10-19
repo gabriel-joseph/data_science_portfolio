@@ -1,0 +1,19 @@
+---
+title: "Vance_week_5_6_assignment"
+output: html_document
+date: "2025-10-19"
+---
+
+```{r}
+
+```
+
+
+```{r}
+# Read in data
+carTheftsMap <- read.csv("carTheftsMap.csv")
+kiaHyundaiThefts <- read.csv("kiaHyundaiThefts.csv")
+KiaHyundaiMilwaukeeData <- read.csv("KiaHyundaiMilwaukeeData.csv")
+MotherboardVICENewsKiaHyundaiTheftData <- read.csv("MotherboardVICENewsKiaHyundaiTheftData.csv")
+
+```
