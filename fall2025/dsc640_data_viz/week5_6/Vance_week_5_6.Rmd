@@ -7,45 +7,32 @@ date: "2025-10-19"
 ```{r}
 # IMPORTS
 
+
 library(dplyr)
 library(ggplot2)
 library(readxl)
 library(tidyverse)
+library(treemapify)
+
 ```
 
 ```{r}
-# print("
-# Call to Action: The current administration has recognized the alarming rates of car thefts. They realize thefts vary by location and time, but the public was be made aware of the crime rates. Our call to action is to inform the general public of crime trends so they can take precautions if they live in a an area witnessing an inrease in crime.
-# Audience: General Public
+ print("
+ Call to Action: The current administration has recognized the alarming rates of car thefts. They realize thefts vary by location and time, but the public was be made aware of the crime rates. Our call to action is to inform the general public of crime trends so they can take precautions if they live in a an area witnessing an inrease in crime.
+ 
+ Audience: General Public
 
-# ")
+ ")
 
-# Read in data
-#carTheftsMap <- read.csv("carTheftsMap.csv")
+
+```
+
+
+
+```{r}
+
 kiaHyundaiThefts <- read.csv("kiaHyundaiThefts.csv")
-#KiaHyundaiMilwaukeeData <- read.csv("KiaHyundaiMilwaukeeData.csv")
-#MotherboardVICENewsKiaHyundaiTheftData <- read.csv("MotherboardVICENewsKiaHyundaiTheftData.csv")
 
-MotherboardVICENewsKiaHyundaiTheftDataExcel <- read_excel("MotherboardVICENewsKiaHyundaiTheftData.xlsx")
-
-
-```
-
-```{r}
-# This is messy, we can rename these columns 
-names(MotherboardVICENewsKiaHyundaiTheftDataExcel)
-
-
-names(raw) <- c(
-  "Month",
-  "Location", "All", "Denver_Percent",
-  "El_Paso_Kia", "El_Paso_All", "El_Paso_Percent",
-  "Portland_Kia", "Portland_All", "Portland_Percent"
-)
-```
-
-
-```{r}
 # print the shape
 kiaHyundaiThefts %>%
   group_by(month) %>%
@@ -58,4 +45,134 @@ kiaHyundaiThefts %>%
        x = "Month", y = "Average % Kia/Hyundai Thefts") +
   theme_minimal()
 
+```
+
+```{r}
+df <- read.csv("tidy_data.csv")
+# --- Clean and prepare data ---
+
+df <- df %>%
+  # Convert Date to Date type and extract Year and Month
+  mutate(
+    Date = as.Date(Date),
+    Year = year(Date),
+    Month = month(Date, label = TRUE, abbr = TRUE)
+  )
+
+# --- Summarize total "All" by Year-Month ---
+df_summary <- df %>%
+  # 2019 is incomplete, so we'll exclude it
+  filter(Year != 2019) %>%
+  # Aggregate totals
+  group_by(Year, Month) %>%
+  summarize(TotalAll = sum(All, na.rm = TRUE), .groups = "drop")
+
+# --- Plot area chart ---
+ggplot(df_summary, aes(x = Month, y = TotalAll, fill = factor(Year), group = Year)) +
+  geom_area(alpha = 0.7, position = "identity") + # Stacked area
+  geom_line(aes(color = factor(Year)), linewidth = 1) + 
+  # Customize labels and theme
+  labs(
+    title = "Total 'All' Counts Over Time by Year",
+    x = "Month",
+    y = "Total All",
+    fill = "Year",
+    color = "Year"
+  ) +
+  theme_minimal() +
+  # Customize theme
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+```
+
+
+```{r}
+# --- Clean and prepare data ---
+df <- df %>%
+  mutate(
+    Date = as.Date(Date),
+    Year = lubridate::year(Date)
+  )
+
+# --- Aggregate totals by Location (optional if multiple dates) ---
+df_summary <- df %>%
+  group_by(Location) %>%
+  summarize(
+    TotalAll = sum(All, na.rm = TRUE),
+    AvgPercent = mean(Percent, na.rm = TRUE)
+  )
+
+# --- Treemap ---
+ggplot(df_summary, aes(
+  area = TotalAll,
+  fill = AvgPercent,
+  label = Location
+)) +
+  geom_treemap(color = "white") +
+  geom_treemap_text(
+    colour = "black",
+    place = "centre",
+    grow = TRUE,
+    reflow = TRUE
+  ) +
+  scale_fill_viridis_c(option = "plasma") +
+  labs(
+    title = "Vehicle Counts by Location (Treemap)",
+    fill = "Avg Percent"
+  ) +
+  theme_minimal()
+```
+
+
+```{r}
+df <- read.csv("carTheftsMap.csv", stringsAsFactors = FALSE)
+
+# Convert "-" to NA and columns to numeric
+year_cols <- c("countCarThefts2019", "countCarThefts2020", "countCarThefts2021", "countCarThefts2022")
+df[year_cols] <- lapply(df[year_cols], function(x) as.numeric(gsub("-", NA, x)))
+
+# Gather into long format
+df_long <- df %>%
+  select(geo_name, all_of(year_cols)) %>%
+  pivot_longer(-geo_name, names_to = "Year", values_to = "Thefts") %>%
+  mutate(Year = gsub("countCarThefts", "", Year))
+
+# Example: Top 5 cities by 2022 thefts
+top_cities <- df %>%
+  arrange(desc(countCarThefts2022)) %>%
+  slice_head(n = 5) %>%
+  pull(geo_name)
+
+ggplot(df_long %>% filter(geo_name %in% top_cities), aes(x = Year, y = Thefts, color = geo_name, group = geo_name)) +
+  geom_line(size = 1.2) +
+  geom_point() +
+  labs(title = "Car Thefts Trend (Top 5 Cities)", x = "Year", y = "Number of Thefts", color = "City") +
+  theme_minimal()
+
+```
+
+```{r}
+
+# Read the data
+df <- read_csv("KiaHyundaiMilwaukeeData.csv")
+
+# Create a date column for proper ordering
+df <- df %>%
+  mutate(date = as.Date(paste(year, month, "01", sep = "-"), format = "%Y-%b-%d"))
+
+# Reshape to long format for stacking
+df_long <- df %>%
+  select(date, countKiaHyundaiThefts, countOtherThefts) %>%
+  pivot_longer(cols = c(countKiaHyundaiThefts, countOtherThefts),
+               names_to = "Type", values_to = "Count")
+
+# Plot stacked area chart
+ggplot(df_long, aes(x = date, y = Count, fill = Type)) +
+  geom_area(alpha = 0.7) +
+  labs(title = "Stacked Area Chart of Vehicle Thefts in Milwaukee",
+       x = "Date", y = "Number of Thefts", fill = "Type") +
+  theme_minimal()
 ```
