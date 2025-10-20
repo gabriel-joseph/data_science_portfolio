@@ -16,16 +16,13 @@ library(treemapify)
 
 ```
 
-```{r}
- print("
- Call to Action: The current administration has recognized the alarming rates of car thefts. They realize thefts vary by location and time, but the public was be made aware of the crime rates. Our call to action is to inform the general public of crime trends so they can take precautions if they live in a an area witnessing an inrease in crime.
- 
- Audience: General Public
+### Call to Action
 
- ")
+The current administration has recognized the alarming rates of car thefts. They realize thefts vary by location and time, but the public must be made aware of the crime rates. Our call to action is to inform the general public of crime trends so they can take precautions if they live in an area witnessing an increase in crime.
 
+### Audience
 
-```
+General Public
 
 
 
@@ -178,13 +175,10 @@ ggplot(df_long, aes(x = date, y = Count, fill = Type)) +
 ```
 
 
-```{r}
-print("Good evening. My name Is Jameson Rodgers, data analyst for the FBI. Last month we were tasked with reporting the overall crime trends in the USA as it pertains to car theft. Utilizing multiple data sources, we saw the same trend: car thefts has increased from 2019 to 2022. As you can tell from this chart, 2019 is denoted with the lowest cumulative car thefts, and each year surpases the previous. 
-")
+Good evening. My name is Jameson Rodgers, data analyst for the FBI. Last month we were tasked with reporting the overall crime trends in the USA as it pertains to car theft. Utilizing multiple data sources, we saw the same trend: car thefts have increased from 2019 to 2022. As you can tell from this chart, 2019 is denoted with the lowest cumulative car thefts, and each year surpasses the previous.
 
+We examined the top cities and saw similar trends. Despite being in different regions, Chicago, Denver, Houston, Los Angeles, and New York all saw increases in car thefts from 2019 to 2022.
 
-print("We examined the top cities and saw similar trends. Despite being in different regions, Chicago, Denver, Houston, Los Angeles, and New York all saw increases in car thefts from 2019 to 2022. ")
+Additionally, we examined Hyundai and Kia thefts across the country. Most areas only saw these cars make up a small percentage of total car thefts. However, in Milwaukee, these two brands made up almost half of all car thefts.
 
-
-print("Additionally, we examined Hyundai and Kia thefts across the country. Most areas only saw these cars make up a small percentage of total car thefts. However, in Milwaukee, these two brands made up almost half of all car thefts.")
-```
+In conclusion, we want to provide an alert to the public: car thefts are up. Your car is at at risk of being stolen. We are actively working with law enforcement to deter car thefts and reverse this trend. To the citizens of Milwaukee, we recognize an uptick in thefts for Kias and Hyundais. This is due to a manufacturing error that makes these cars easier to steal. Please consult your local body shop to fix this flaw. The attorney general will be seeking charges against Hyundai and Kia for negligence in this matter. Thank you for your time.
