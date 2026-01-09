@@ -8,6 +8,7 @@ ssh -L 9870:localhost:9870 \
     gvance67@34.61.213.179
 
 
+ssh gvance67@34.61.213.179
 
 URLs
 
