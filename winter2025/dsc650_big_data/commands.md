@@ -45,3 +45,28 @@ cd to dir then
 
 docker compose up -d
 
+
+
+
+EXPLAIN SELECT
+    site,
+    COUNT(*) AS n_rows
+FROM soil_nutrient_pools
+GROUP BY site
+ORDER BY site;
+
+
+
+EXPLAIN SELECT
+    SampleID,
+    site,
+    year,
+    type,
+    faith_pd
+FROM soil_nutrient_pools
+LIMIT 5;
+
+
+
+EXPLAIN SELECT COUNT(*)
+FROM soil_nutrient_pools;
