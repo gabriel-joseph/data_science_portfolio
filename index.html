@@ -1,565 +1,606 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Gabriel Vance - Data Science Portfolio">
-  <title>Gabriel Vance | Data Science Portfolio</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Manrope:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #f8f3e7;
-      --surface: #fffdf8;
-      --ink: #16243a;
-      --muted: #4c5b74;
-      --accent: #e65f2b;
-      --accent-2: #1b9a8f;
-      --line: #d7cfbf;
-      --shadow: 0 14px 38px rgba(22, 36, 58, 0.12);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      color: var(--ink);
-      font-family: "Manrope", sans-serif;
-      background:
-        radial-gradient(circle at 9% 15%, rgba(230, 95, 43, 0.14), transparent 36%),
-        radial-gradient(circle at 90% 14%, rgba(27, 154, 143, 0.16), transparent 34%),
-        linear-gradient(180deg, #f9f5ec 0%, #f1ebdd 100%);
-      line-height: 1.55;
-    }
-
-    body::before,
-    body::after {
-      content: "";
-      position: fixed;
-      width: 280px;
-      height: 280px;
-      z-index: -1;
-      border-radius: 34% 66% 45% 55% / 48% 30% 70% 52%;
-      opacity: 0.22;
-      filter: blur(1px);
-      animation: drift 12s ease-in-out infinite alternate;
-    }
-
-    body::before {
-      top: -90px;
-      right: -80px;
-      background: #f4b184;
-    }
-
-    body::after {
-      bottom: -70px;
-      left: -95px;
-      background: #94d7cf;
-      animation-delay: 1.2s;
-    }
-
-    .wrap {
-      width: min(1100px, 92vw);
-      margin: 0 auto;
-      padding: 2.2rem 0 3.2rem;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.2rem 0 1.1rem;
-      border-bottom: 1px solid var(--line);
-      position: sticky;
-      top: 0;
-      backdrop-filter: blur(7px);
-      background: rgba(248, 243, 231, 0.8);
-      z-index: 10;
-    }
-
-    .mark {
-      font-family: "Space Mono", monospace;
-      font-size: 0.83rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      font-weight: 700;
-      color: var(--muted);
-    }
-
-    .topbar nav {
-      display: flex;
-      gap: 0.9rem;
-      flex-wrap: wrap;
-    }
-
-    .topbar a {
-      text-decoration: none;
-      color: var(--ink);
-      font-weight: 700;
-      font-size: 0.95rem;
-      border: 1px solid transparent;
-      border-radius: 999px;
-      padding: 0.35rem 0.8rem;
-      transition: background-color 0.22s ease, color 0.22s ease, transform 0.22s ease;
-    }
-
-    .topbar a:hover {
-      transform: translateY(-2px);
-      background: #fff7e9;
-      border-color: #edddbe;
-    }
-
-    header.hero {
-      padding: 2.6rem 0 2.1rem;
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 1.8rem;
-      align-items: end;
-      animation: rise 0.8s ease-out both;
-    }
-
-    h1,
-    h2,
-    h3 {
-      font-family: "Fraunces", serif;
-      line-height: 1.1;
-      margin: 0;
-    }
-
-    h1 {
-      font-size: clamp(2rem, 4vw, 3.3rem);
-      letter-spacing: 0.01em;
-    }
-
-    .hero p {
-      margin-top: 1rem;
-      color: var(--muted);
-      max-width: 60ch;
-    }
-
-    .cta-row {
-      margin-top: 1.5rem;
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      border-radius: 999px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.95rem;
-      padding: 0.62rem 1rem;
-      transition: transform 0.22s ease, box-shadow 0.22s ease;
-      border: 1px solid transparent;
-      display: inline-block;
-    }
-
-    .btn.primary {
-      color: #fff;
-      background: linear-gradient(96deg, #d65227, #eb8a40);
-      box-shadow: 0 12px 24px rgba(214, 82, 39, 0.3);
-    }
-
-    .btn.secondary {
-      color: var(--ink);
-      border-color: #d8c9a8;
-      background: #fffaf0;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .hero-note {
-      background: linear-gradient(150deg, #fff7e8, #fffdf8);
-      border: 1px solid #e5d6b5;
-      border-radius: 16px;
-      padding: 1rem;
-      box-shadow: var(--shadow);
-    }
-
-    .hero-note h2 {
-      font-size: 1.15rem;
-      margin-bottom: 0.55rem;
-    }
-
-    .hero-note ul {
-      margin: 0;
-      padding-left: 1.1rem;
-      color: var(--muted);
-    }
-
-    section {
-      margin-top: 2rem;
-      background: rgba(255, 253, 248, 0.92);
-      border: 1px solid #e6ddca;
-      border-radius: 20px;
-      padding: 1.35rem;
-      box-shadow: var(--shadow);
-      animation: rise 0.75s ease-out both;
-    }
-
-    section h2 {
-      font-size: clamp(1.45rem, 3vw, 2rem);
-      margin-bottom: 0.4rem;
-    }
-
-    .sub {
-      color: var(--muted);
-      margin: 0 0 1rem;
-    }
-
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .pill {
-      border: 1px solid #d9ceb5;
-      border-radius: 999px;
-      padding: 0.35rem 0.75rem;
-      font-size: 0.87rem;
-      background: #fff8ed;
-      font-weight: 600;
-      color: var(--ink);
-    }
-
-    .projects {
-      margin-top: 1rem;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(260px, 1fr));
-      gap: 1rem;
-    }
-
-    .card {
-      border: 1px solid #e2d8c3;
-      border-radius: 16px;
-      padding: 1rem;
-      background:
-        linear-gradient(180deg, #fffdf8 0%, #fffaf1 100%);
-      animation: rise 0.55s ease-out both;
-      animation-delay: calc(var(--i, 0) * 70ms);
-    }
-
-    .card h3 {
-      font-size: 1.18rem;
-      margin-bottom: 0.4rem;
-    }
-
-    .status {
-      display: inline-block;
-      margin-bottom: 0.45rem;
-      font-family: "Space Mono", monospace;
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      border-radius: 999px;
-      padding: 0.23rem 0.55rem;
-      font-weight: 700;
-    }
-
-    .status.complete {
-      color: #0e665d;
-      background: rgba(27, 154, 143, 0.14);
-    }
-
-    .status.progress {
-      color: #9f471f;
-      background: rgba(230, 95, 43, 0.16);
-    }
-
-    .card p {
-      margin: 0 0 0.7rem;
-      color: var(--muted);
-      min-height: 3.8em;
-    }
-
-    .links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.45rem;
-    }
-
-    .links a {
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.84rem;
-      border-radius: 9px;
-      padding: 0.3rem 0.58rem;
-      color: #14314d;
-      border: 1px solid #d8cab0;
-      background: #fff;
-    }
-
-    .links a:hover {
-      background: #f4ede0;
-    }
-
-    .contact-box {
-      display: grid;
-      gap: 0.8rem;
-      grid-template-columns: repeat(2, minmax(220px, 1fr));
-    }
-
-    .contact-card {
-      border: 1px solid #e2d7bf;
-      border-radius: 14px;
-      padding: 0.9rem;
-      background: #fffcf7;
-    }
-
-    .contact-card h3 {
-      font-size: 1rem;
-      margin-bottom: 0.3rem;
-    }
-
-    .contact-card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .contact-card a {
-      color: #0f536f;
-      font-weight: 700;
-      text-decoration: none;
-    }
-
-    footer {
-      margin-top: 1.25rem;
-      color: var(--muted);
-      font-size: 0.9rem;
-      text-align: center;
-    }
-
-    @keyframes rise {
-      from {
-        opacity: 0;
-        transform: translateY(16px);
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Gabriel Vance - Data Science Portfolio" />
+    <title>Gabriel Vance | Data Science Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Manrope:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f8f3e7;
+        --surface: #fffdf8;
+        --ink: #16243a;
+        --muted: #4c5b74;
+        --accent: #e65f2b;
+        --accent-2: #1b9a8f;
+        --line: #d7cfbf;
+        --shadow: 0 14px 38px rgba(22, 36, 58, 0.12);
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
 
-    @keyframes drift {
-      from {
-        transform: translateY(0px) rotate(0deg);
+      * {
+        box-sizing: border-box;
       }
-      to {
-        transform: translateY(-10px) rotate(9deg);
-      }
-    }
 
-    @media (max-width: 860px) {
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family: "Manrope", sans-serif;
+        background:
+          radial-gradient(circle at 9% 15%, rgba(230, 95, 43, 0.14), transparent 36%),
+          radial-gradient(circle at 90% 14%, rgba(27, 154, 143, 0.16), transparent 34%),
+          linear-gradient(180deg, #f9f5ec 0%, #f1ebdd 100%);
+        line-height: 1.55;
+      }
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        width: 280px;
+        height: 280px;
+        z-index: -1;
+        border-radius: 34% 66% 45% 55% / 48% 30% 70% 52%;
+        opacity: 0.22;
+        filter: blur(1px);
+        animation: drift 12s ease-in-out infinite alternate;
+      }
+
+      body::before {
+        top: -90px;
+        right: -80px;
+        background: #f4b184;
+      }
+
+      body::after {
+        bottom: -70px;
+        left: -95px;
+        background: #94d7cf;
+        animation-delay: 1.2s;
+      }
+
+      .wrap {
+        width: min(1100px, 92vw);
+        margin: 0 auto;
+        padding: 2.2rem 0 3.2rem;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.2rem 0 1.1rem;
+        border-bottom: 1px solid var(--line);
+        position: sticky;
+        top: 0;
+        backdrop-filter: blur(7px);
+        background: rgba(248, 243, 231, 0.8);
+        z-index: 10;
+      }
+
+      .mark {
+        font-family: "Space Mono", monospace;
+        font-size: 0.83rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: var(--muted);
+      }
+
+      .topbar nav {
+        display: flex;
+        gap: 0.9rem;
+        flex-wrap: wrap;
+      }
+
+      .topbar a {
+        text-decoration: none;
+        color: var(--ink);
+        font-weight: 700;
+        font-size: 0.95rem;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        padding: 0.35rem 0.8rem;
+        transition:
+          background-color 0.22s ease,
+          color 0.22s ease,
+          transform 0.22s ease;
+      }
+
+      .topbar a:hover {
+        transform: translateY(-2px);
+        background: #fff7e9;
+        border-color: #edddbe;
+      }
+
       header.hero {
-        grid-template-columns: 1fr;
+        padding: 2.6rem 0 2.1rem;
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 1.8rem;
+        align-items: end;
+        animation: rise 0.8s ease-out both;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Fraunces", serif;
+        line-height: 1.1;
+        margin: 0;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 4vw, 3.3rem);
+        letter-spacing: 0.01em;
+      }
+
+      .hero p {
+        margin-top: 1rem;
+        color: var(--muted);
+        max-width: 60ch;
+      }
+
+      .cta-row {
+        margin-top: 1.5rem;
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.95rem;
+        padding: 0.62rem 1rem;
+        transition:
+          transform 0.22s ease,
+          box-shadow 0.22s ease;
+        border: 1px solid transparent;
+        display: inline-block;
+      }
+
+      .btn.primary {
+        color: #fff;
+        background: linear-gradient(96deg, #d65227, #eb8a40);
+        box-shadow: 0 12px 24px rgba(214, 82, 39, 0.3);
+      }
+
+      .btn.secondary {
+        color: var(--ink);
+        border-color: #d8c9a8;
+        background: #fffaf0;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .hero-note {
+        background: linear-gradient(150deg, #fff7e8, #fffdf8);
+        border: 1px solid #e5d6b5;
+        border-radius: 16px;
+        padding: 1rem;
+        box-shadow: var(--shadow);
+      }
+
+      .hero-note h2 {
+        font-size: 1.15rem;
+        margin-bottom: 0.55rem;
+      }
+
+      .hero-note ul {
+        margin: 0;
+        padding-left: 1.1rem;
+        color: var(--muted);
+      }
+
+      section {
+        margin-top: 2rem;
+        background: rgba(255, 253, 248, 0.92);
+        border: 1px solid #e6ddca;
+        border-radius: 20px;
+        padding: 1.35rem;
+        box-shadow: var(--shadow);
+        animation: rise 0.75s ease-out both;
+      }
+
+      section h2 {
+        font-size: clamp(1.45rem, 3vw, 2rem);
+        margin-bottom: 0.4rem;
+      }
+
+      .sub {
+        color: var(--muted);
+        margin: 0 0 1rem;
+      }
+
+      .pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .pill {
+        border: 1px solid #d9ceb5;
+        border-radius: 999px;
+        padding: 0.35rem 0.75rem;
+        font-size: 0.87rem;
+        background: #fff8ed;
+        font-weight: 600;
+        color: var(--ink);
       }
 
       .projects {
-        grid-template-columns: 1fr;
+        margin-top: 1rem;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(260px, 1fr));
+        gap: 1rem;
+      }
+
+      .card {
+        border: 1px solid #e2d8c3;
+        border-radius: 16px;
+        padding: 1rem;
+        background: linear-gradient(180deg, #fffdf8 0%, #fffaf1 100%);
+        animation: rise 0.55s ease-out both;
+        animation-delay: calc(var(--i, 0) * 70ms);
+      }
+
+      .card h3 {
+        font-size: 1.18rem;
+        margin-bottom: 0.4rem;
+      }
+
+      .status {
+        display: inline-block;
+        margin-bottom: 0.45rem;
+        font-family: "Space Mono", monospace;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        border-radius: 999px;
+        padding: 0.23rem 0.55rem;
+        font-weight: 700;
+      }
+
+      .status.complete {
+        color: #0e665d;
+        background: rgba(27, 154, 143, 0.14);
+      }
+
+      .status.progress {
+        color: #9f471f;
+        background: rgba(230, 95, 43, 0.16);
+      }
+
+      .card p {
+        margin: 0 0 0.7rem;
+        color: var(--muted);
+        min-height: 3.8em;
+      }
+
+      .links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+      }
+
+      .links a {
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.84rem;
+        border-radius: 9px;
+        padding: 0.3rem 0.58rem;
+        color: #14314d;
+        border: 1px solid #d8cab0;
+        background: #fff;
+      }
+
+      .links a:hover {
+        background: #f4ede0;
       }
 
       .contact-box {
-        grid-template-columns: 1fr;
+        display: grid;
+        gap: 0.8rem;
+        grid-template-columns: repeat(2, minmax(220px, 1fr));
       }
-    }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <div class="topbar">
-      <div class="mark">Gabriel Vance</div>
-      <nav aria-label="Main Navigation">
-        <a href="#about">About</a>
-        <a href="#projects">Work/Projects</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </div>
 
-    <header class="hero">
-      <div>
-        <h1>Data Science Portfolio</h1>
-        <p>I am Gabriel Vance, a Bellevue University data science student focused on machine learning and data storytelling across politics, media, economics, and public health.</p>
-        <div class="cta-row">
-          <a class="btn primary" href="#projects">View Projects</a>
-          <a class="btn secondary" href="https://github.com/gabriel-joseph/data_science_portfolio" target="_blank" rel="noopener noreferrer">Open Repository</a>
+      .contact-card {
+        border: 1px solid #e2d7bf;
+        border-radius: 14px;
+        padding: 0.9rem;
+        background: #fffcf7;
+      }
+
+      .contact-card h3 {
+        font-size: 1rem;
+        margin-bottom: 0.3rem;
+      }
+
+      .contact-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .contact-card a {
+        color: #0f536f;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      footer {
+        margin-top: 1.25rem;
+        color: var(--muted);
+        font-size: 0.9rem;
+        text-align: center;
+      }
+
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes drift {
+        from {
+          transform: translateY(0px) rotate(0deg);
+        }
+        to {
+          transform: translateY(-10px) rotate(9deg);
+        }
+      }
+
+      @media (max-width: 860px) {
+        header.hero {
+          grid-template-columns: 1fr;
+        }
+
+        .projects {
+          grid-template-columns: 1fr;
+        }
+
+        .contact-box {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="topbar">
+        <div class="mark">Gabriel Vance</div>
+        <nav aria-label="Main Navigation">
+          <a href="#about">About</a>
+          <a href="#projects">Work/Projects</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+
+      <header class="hero">
+        <div>
+          <h1>Data Science Portfolio</h1>
+          <p>
+            Hi! I'm Gabriel Vance, a Data Science professional with expertise in machine learning, statistical analysis, and data visualization. I've completed my degree at Bellevue University and am actively seeking opportunities to apply my skills to impactful data-driven projects.
+          </p>
+          <div class="cta-row">
+            <a class="btn primary" href="#projects">View Projects</a>
+            <a
+              class="btn secondary"
+              href="https://github.com/gabriel-joseph/data_science_portfolio"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Open Repository</a
+            >
+          </div>
         </div>
-      </div>
-      <aside class="hero-note" aria-label="Portfolio Snapshot">
-        <h2>Snapshot</h2>
-        <ul>
-          <li>Program: Data Science, Bellevue University (started 2024)</li>
-          <li>Core stack: Python, R/Rmd, SQL, Power BI, Excel, Git/GitHub</li>
-          <li>Current interests: elections, markets, social behavior, weather, healthcare</li>
-        </ul>
-      </aside>
-    </header>
+        <aside class="hero-note" aria-label="Portfolio Snapshot">
+          <h2>Snapshot</h2>
+          <ul>
+            <li>Program: Data Science, Bellevue University (started 2024)</li>
+            <li>Core stack: Python, R/Rmd, SQL, Power BI, Excel, Git/GitHub</li>
+            <li>Current interests: elections, markets, social behavior, weather, healthcare</li>
+          </ul>
+        </aside>
+      </header>
 
-    <section id="about">
-      <h2>About</h2>
-      <p class="sub">I build end-to-end analysis projects from raw datasets to findings, using both classical statistics and machine learning workflows.</p>
-      <div class="pill-row" aria-label="Skills">
-        <span class="pill">Python</span>
-        <span class="pill">R / Rmd</span>
-        <span class="pill">SQL</span>
-        <span class="pill">Power BI</span>
-        <span class="pill">Machine Learning</span>
-        <span class="pill">Data Visualization</span>
-        <span class="pill">Statistical Analysis</span>
-        <span class="pill">Git/GitHub</span>
-      </div>
-    </section>
+      <section id="about">
+        <h2>About</h2>
+        <p class="sub">
+          I build end-to-end analysis projects from raw datasets to findings, using both classical statistics and
+          machine learning workflows.
+        </p>
+        <div class="pill-row" aria-label="Skills">
+          <span class="pill">Python</span>
+          <span class="pill">R / Rmd</span>
+          <span class="pill">SQL</span>
+          <span class="pill">Power BI</span>
+          <span class="pill">Machine Learning</span>
+          <span class="pill">Data Visualization</span>
+          <span class="pill">Statistical Analysis</span>
+          <span class="pill">Git/GitHub</span>
+        </div>
+      </section>
 
-    <section id="projects">
-      <h2>Work/Projects</h2>
-      <p class="sub">Selected projects from this repository. Each card links directly to files in your portfolio repo.</p>
-      <div class="projects">
-        <article class="card" style="--i:1">
-          <span class="status complete">Complete</span>
-          <h3>1. Fake News Classification</h3>
-          <p>NLP-based machine learning workflow to classify articles as real or fake news.</p>
-          <div class="links">
-            <a href="1.fake_news/fake_news_classification.ipynb">Notebook</a>
-            <a href="1.fake_news/fake_news_classification.html">HTML</a>
-            <a href="1.fake_news/fake_news_classification.pdf">PDF</a>
-          </div>
-        </article>
+      <section id="projects">
+        <h2>Work/Projects</h2>
+        <p class="sub">
+          Selected projects from this repository. Each card links directly to files in your portfolio repo.
+        </p>
+        <div class="projects">
+          <article class="card" style="--i: 1">
+            <span class="status complete">Complete</span>
+            <h3>1. Fake News Classification</h3>
+            <p>NLP-based machine learning workflow to classify articles as real or fake news.</p>
+            <div class="links">
+              <a href="1.fake_news/fake_news_classification.ipynb">Notebook</a>
+              <a href="1.fake_news/fake_news_classification.html">HTML</a>
+              <a href="1.fake_news/fake_news_classification.pdf">PDF</a>
+            </div>
+          </article>
 
-        <article class="card" style="--i:2">
-          <span class="status complete">Complete</span>
-          <h3>2. S&amp;P Performance vs Elections</h3>
-          <p>Analysis of S&amp;P 500 performance around U.S. presidential election cycles, political uncertainty, and investor sentiment.</p>
-          <div class="links">
-            <a href="2.s&amp;p_politics/Vance%20s%26p%20and%20politics.pdf">PDF</a>
-          </div>
-        </article>
+          <article class="card" style="--i: 2">
+            <span class="status complete">Complete</span>
+            <h3>2. S&amp;P Performance vs Elections</h3>
+            <p>
+              Analysis of S&amp;P 500 performance around U.S. presidential election cycles, political uncertainty, and
+              investor sentiment.
+            </p>
+            <div class="links">
+              <a href="2.s&amp;p_politics/Vance%20s%26p%20and%20politics.pdf">PDF</a>
+            </div>
+          </article>
 
-        <article class="card" style="--i:3">
-          <span class="status complete">Complete</span>
-          <h3>3. Screen Time Analysis</h3>
-          <p>Analysis of screen time habits and their relationship to health outcomes, daily usage patterns, and behavior trends.</p>
-          <div class="links">
-            <a href="3.%20screen_time/Vance%20screen%20time.pdf">PDF</a>
-          </div>
-        </article>
+          <article class="card" style="--i: 3">
+            <span class="status complete">Complete</span>
+            <h3>3. Screen Time Analysis</h3>
+            <p>
+              Analysis of screen time habits and their relationship to health outcomes, daily usage patterns, and
+              behavior trends.
+            </p>
+            <div class="links">
+              <a href="3.%20screen_time/Vance%20screen%20time.pdf">PDF</a>
+            </div>
+          </article>
 
-        <article class="card" style="--i:4">
-          <span class="status complete">Complete</span>
-          <h3>4. Titanic Fatalities</h3>
-          <p>Exploratory survival analysis by age, sex, and passenger attributes using the Titanic dataset.</p>
-          <div class="links">
-            <a href="4.titanic/titanic_victims.ipynb">Notebook</a>
-            <a href="4.titanic/train.csv">Dataset</a>
-          </div>
-        </article>
+          <article class="card" style="--i: 4">
+            <span class="status complete">Complete</span>
+            <h3>4. Titanic Fatalities</h3>
+            <p>Exploratory survival analysis by age, sex, and passenger attributes using the Titanic dataset.</p>
+            <div class="links">
+              <a href="4.titanic/titanic_victims.ipynb">Notebook</a>
+              <a href="4.titanic/train.csv">Dataset</a>
+            </div>
+          </article>
 
-        <article class="card" style="--i:5">
-          <span class="status complete">Complete</span>
-          <h3>5. Dodgers 2022 Attendance</h3>
-          <p>Analysis of factors associated with Los Angeles Dodgers game attendance during the 2022 season.</p>
-          <div class="links">
-            <a href="5.dodgers_2022/dodgers_attendance_analysis.ipynb">Notebook</a>
-            <a href="5.dodgers_2022/dodgers_attendance_analysis.html">HTML</a>
-            <a href="5.dodgers_2022/dodgers_attendance_analysis.pdf">PDF</a>
-          </div>
-        </article>
+          <article class="card" style="--i: 5">
+            <span class="status complete">Complete</span>
+            <h3>5. Dodgers 2022 Attendance</h3>
+            <p>Analysis of factors associated with Los Angeles Dodgers game attendance during the 2022 season.</p>
+            <div class="links">
+              <a href="5.dodgers_2022/dodgers_attendance_analysis.ipynb">Notebook</a>
+              <a href="5.dodgers_2022/dodgers_attendance_analysis.html">HTML</a>
+              <a href="5.dodgers_2022/dodgers_attendance_analysis.pdf">PDF</a>
+            </div>
+          </article>
 
-        <article class="card" style="--i:6">
-          <span class="status complete">Complete</span>
-          <h3>6. Movie Recommender</h3>
-          <p>Recommendation system built with cosine similarity to surface related movies from user preferences.</p>
-          <div class="links">
-            <a href="6.movie_recommender/movie_recommendation.ipynb">Notebook</a>
-            <a href="6.movie_recommender/movie_recommendation.html">HTML</a>
-            <a href="6.movie_recommender/movie_recommendation.pdf">PDF</a>
-          </div>
-        </article>
+          <article class="card" style="--i: 6">
+            <span class="status complete">Complete</span>
+            <h3>6. Movie Recommender</h3>
+            <p>Recommendation system built with cosine similarity to surface related movies from user preferences.</p>
+            <div class="links">
+              <a href="6.movie_recommender/movie_recommendation.ipynb">Notebook</a>
+              <a href="6.movie_recommender/movie_recommendation.html">HTML</a>
+              <a href="6.movie_recommender/movie_recommendation.pdf">PDF</a>
+            </div>
+          </article>
 
-        <article class="card" style="--i:7">
-          <span class="status complete">Complete</span>
-          <h3>7. Housing Price Prediction</h3>
-          <p>Regression-based R workflow for home price modeling and variance evaluation.</p>
-          <div class="links">
-            <a href="7.housing_prices/housing_price_prediction.Rmd">Rmd</a>
-            <a href="7.housing_prices/housing_price_prediction.html">HTML</a>
-            <a href="7.housing_prices/housing_prices.pdf">PDF</a>
-          </div>
-        </article>
+          <article class="card" style="--i: 7">
+            <span class="status complete">Complete</span>
+            <h3>7. Housing Price Prediction</h3>
+            <p>Regression-based R workflow for home price modeling and variance evaluation.</p>
+            <div class="links">
+              <a href="7.housing_prices/housing_price_prediction.Rmd">Rmd</a>
+              <a href="7.housing_prices/housing_price_prediction.html">HTML</a>
+              <a href="7.housing_prices/housing_prices.pdf">PDF</a>
+            </div>
+          </article>
 
-        <article class="card" style="--i:8">
-          <span class="status complete">Complete</span>
-          <h3>8. Chronic Disease Analysis</h3>
-          <p>Public health analysis of chronic disease prevalence across demographics and geography.</p>
-          <div class="links">
-            <a href="8.chronic_diseases/chronic_diseases.ipynb">Notebook</a>
-            <a href="8.chronic_diseases/chronic_diseases.csv">Dataset</a>
-          </div>
-        </article>
+          <article class="card" style="--i: 8">
+            <span class="status complete">Complete</span>
+            <h3>8. Chronic Disease Analysis</h3>
+            <p>Public health analysis of chronic disease prevalence across demographics and geography.</p>
+            <div class="links">
+              <a href="8.chronic_diseases/chronic_diseases.ipynb">Notebook</a>
+              <a href="8.chronic_diseases/chronic_diseases.csv">Dataset</a>
+            </div>
+          </article>
 
-        <article class="card" style="--i:9">
-          <span class="status complete">Complete</span>
-          <h3>9. Netflix Viewership Analysis</h3>
-          <p>Trend analysis of Netflix viewing behavior, genre patterns, and factors that influence viewership.</p>
-          <div class="links">
-            <a href="9.netflix_viewership/netflix_viewership.ipynb">Notebook</a>
-            <a href="9.netflix_viewership/netflix_viewership.pdf">PDF</a>
-          </div>
-        </article>
+          <article class="card" style="--i: 9">
+            <span class="status complete">Complete</span>
+            <h3>9. Netflix Viewership Analysis</h3>
+            <p>Trend analysis of Netflix viewing behavior, genre patterns, and factors that influence viewership.</p>
+            <div class="links">
+              <a href="9.netflix_viewership/netflix_viewership.ipynb">Notebook</a>
+              <a href="9.netflix_viewership/netflix_viewership.pdf">PDF</a>
+            </div>
+          </article>
 
-        <article class="card" style="--i:10">
-          <span class="status complete">Complete</span>
-          <h3>10. White House Visitor Logs</h3>
-          <p>Report on White House visitor data, exploring patterns in visitor timing and demographics.</p>
-          <div class="links">
-            <a href="10.white_house_visitor_logs/10.white_house_visitor_logs.pdf">PDF Report</a>
-          </div>
-        </article>
+          <article class="card" style="--i: 10">
+            <span class="status complete">Complete</span>
+            <h3>10. White House Visitor Logs</h3>
+            <p>Report on White House visitor data, exploring patterns in visitor timing and demographics.</p>
+            <div class="links">
+              <a href="10.white_house_visitor_logs/10.white_house_visitor_logs.pdf">PDF Report</a>
+            </div>
+          </article>
+        </div>
+      </section>
 
-      </div>
-    </section>
+      <section id="contact">
+        <h2>Contact</h2>
+        <p class="sub">Use these links to review my work and contact me for data-focused opportunities.</p>
+        <div class="contact-box">
+          <article class="contact-card">
+            <h3>Email</h3>
+            <p><a href="mailto:gjvance67@gmail.com">gjvance67@gmail.com</a></p>
+          </article>
+          <article class="contact-card">
+            <h3>LinkedIn</h3>
+            <p>
+              <a href="https://www.linkedin.com/in/gabriel-vance-b59209169/" target="_blank" rel="noopener noreferrer"
+                >gabriel-vance-b59209169</a
+              >
+            </p>
+          </article>
+          <article class="contact-card">
+            <h3>GitHub Profile</h3>
+            <p>
+              <a href="https://github.com/gabriel-joseph" target="_blank" rel="noopener noreferrer"
+                >github.com/gabriel-joseph</a
+              >
+            </p>
+          </article>
+          <article class="contact-card">
+            <h3>Portfolio Repository</h3>
+            <p>
+              <a
+                href="https://github.com/gabriel-joseph/data_science_portfolio"
+                target="_blank"
+                rel="noopener noreferrer"
+                >data_science_portfolio</a
+              >
+            </p>
+          </article>
+          <article class="contact-card">
+            <h3>Location</h3>
+            <p>Bellevue, NE</p>
+          </article>
+        </div>
+      </section>
 
-    <section id="contact">
-      <h2>Contact</h2>
-      <p class="sub">Use these links to review my work and contact me for data-focused opportunities.</p>
-      <div class="contact-box">
-        <article class="contact-card">
-          <h3>Email</h3>
-          <p><a href="mailto:gjvance67@gmail.com">gjvance67@gmail.com</a></p>
-        </article>
-        <article class="contact-card">
-          <h3>LinkedIn</h3>
-          <p><a href="https://www.linkedin.com/in/gabriel-vance-b59209169/" target="_blank" rel="noopener noreferrer">gabriel-vance-b59209169</a></p>
-        </article>
-        <article class="contact-card">
-          <h3>GitHub Profile</h3>
-          <p><a href="https://github.com/gabriel-joseph" target="_blank" rel="noopener noreferrer">github.com/gabriel-joseph</a></p>
-        </article>
-        <article class="contact-card">
-          <h3>Portfolio Repository</h3>
-          <p><a href="https://github.com/gabriel-joseph/data_science_portfolio" target="_blank" rel="noopener noreferrer">data_science_portfolio</a></p>
-        </article>
-        <article class="contact-card">
-          <h3>Location</h3>
-          <p>Bellevue, NE</p>
-        </article>
-      </div>
-    </section>
-
-    <footer>
-      Built for GitHub Pages. To publish, set your repo Pages source to the branch containing this <code>index.html</code>.
-    </footer>
-  </div>
-</body>
+      <footer>
+        Built for GitHub Pages. To publish, set your repo Pages source to the branch containing this
+        <code>index.html</code>.
+      </footer>
+    </div>
+  </body>
 </html>
