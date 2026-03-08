@@ -1,1 +1,0 @@
-will be done during weeks 9-12 of the course.

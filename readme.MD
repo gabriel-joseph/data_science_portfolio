@@ -7,8 +7,8 @@ Skills: Python, R/Rmd, SQL, PowerBi, Excel, Git/GitHub, Machine Learning, Data V
 In this repositrory, you'll find a collection of my projects and assignments that showcase my skills and knowledge in data science.
 
 1. Fake News Classification: A machine learning project that classifies news articles as real or fake using natural language processing techniques.
-2. S&P Performance vs Elections (WIP): An analysis of the S&P 500 performance in relation to U.S. presidential elections.
-3. Analysis of Social Media Virality: A study on the factors that contribute to the virality of social media posts across different platforms. (WIP)
+2. S&P Performance vs Elections: An analysis of the S&P 500 performance in relation to U.S. presidential elections.
+3. Screen Time Analysis: A study of screen time habits, usage patterns, and related health outcomes.
 4. Titanic Fatalities: An analysis of the Titanic disaster, focusing on survival rates based on various factors such as age and gender.
 5. Dodgers 2022: Analyze what drives attendance to Los Angeles Dodgers games during the 2022 MLB season.
 6. Movie recommender: Using an already existing dataset to build a movie recommender system using cosine similarity.
