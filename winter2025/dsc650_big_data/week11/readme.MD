@@ -1,7 +1,3 @@
-we have various txt/pdf documents under /workspaces/data_science_classes_windows/winter2025/dsc650_big_data that show big data tools using docker. this shows various uses of the tools and commands run. 
-
-
-considering the previous steps run in previous weeks and the week11 readme, draft a markdown that shows a walkthrough from setup to completion of all tasks. the walkthrough should have commands to execute as well as indications such as "take a screenshot here". I should be able to follow the pdf step by step and deliver the complete report for the final project. make sure you meet all requirements for the readme
 
 
 Assignment Materials
