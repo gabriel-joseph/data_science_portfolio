@@ -29,13 +29,15 @@ Run these on your VM host shell.
 cd ~/dsc650-infra/bellevue-bigdata/hadoop-hive-spark-hbase
 
 # set project-specific variables
-export DATASET_RAW_URL="https://raw.githubusercontent.com/<your-user>/<your-repo>/main/<your-file>.csv"
-export DATASET_FILENAME="<your-file>.csv"
+export DATASET_RAW_URL="https://raw.githubusercontent.com/gabriel-joseph/bigdata/main/noshowappointments.csv"
+export DATASET_FILENAME="noshowappointments.csv"
 export HDFS_DIR="/tmp"
 export HIVE_DB="final_project"
-export HIVE_TABLE="your_dataset"
+export HIVE_TABLE="noshowappointments"
 export HBASE_TABLE="project_metrics"
 ```
+
+Use the raw GitHub URL above in NiFi, not the GitHub `blob` page URL.
 
 Validate URL before using it in NiFi:
 
@@ -167,18 +169,27 @@ hive
 
 ### 3.2 Create database and managed table
 
-Use your real schema (example template below; edit columns/types for your dataset):
+Use this Hive-safe schema for `noshowappointments.csv`:
 
 ```sql
 CREATE DATABASE IF NOT EXISTS final_project;
 USE final_project;
 
-CREATE TABLE IF NOT EXISTS your_dataset (
-    col1 STRING,
-    col2 STRING,
-    feature_1 DOUBLE,
-    feature_2 DOUBLE,
-    target DOUBLE
+CREATE TABLE IF NOT EXISTS noshowappointments (
+    patient_id STRING,
+    appointment_id STRING,
+    gender STRING,
+    scheduled_day STRING,
+    appointment_day STRING,
+    age INT,
+    neighbourhood STRING,
+    scholarship INT,
+    hipertension INT,
+    diabetes INT,
+    alcoholism INT,
+    handcap INT,
+    sms_received INT,
+    no_show STRING
 )
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ','
@@ -186,26 +197,28 @@ STORED AS TEXTFILE
 TBLPROPERTIES ('skip.header.line.count'='1');
 ```
 
+This schema keeps the ID columns as `STRING` so the default Spark feature-selection step does not treat them as numeric predictors.
+
 ### 3.3 Load CSV from HDFS into managed table
 
 ```sql
-LOAD DATA INPATH '/tmp/<your-file>.csv' OVERWRITE INTO TABLE your_dataset;
+LOAD DATA INPATH '/tmp/noshowappointments.csv' OVERWRITE INTO TABLE noshowappointments;
 ```
 
 ### 3.4 Validate with required queries
 
 ```sql
-SELECT COUNT(*) AS n_rows FROM your_dataset;
+SELECT COUNT(*) AS n_rows FROM noshowappointments;
 
 -- include at least one aggregation query for objective requirement
-SELECT col1, COUNT(*) AS cnt
-FROM your_dataset
-GROUP BY col1
+SELECT neighbourhood, COUNT(*) AS cnt
+FROM noshowappointments
+GROUP BY neighbourhood
 ORDER BY cnt DESC
 LIMIT 20;
 
 -- optional sample rows
-SELECT * FROM your_dataset LIMIT 10;
+SELECT * FROM noshowappointments LIMIT 10;
 ```
 
 Exit Hive/master:
@@ -299,7 +312,7 @@ Create your script locally (VS Code) and place it on master container path (per 
 
 Suggested filename: `sparkml_final.py`
 
-### 6.1 Example script template (edit table/columns/algorithm)
+### 6.1 Example script template for `noshowappointments.csv`
 
 ```python
 from pyspark.sql import SparkSession
@@ -313,8 +326,8 @@ import time
 
 # ===== EDIT THESE =====
 HIVE_DB = "final_project"
-HIVE_TABLE = "your_dataset"
-TARGET_COL = "target"               # label column in Hive table
+HIVE_TABLE = "noshowappointments"
+TARGET_COL = "no_show"              # "No" / "Yes" appointment outcome
 PROBLEM_TYPE = "classification"     # classification or regression
 HBASE_TABLE = "project_metrics"
 # ======================
