@@ -1,2 +1,5 @@
 *.csv
-*.xlsx
+*.xlsx# large datasets stay local
+*.csv
+*.parquet
+*.zip
