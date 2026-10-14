@@ -1,0 +1,155 @@
+---
+title: "Week 6: Probability Theory"
+author: "Gabriel Vance"
+date: "April 15, 2025"
+output: html_document
+---
+
+
+# Imports
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+```
+
+
+
+# A six-sided die is rolled repeatedly. What is the expected value average as the die is rolled more and more? The expected value for a single roll is 1+2+3+4+5+6 / 6 = 3.5. What’s wrong with the answer, just in logical terms? Create this in R (i.e., simulate many rolls and visualize the results).
+```{r}
+rolls <- 10000 # number of rolls
+die_rolls <- sample(1:6, rolls, replace = TRUE) # simulate rolling a die 10,000 times
+die_rolls_df <- data.frame(roll = die_rolls) # create a dataframe for visualization
+# Die have whole numbers, such as 1, 2, 3. Just because the average is 3.5 does not mean you will roll a 3.5 because 3.5 is not the side of a die. The average value will approach 3.5 as the number of rolls increases, but it will never actually be 3.5.
+
+mean(die_rolls_df$roll) # for example, this was 3.48
+
+roll_counts <- table(die_rolls_df$roll)
+barplot(roll_counts,
+  main = "Frequency of Die Rolls (1–6)",
+  xlab = "Die Face",
+  ylab = "Count",
+  col = "skyblue",
+  border = "white"
+)
+```
+
+
+# A box contains 30 red balls and 15 green balls. A ball is drawn from the box, and the color is written down. The ball is then returned to the box, and the process is repeated. What is the expected proportion of red balls drawn as the number of draws increases? Create this in R (i.e., simulate the draws from the box and visualize the results).
+
+```{r}
+balls_drawn <- 100000 # number of balls drawn
+balls <- sample(c("red", "green"), rolls, replace = TRUE, prob = c(2 / 3, 1 / 3))
+balls_df <- data.frame(draw = balls) # create a dataframe for visualization
+
+draw_counts <- table(balls_df$draw)
+
+
+barplot(draw_counts,
+  main = "Frequency of Drawing a Ball (Red or Green)",
+  xlab = "Ball Color",
+  ylab = "Count",
+  col = "skyblue",
+  border = "white"
+)
+
+theoretical_red_to_green_ratio <- 30 / 15 # 2:1
+actual_red_to_green_ratio <- draw_counts["red"] / draw_counts["green"]
+
+cat(paste(
+  "Expected ratio of red to green balls:", theoretical_red_to_green_ratio,
+  "\nActual ratio of red to green balls:", round(actual_red_to_green_ratio, 2)
+))
+```
+
+# Do Exercise 1 from the text (in Chapter 9). You can use the author’s code, and it is strongly suggested that instead of copying/pasting, you re-write the code. Explain each line in the code both in programming (i.e., what the R is doing) and statistics terms.
+```{r}
+# Cohen's imports
+library(ggplot2)
+library(cowplot)
+library(emg)
+library(pracma)
+library(tidyr)
+
+theme_set(theme_classic(base_size = 14))
+options(scipen = 999)
+
+
+N <- 500 # number of iterations
+nSamples <- 50 # number of samples
+kHistBins <- 20 # number of histogram bins, this is useful for limiting the values we plot
+
+# creates a sequence of numbers from -3 to 3
+edges <- seq(-3, 3, length.out = kHistBins + 1) # create edges for the histogram bins
+
+# creates matrix of 0 with samples and bins
+allHistY <- matrix(0, nrow = nSamples, ncol = kHistBins)
+allMeans <- rep(0, nSamples) # create a vector to store means of each sample
+ldatall <- data.frame(mids = NULL, Count = NULL) # empty data frame with two column
+
+for (sampi in 1:nSamples) { # this was much cleaner for looping
+  data <- rnorm(N, mean = 0, sd = 1) # generate random normal data
+  histY <- hist(data[abs(data) <= 3.0], breaks = edges, plot = FALSE) # create histogram data
+  allHistY[sampi, ] <- histY$counts # store histogram counts
+  ldat <- data.frame(mids = histY$mids, Count = histY$counts) # create a dataframe for the histogram
+  allMeans[sampi] <- mean(data) # calculate the mean of the data
+  ldatall <- rbind(ldatall, ldat) # combine all histograms into one dataframe
+}
+
+titleA <- expression(paste(bold("A)"), " Histograms")) # title for the first plot
+titleB <- bquote(bold("B)") ~ "Scatter of means (mean=" ~ .(sprintf("%.3g", mean(allMeans))) * ")") # title for the second plot
+# generates 50 random numbers from a uniform distribution between 0.5 and 0.9.
+c <- runif(50, min = 0.5, max = 0.9)
+
+# create the first plot showing all histogram points from all samples
+ggp1 <- ggplot(data = ldatall) + # use the combined histogram data
+  aes(x = mids, y = Count) + # set x to bin midpoints and y to counts
+  theme(legend.position = "none") + # remove legend for a cleaner look
+  geom_point( # plot each point as a dot
+    colour = rgb(rep(c, 20), rep(c, 20), rep(c, 20)), # use grayscale colors for each sample
+    size = 3.5 # set point size
+  ) +
+  geom_line( # add a line summarizing all samples
+    stat = "summary", # use summary statistics (mean by default)
+    fun = "mean", # plot the mean count at each x
+    linewidth = 1.5 # set line thickness
+  ) +
+  labs( # add axis labels and title
+    x = "Data value",
+    y = "Count",
+    title = titleA
+  ) +
+  theme( # more custom theming?
+    axis.text = element_text(size = 14),
+    plot.title = element_text(vjust = -1)
+  )
+
+# create the second plot showing the sample means from all 50 samples
+ggp2 <- ggplot() +
+  geom_point( # plot each sample mean as a filled square
+    aes(x = 1:50, y = allMeans), # x-axis: sample number, y-axis: sample mean
+    shape = 22, # use filled square shape
+    size = 5, # set size of the squares?
+    fill = rgb(c, c, c), # use same grayscale values as in ggp1
+    stroke = 1.0
+  ) +
+  geom_hline( # add a horizontal dashed line at the overall mean of sample means
+    yintercept = mean(allMeans), # position at the mean of all sample means
+    linetype = 2,
+    linewidth = 0.8
+  ) +
+  labs( # add axis labels and title
+    x = "Sample number",
+    y = "Sample mean",
+    title = titleB
+  ) +
+  theme( # adjust visual appearance
+    legend.position = "none", # no legend
+    axis.text = element_text(size = 14), # larger axis text
+    plot.title = element_text(vjust = -1) # adjust vertical title position
+  )
+
+# combine the two plots vertically into one figure
+plot_grid(ggp1, ggp2, ncol = 1, align = "v")
+```
+

@@ -1,0 +1,61 @@
+---
+title: "Week 10: Correlations and Confidence Intervals"
+author: "Gabriel Vance"
+date: "May 12, 2025"
+output: html_document
+---
+
+
+# Imports
+```{r}
+# Load necessary libraries
+library(dplyr)
+library(GGally)
+library(lsa)
+library(tidyverse)
+```
+
+Create both one-way and two-way ANOVA. Use AIC to determine which one is better for the dataset.
+
+
+```{r}
+# Load data
+travel_insurance_df <- read.csv("travel_insurance.csv")
+names(travel_insurance_df)
+
+# columns Agency,AgencyType,DistributionChannel,ProductName,Claim,Duration,Destination,NetSales,Commission,Gender,Age
+
+# Set a seed for reproducibility
+set.seed(123)
+
+# I have to limit this to 30% of the data because it won't work
+# ! Note, when I switched to agency and product name, I was able to improve rendering times
+subset_df <- travel_insurance_df[sample(nrow(travel_insurance_df), size = 0.95 * nrow(travel_insurance_df)), ]
+```
+
+
+
+
+```{r}
+one_way_test <- aov(Commission ~ ProductName, data = subset_df)
+two_way_test_with_ineraction <- aov(Commission ~ ProductName * AgencyType, data = subset_df)
+two_way_test_without_ineraction <- aov(Commission ~ ProductName + AgencyType, data = subset_df)
+
+summary(one_way_test)
+summary(two_way_test_with_ineraction)
+summary(two_way_test_without_ineraction)
+
+AIC(one_way_test, two_way_test_with_ineraction, two_way_test_without_ineraction)
+
+
+
+
+##                                 df      AIC
+## one_way_test                    27 446808.6
+## two_way_test_with_ineraction    29 446789.4
+## two_way_test_without_ineraction 28 446792.6
+
+# AIC comparison
+cat("While two_way_test_with_ineraction had a lower AIC, the scores overall were fairly even. The more complex model (two_way_test_with_ineraction) was only slightly better than the same two way test without interaction. That being said, two_way_test_with_ineraction was the most accurate.")
+```
+

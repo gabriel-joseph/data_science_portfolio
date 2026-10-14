@@ -1,0 +1,239 @@
+---
+title: "Vance_week_5_6_assignment"
+output: html_document
+date: "2025-10-19"
+---
+
+
+```{r, warning=FALSE}
+# IMPORTS
+
+library(dplyr)
+library(ggplot2)
+library(readxl)
+library(tidyverse)
+library(treemapify)
+
+```
+
+
+
+```{r}
+
+kiaHyundaiThefts <- read.csv("kiaHyundaiThefts.csv")
+
+# print the shape
+kiaHyundaiThefts %>%
+  group_by(month) %>%
+  summarise(across(starts_with("count"), mean),
+            percentKiaHyundai = mean(percentKiaHyundai)) %>%
+  mutate(month = factor(month, levels = month.abb)) %>%
+  ggplot(aes(x = month, y = percentKiaHyundai)) +
+  geom_col(fill = "steelblue") +
+  labs(title = "Average Percent of Kia/Hyundai Thefts by Month",
+       x = "Month", y = "Average % Kia/Hyundai Thefts") +
+  theme_minimal()
+
+
+kiaHyundaiThefts %>%
+  group_by(year) %>%
+  summarise(across(starts_with("count"), mean),
+            percentKiaHyundai = mean(percentKiaHyundai)) %>%
+  mutate(year = factor(year)) %>%
+  ggplot(aes(x = year, y = percentKiaHyundai)) +
+  geom_col(fill = "steelblue") +
+  labs(title = "Average Percent of Kia/Hyundai Thefts by Year",
+       x = "Year", y = "Average % Kia/Hyundai Thefts") +
+  theme_minimal()
+
+```
+
+```{r}
+df <- read.csv("tidy_data.csv")
+# --- Clean and prepare data ---
+
+df <- df %>%
+  # Convert Date to Date type and extract Year and Month
+  mutate(
+    Date = as.Date(Date),
+    Year = year(Date),
+    Month = month(Date, label = TRUE, abbr = TRUE)
+  )
+
+# --- Summarize total "All" by Year-Month ---
+df_summary <- df %>%
+  # 2019 is incomplete, so we'll exclude it
+  filter(Year != 2019) %>%
+  # Aggregate totals
+  group_by(Year, Month) %>%
+  summarize(TotalAll = sum(All, na.rm = TRUE), .groups = "drop")
+
+# --- Plot area chart ---
+ggplot(df_summary, aes(x = Month, y = TotalAll, fill = factor(Year), group = Year)) +
+  geom_area(alpha = 0.7, position = "identity") + # Stacked area
+  geom_line(aes(color = factor(Year)), linewidth = 1) + 
+  # Customize labels and theme
+  labs(
+    title = "Total 'All' Counts Over Time by Year",
+    x = "Month",
+    y = "Total All",
+    fill = "Year",
+    color = "Year"
+  ) +
+  theme_minimal() +
+  # Customize theme
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+```
+
+
+```{r}
+
+
+# Extract year and convert Percent to numeric
+df <- df %>%
+  mutate(year = substr(Date, 1, 4),
+         Percent = as.numeric(Percent))
+
+# Function to plot pie chart for a given year
+plot_pie_year <- function(df, year_val) {
+  avg_percent <- df %>%
+    filter(year == year_val) %>%
+    summarise(mean_percent = mean(Percent, na.rm = TRUE)) %>%
+    pull(mean_percent)
+  
+  pie_df <- data.frame(
+    Category = c("Kia/Hyundai", "Other"),
+    Percent = c(avg_percent, 100 - avg_percent)
+  )
+  
+  ggplot(pie_df, aes(x = "", y = Percent, fill = Category)) +
+    geom_bar(stat = "identity", width = 1) +
+    coord_polar("y") +
+    labs(title = paste("Average % Kia/Hyundai vs Other -", year_val),
+         fill = "Category") +
+    theme_void() +
+    geom_text(aes(label = paste0(round(Percent, 1), "%")),
+              position = position_stack(vjust = 0.5))
+}
+
+# Plot for 2020
+plot_pie_year(df, "2020")
+
+# Plot for 2021
+plot_pie_year(df, "2021")
+
+# Plot for 2022
+plot_pie_year(df, "2022")
+
+```
+
+
+```{r, warning=FALSE}
+# --- Clean and prepare data ---
+df <- df %>%
+  mutate(
+    Date = as.Date(Date),
+    Year = lubridate::year(Date)
+  )
+
+# --- Aggregate totals by Location (optional if multiple dates) ---
+df_summary <- df %>%
+  group_by(Location) %>%
+  summarize(
+    TotalAll = sum(All, na.rm = TRUE),
+    AvgPercent = mean(Percent, na.rm = TRUE)
+  )
+
+# --- Treemap ---
+ggplot(df_summary, aes(
+  area = TotalAll,
+  fill = AvgPercent,
+  label = Location
+)) +
+  geom_treemap(color = "white") +
+  geom_treemap_text(
+    colour = "black",
+    place = "centre",
+    grow = TRUE,
+    reflow = TRUE
+  ) +
+  scale_fill_viridis_c(option = "plasma") +
+  labs(
+    title = "Vehicle Counts by Location (Treemap)",
+    fill = "Avg Percent"
+  ) +
+  theme_minimal()
+```
+
+
+```{r, warning=FALSE}
+df <- read.csv("carTheftsMap.csv", stringsAsFactors = FALSE)
+
+# Convert "-" to NA and columns to numeric
+year_cols <- c("countCarThefts2019", "countCarThefts2020", "countCarThefts2021", "countCarThefts2022")
+df[year_cols] <- lapply(df[year_cols], function(x) as.numeric(gsub("-", NA, x)))
+
+# Gather into long format
+df_long <- df %>%
+  select(geo_name, all_of(year_cols)) %>%
+  pivot_longer(-geo_name, names_to = "Year", values_to = "Thefts") %>%
+  mutate(Year = gsub("countCarThefts", "", Year))
+
+# Example: Top 5 cities by 2022 thefts
+top_cities <- df %>%
+  arrange(desc(countCarThefts2022)) %>%
+  slice_head(n = 5) %>%
+  pull(geo_name)
+
+ggplot(df_long %>% filter(geo_name %in% top_cities), aes(x = Year, y = Thefts, color = geo_name, group = geo_name)) +
+  geom_line(size = 1.2) +
+  geom_point() +
+  labs(title = "Car Thefts Trend (Top 5 Cities)", x = "Year", y = "Number of Thefts", color = "City") +
+  theme_minimal()
+
+```
+
+```{r}
+
+# Read the data
+df <- read_csv("KiaHyundaiMilwaukeeData.csv")
+
+# Create a date column for proper ordering
+df <- df %>%
+  mutate(date = as.Date(paste(year, month, "01", sep = "-"), format = "%Y-%b-%d"))
+
+# Reshape to long format for stacking
+df_long <- df %>%
+  select(date, countKiaHyundaiThefts, countOtherThefts) %>%
+  pivot_longer(cols = c(countKiaHyundaiThefts, countOtherThefts),
+               names_to = "Type", values_to = "Count")
+
+# Plot stacked area chart
+ggplot(df_long, aes(x = date, y = Count, fill = Type)) +
+  geom_area(alpha = 0.7) +
+  labs(title = "Stacked Area Chart of Vehicle Thefts in Milwaukee",
+       x = "Date", y = "Number of Thefts", fill = "Type") +
+  theme_minimal()
+```
+
+
+### Call to Action
+
+The current administration has recognized the alarming rates of car thefts. They realize thefts vary by location and time, but the public must be made aware of the crime rates. Our call to action is to inform the general public of crime trends so they can take precautions if they live in an area witnessing an increase in crime.
+
+### Audience
+
+General Public
+
+
+Good evening. My name is Jameson Rodgers, data analyst for the FBI. Last month we were tasked with reporting the overall crime trends in the USA as it pertains to car theft. Utilizing multiple data sources, we saw the same trend: car thefts have increased from 2019 to 2022. As you can tell from this chart, 2019 is denoted with the lowest cumulative car thefts, and each year surpasses the previous.
+
+We examined the top cities and saw similar trends. Despite being in different regions, Chicago, Denver, Houston, Los Angeles, and New York all saw increases in car thefts from 2019 to 2022.
+
+Additionally, we examined Hyundai and Kia thefts across the country. Most areas only saw these cars make up a small percentage of total car thefts. However, in Milwaukee, these two brands made up almost half of all car thefts.
+
+In conclusion, we want to provide an alert to the public: car thefts are up. Your car is at at risk of being stolen. We are actively working with law enforcement to deter car thefts and reverse this trend. To the citizens of Milwaukee, we recognize an uptick in thefts for Kias and Hyundais. This is due to a manufacturing error that makes these cars easier to steal. Please consult your local body shop to fix this flaw. The attorney general will be seeking charges against Hyundai and Kia for negligence in this matter. Thank you for your time.

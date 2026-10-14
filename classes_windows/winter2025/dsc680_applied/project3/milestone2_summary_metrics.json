@@ -1,0 +1,15 @@
+{
+  "n_records": 2400,
+  "avg_screen_hours": 4.26,
+  "avg_sleep_hours": 8.91,
+  "heavy_screen_pct": 13.5,
+  "poor_sleep_pct": 4.9,
+  "corr_screen_sleep": -0.683,
+  "corr_screen_mental": 0.748,
+  "corr_screen_attention": -0.553,
+  "logit_or_screen": 2.256,
+  "logit_or_ci_low": 1.808,
+  "logit_or_ci_high": 2.815,
+  "ols_beta_screen": 0.213,
+  "ols_p_screen": 1.8377087758365304e-07
+}

@@ -1,0 +1,46 @@
+Tuesday
+
+2.	Conduct Univariate Analysis 
+a.	Calculate descriptive statistics (mean, median, mode, variance, skewness, kurtosis) of the key variables in your dataset 
+b.	Create visualization of the key variables to examine distribution or patterns 
+i.	Consider adding histogram, box plots, or density plots to visualize the distribution of numerical variables, and bar charts for categorical variables. 
+ii.	If you have to handle outliers/skewness, it is important to visualize outliers through boxplots or scatterplots and then explain the methods used, such as why trimming or transformation was applied (or why not).  
+iii.	You can also visualize missing data (e.g., using a heatmap) to identify patterns in missingness and determine if it is critical. 
+3.	Conduct Bivariate Analysis  
+a.	Calculate covariance and correlation 
+i.	Utilize Pearson correlation for continuous values.  
+ii.	For categorical variables, you could explore additional methods like Spearman rank correlation (Optional)  
+b.	Create visualization 
+i.	You may visualize bivariate relationships with scatter plots, pair plots, or heatmaps for correlation matrices 
+ii.	You can create advanced visualization with Seaborn (Optional)  
+4.	Test Statistics  
+a.	Develop a hypothesis and select the appropriate test statistics based on your data. 
+b.	For each test (e.g., t-test, F-test, Chi-squared), be sure to discuss the assumptions and whether they hold for your dataset 
+c.	Explain the test statistics results, interpret p-values and draw conclusion  
+
+Wednesday
+5.	Regression and Classification 
+a.	Regression Analysis 
+i.	Select an appropriate regression model based on the variable selected.  
+ii.	Run the regression model and evaluate it with the performance metrics you’ve learned  
+iii.	Interpret your result 
+iv.	You may also want to check for multicollinearity or analyze residual to check your assumptions (Optional) 
+b.	Classification Model  
+i.	Select an appropriate classification model based on the variable selected.  
+ii.	Conduct the classification analysis and evaluate it with multiple metrics to provide a fuller picture of performance.  
+iii.	Interpret your result  
+6.	Advanced Analysis Techniques  
+a.	Clustering Analysis  
+i.	Select an appropriate clustering method for your data, and consider including dimensionality reduction (e.g., PCA) to visualize the clusters especially in high-dimensional spaces. 
+ii.	Evaluate the model and interpret the grouping of data based on the result  
+b.	Machine Learning approach to Regression or Classification  
+i.	Apply a regression or classification model using machine learning approach. You can use the same set of variables from requirement number 5.  
+ii.	Evaluate the model performance metrics and interpret the results 
+7.	Data Storytelling (500-1000 words narrative of your project)  
+a.	Story Flow: In addition to presenting insights, the narrative should have a logical flow, from the problem statement to the key findings. This includes discussing how the insights lead to actionable conclusions or business decisions. 
+b.	Select 1 to 2 visualizations for Impact: They should help convey key insights in a way that's easily understood and to highlight important trends or patterns from your analysis.  
+c.	Recommendation: Provide actionable recommendations or insights at the end of the project. It's important to not just interpret the data, but to tie it back to the problem or objective. 
+8.	Documentation  
+a.	It is expected that you will document the entire analysis process within the Jupyter Lab/Notebook file.  
+b.	Consider commenting on potential limitations of your analysis or assumptions made during the EDA process. 
+c.	Clearly label each part of the EDA tasks requirement to make it easy to follow and determine if you meet all the project requirements.  

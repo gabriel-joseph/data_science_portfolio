@@ -1,0 +1,909 @@
+---
+title: "Week 7: Hypothesis Testing"
+author: "Gabriel Vance"
+date: "April 21, 2025"
+output: html_document
+---
+
+
+# Imports
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+# import libraries
+library(cowplot)
+library(glue)
+library(pracma)
+library(reshape)
+library(scales)
+library(truncnorm)
+```
+
+```{r}
+data <- ("
+        Higher  Lower
+Value1      1      120
+Value2      118      2
+")
+
+data_as_matrix <- as.matrix(read.table(textConnection(data), header = TRUE))
+fisher.test(data_as_matrix)
+```
+
+Given that information, complete the following two examples. You’ll need R code along with Markdown.
+An experiment is executed to determine if spending too much time on social media hurts cognitive ability. The following data is a summary of that experiment.
+
+Social | Higher | Lower
+Y      |    1   | 120
+N      |   118  |  2
+
+
+Assuming the null hypothesis is that using social results in lower cognitive ability, and alpha is .05:
+What is the alternative hypothesis?
+```{r}
+# alternative hypothesis - This is the statement that contradicts the null hypothesis.
+print("The alternative hypothesis to 'social media results in lower cognitive ability' is 'social media does not result in lower cognitive ability or results in higher cognitive ability'. However, NH is usually that 'nothing happened' or 'no difference'., so maybe the null hypothesis is that social media doesn't affect cognitive abiliy? We're going to press forward with the original definition and the way this was phrashed.")
+```
+What is the p-value?
+```{r}
+test_result <- fisher.test(data_as_matrix)
+
+# p-value -  measure probability of taining the observed results, assuming null hypotthesis is true. Low p-value = greater statistical signficance. 0.05 or lower is considered signficant
+p_value <- test_result$p.value
+cat("The p-value is: ", p_value)
+```
+Is the null hypothesis proven or disproven and why?
+```{r}
+cat("The null hypothesis is disproven because the p-value is less than 0.05. We reject the null hypothesis and accept the alterative hypothesis")
+```
+Is this a one-sided or two-sided test?
+```{r}
+cat("Because we used fisher.test() and did not specify the alternative parameter, the test is two-sided by default.")
+```
+
+
+You toss a two-sided coin 100 times. Assuming the null hypothesis is that the coin is a fair coin and alpha is .05:
+What’s the alternative hypothesis?
+Is this a one-sided or two-sided test?
+```{r}
+print("The alternative hypothesis to 'the coin is a fair coin' is 'the coin is not a fair coin' and that it will land on heads or tails disporitaionally ")
+print("This is a two-sided test because we are looking for any difference in the distribution of heads and tails, not just one side.")
+```
+If the coin is heads 95 times, what is the p-value?
+```{r}
+p_val <- 2 * pbinom(5, size = 100, prob = 0.5)
+print(p_val) #  1.252325e-22
+```
+Is the null hypothesis proven or disproven and why?
+```{r}
+cat("The null hypothesis is disproven because the p-value is less than 0.05. We reject the null hypothesis and accept the alterative hypothesis")
+```
+Is this a one-sided or two-sided test, and why?
+```{r}
+print("Because we are looking for any difference in the distribution of heads and tails, not just one side, this is a two-sided test. We are looking for any difference in the distribution of heads and tails, not just one side.")
+```
+
+Complete Exercise #1 from the text (at the end of Chapter 10).
+
+```{r}
+# 10.1 says to copy code and modify it
+
+#-------- Figure 10.2: Empirical distribution under H0 ---------#
+#---------------------------------------------------------------#
+N <- 1e2 # per group per sample
+numExps <- 1e3
+meandiff <- numeric(numExps)
+
+# run the experiment
+for (i in 1:numExps) {
+  pre <- rtruncnorm(N, a = -5, b = 10, mean = 6, sd = 2)
+  pst <- rtruncnorm(N, a = -5, b = 10, mean = 6, sd = 2)
+  meandiff[i] <- mean(pst) - mean(pre)
+}
+
+df <- data.frame(x = meandiff)
+fig <- ggplot(df, aes(x = x)) +
+  geom_histogram(bins = 20, color = "black", fill = "gray50") +
+  scale_x_continuous(breaks = seq(-1, 1, .25), limits = c(-1, 1)) +
+  scale_y_continuous(breaks = seq(0, 150, 25), expand = c(0, 0)) +
+  labs(x = expression(paste("Difference value (", Delta, ")")), y = "Count") +
+  theme_classic()
+
+fig
+
+
+p <- t.test(meandiff, mu = 0)$p.value
+
+# Print the p-value
+cat("The p-value from the t-test is:", p, "\n")
+```
+
+Run tests 100 times and record the number of times the p-value is below threshold
+```{r}
+# Initialize variables to track false alarm rate
+threshold <- 0.05 # Set the p-value threshold
+false_alarm_count <- 0
+num_repeats <- 100 # Number of times to run the t-test
+
+# Run the t-test 100 times and count false alarms
+for (i in 1:num_repeats) {
+  # Perform the t-test on 'meandiff' values, assuming the null hypothesis mean is 0
+  p_value <- t.test(meandiff, mu = 0)$p.value
+
+  # Check if p-value is below the threshold
+  if (p_value < threshold) {
+    false_alarm_count <- false_alarm_count + 1
+  }
+}
+
+# Calculate the false alarm rate
+false_alarm_rate <- false_alarm_count / num_repeats
+
+# Print the results
+cat("The false alarm rate (p-value < 0.05) after 100 t-tests is:", false_alarm_rate, "\n")
+```
+
+Embed this into a for loop that uses a threshold ranging from .001 to .9
+Plot empirical false alarm rate.
+
+```{r}
+# Initialize variables for tracking false alarm rates
+thresholds <- seq(0.001, 0.9, by = 0.01) # Thresholds from 0.001 to 0.9
+empirical_FA <- numeric(length(thresholds)) # To store empirical false alarm rates
+expected_FA <- thresholds # Expected FA is just the threshold itself, from 0.001 to 0.9
+num_repeats <- 100 # Number of repetitions for the experiment
+
+# Run the experiment for each threshold and compute the empirical false alarm rate
+for (t in 1:length(thresholds)) {
+  threshold <- thresholds[t]
+  false_alarm_count <- 0
+
+  # Run 100 t-tests and count the number of false alarms (p-values below threshold)
+  for (i in 1:num_repeats) {
+    p_value <- t.test(meandiff, mu = 0)$p.value
+    if (p_value < threshold) {
+      false_alarm_count <- false_alarm_count + 1
+    }
+  }
+
+  # Calculate the empirical false alarm rate for this threshold
+  empirical_FA[t] <- false_alarm_count / num_repeats
+}
+
+# Create a data frame for plotting the expected vs. empirical false alarm rates
+df_FA <- data.frame(
+  threshold = thresholds,
+  empirical_FA = empirical_FA,
+  expected_FA = expected_FA
+)
+
+# Plot the expected vs empirical false alarm rate
+fig_FA <- ggplot(df_FA, aes(x = expected_FA, y = empirical_FA)) +
+  geom_point(color = "blue", size = 2) + # Plot the points
+  geom_line(color = "red", size = 1) + # Add a line to connect the points
+  labs(
+    x = "Expected False Alarm Rate (Threshold)", y = "Empirical False Alarm Rate",
+    title = "Expected vs Empirical False Alarm Rate"
+  ) +
+  theme_minimal()
+
+# Display the plot
+print(fig_FA)
+
+# Optionally, save the plot to a file
+ggsave(filename = "expected_vs_empirical_FA.png", width = 8, height = 4, units = "in", dpi = 300)
+
+# Print the final results
+cat("Expected vs Empirical False Alarm Rate plot generated.\n")
+```
+
+Plot means and p-values
+
+```{r}
+#-------- Figure 10.2: Empirical distribution under H0 ---------#
+#---------------------------------------------------------------#
+N <- 1e2 # per group per sample
+numExps <- 1e3 # number of experiments
+meandiff <- numeric(numExps)
+p_values <- numeric(numExps) # To store p-values from each t-test
+empirical_means <- numeric(numExps) # To store empirical means for plotting
+
+# Run the experiment to generate 'meandiff' and capture p-values from t-tests
+for (i in 1:numExps) {
+  pre <- rtruncnorm(N, a = -5, b = 10, mean = 6, sd = 2)
+  pst <- rtruncnorm(N, a = -5, b = 10, mean = 6, sd = 2)
+  meandiff[i] <- mean(pst) - mean(pre)
+  empirical_means[i] <- mean(meandiff[i]) # Capture the empirical mean
+
+  # Perform a t-test on the full samples (pre and pst) to calculate p-value
+  p_values[i] <- t.test(pst, pre)$p.value
+}
+
+# Create a data frame for plotting p-values vs empirical means
+df_empirical <- data.frame(
+  empirical_mean = empirical_means,
+  p_value = p_values
+)
+
+# Create the plot for p-values vs empirical means
+fig_empirical <- ggplot(df_empirical, aes(x = empirical_mean, y = p_value)) +
+  geom_point(color = "blue", size = 1) +
+  labs(x = "Empirical Mean of Differences", y = "P-value", title = "P-value vs Empirical Mean of Differences") +
+  theme_minimal()
+
+# Display the plot
+print(fig_empirical)
+```
+
+
+```{r}
+#-------- Figure 10.3: Distribution assuming H0 is true ---------#
+#----------------------------------------------------------------#
+fig <- ggplot(df, aes(x = x)) +
+  geom_histogram(aes(linetype = "H"), bins = 20, color = "black", fill = "gray90", show.legend = FALSE) +
+  geom_vline(aes(xintercept = .1, linetype = "b"), lwd = 1, key_glyph = "path") +
+  geom_vline(aes(xintercept = .7, linetype = "c"), lwd = 1, key_glyph = "path") +
+  scale_x_continuous(breaks = seq(-1, 1, .25), limits = c(-1, 1)) +
+  scale_y_continuous(breaks = seq(0, 140, 20), expand = c(0, 0)) +
+  scale_linetype_manual(
+    labels = c(
+      expression(paste('"A" (', Delta, " = .1)")),
+      expression(paste('"B" (', Delta, " = .7)")),
+      expression(paste("H"[0], " dist."))
+    ),
+    values = c(H = "solid", b = "dashed", c = "dotted")
+  ) +
+  labs(x = "Difference value", y = "Count") +
+  theme_classic() +
+  guides(linetype = guide_legend(override.aes = list(
+    linetype = c("dashed", "dotted", "solid"),
+    size = 10, linewidth = c(.75, .75, 3),
+    color = c("black", "black", "gray")
+  ))) +
+  theme(
+    legend.title = element_blank(),
+    legend.position = c(.12, .75),
+    legend.text.align = 0,
+    legend.background = element_blank(),
+    legend.box.background = element_rect(colour = "black"),
+    legend.box.margin = margin(-7, 2, -2, 2)
+  ) # top, right, bottom, left
+
+fig
+```
+create and plot a pdf of one distriubtion using dt(t,df) where t is a vector of t-values between -4 and +_4. use df=20.
+
+```{r}
+# Define a range of t-values from -4 to +4
+t_values <- seq(-4, 4, length.out = 100)
+
+# Calculate the probability density for each t-value using dt() with df = 20
+pdf_values <- dt(t_values, df = 20)
+
+# Create a data frame for plotting
+df_pdf <- data.frame(t_values = t_values, pdf_values = pdf_values)
+
+# Plot the PDF of the t-distribution
+fig_pdf <- ggplot(df_pdf, aes(x = t_values, y = pdf_values)) +
+  geom_line(color = "blue", size = 1) +
+  labs(x = "T-value", y = "Probability Density", title = "PDF of t-distribution with df = 20") +
+  theme_minimal()
+
+# Display the plot
+print(fig_pdf)
+```
+
+in a for loop, create many t-distriubtions using the same t-values but df values, ranging from 4 to 40 in integer steps. plot distrubtions, scale y-axis to proability
+
+```{r}
+# Define a range of t-values from -4 to +4
+t_values <- seq(-4, 4, length.out = 100)
+
+# Create an empty data frame to store results for plotting
+df_t_distributions <- data.frame()
+
+# Loop through degrees of freedom (from 4 to 40) and compute the t-distribution for each
+for (df in 4:40) {
+  # Calculate the probability density for each t-value using dt() with the current df
+  pdf_values <- dt(t_values, df = df)
+
+  # Create a data frame for the current distribution
+  temp_df <- data.frame(
+    t_values = t_values,
+    pdf_values = pdf_values,
+    df = as.factor(df) # Store the degrees of freedom for legend
+  )
+
+  # Append the result to the main data frame
+  df_t_distributions <- rbind(df_t_distributions, temp_df)
+}
+
+# Plot all the t-distributions on the same plot
+fig_t_distributions <- ggplot(df_t_distributions, aes(x = t_values, y = pdf_values, color = df)) +
+  geom_line(size = 1) +
+  labs(x = "T-value", y = "Probability Density", title = "T-Distributions with Varying Degrees of Freedom") +
+  scale_y_continuous(labels = scales::percent) + # Scale y-axis to probability density
+  theme_minimal() +
+  theme(legend.title = element_blank()) # Remove legend title for clarity
+
+# Display the plot
+print(fig_t_distributions)
+```
+
+Cohen's book from 10.4
+```{r}
+#-------- Figure 10.4: Analytical vs. empirical H0 distribution ---------#
+#------------------------------------------------------------------------#
+empirical <- rnorm(1e4)
+x <- seq(-4, 4, length = 1001)
+analytical <- dnorm(x) * diff(x[1:2])
+
+fig_A <- ggplot(data.frame(x = x, y = analytical), aes(x = x, y = y)) +
+  geom_smooth(color = "black", lwd = .75) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(breaks = NULL) +
+  labs(
+    title = expression(paste(bold("A)  "), "Analytical ", "H"[0], " distribution")),
+    x = "", y = "Probability"
+  ) +
+  theme_classic() +
+  theme(plot.title = element_text(size = 14))
+
+fig_B <- ggplot(data.frame(x = empirical), aes(x = x)) +
+  geom_histogram(bins = 60, color = "black", fill = "gray80") +
+  scale_x_continuous(limit = c(-4, 4)) +
+  scale_y_continuous(breaks = NULL, expand = c(0, 0)) +
+  labs(
+    title = expression(paste(bold("B)  "), "Empirical ", "H"[0], " distribution")),
+    x = "Test statistic value", y = "Count"
+  ) +
+  theme_classic() +
+  theme(plot.title = element_text(size = 14))
+
+fig <- plot_grid(fig_A, fig_B, ncol = 1)
+
+fig
+```
+Start by creating a family of k-40 random p-vales as u^2 then implement the following steps:
+
+1. sort the p-values 
+
+
+```{r}
+# Generate random p-values (e.g., using a uniform distribution)
+set.seed(123) # For reproducibility
+k <- 40
+u <- runif(k) # Generate k random numbers from uniform distribution
+pvals <- u^2 # p-values generated from u^2 (uniform squared)
+
+# Step 1: Sort the p-values
+sorted_pvals <- sort(pvals)
+
+# Print the sorted p-values
+print("Sorted p-values:")
+print(sorted_pvals)
+```
+2. compute linear-interpolated p-values set as v/k where v is a vector of integers
+
+
+```{r}
+# Create a vector of integers from 1 to k (v)
+v <- 1:k
+
+# Compute the linear-interpolated p-values as v/k
+linear_interpolated_pvals <- v / k
+
+# Display the linear-interpolated p-values
+print("Linear-interpolated p-values (v/k):")
+print(linear_interpolated_pvals)
+```
+3. compute adjusted p-values by dividing the sorted p-values by the linear interpolated p-values
+
+```{r}
+# Compute the adjusted p-values
+adjusted_pvals <- sorted_pvals / linear_interpolated_pvals
+
+# Display the adjusted p-values
+print("Adjusted p-values (sorted p-values / linear-interpolated p-values):")
+print(adjusted_pvals)
+```
+
+
+
+Use function fdrcorrection() which is contained in p.adjust(pvaels,"BH")
+
+Organize results into a graph
+
+
+```{r}
+# Apply the Benjamini-Hochberg correction
+fdr_corrected_pvals <- p.adjust(sorted_pvals, method = "BH")
+
+# Display the FDR-corrected p-values
+print("FDR-corrected p-values (Benjamini-Hochberg):")
+print(fdr_corrected_pvals)
+
+# Step 5: Organize results into a graph
+
+# Create a data frame with the sorted p-values, linear-interpolated p-values, and FDR-corrected p-values
+df_results <- data.frame(
+  Sorted_pvals = sorted_pvals,
+  Linear_interpolated_pvals = linear_interpolated_pvals,
+  FDR_corrected_pvals = fdr_corrected_pvals
+)
+
+# Plot the results: Sorted p-values, linear-interpolated p-values, and FDR-corrected p-values
+library(ggplot2)
+
+fig_fdr <- ggplot(df_results, aes(x = 1:k)) +
+  geom_line(aes(y = Sorted_pvals, color = "Sorted p-values"), size = 1) +
+  geom_line(aes(y = Linear_interpolated_pvals, color = "Linear Interpolated p-values"), size = 1) +
+  geom_line(aes(y = FDR_corrected_pvals, color = "FDR-corrected p-values"), size = 1) +
+  labs(
+    x = "Index",
+    y = "P-value",
+    title = "Sorted P-values, Linear Interpolated P-values, and FDR-corrected P-values"
+  ) +
+  scale_color_manual(values = c("blue", "red", "green")) +
+  theme_minimal() +
+  theme(
+    legend.title = element_blank(),
+    legend.position = "top"
+  )
+
+# Display the plot
+print(fig_fdr)
+```
+
+
+
+```{r}
+#-------- Figure 10.5: p-values and thresholds ---------#
+#-------------------------------------------------------#
+# create a Gaussian probability curve
+zvals <- seq(-3, 3, length = 1001)
+zpdf <- dnorm(zvals)
+
+# plot the probability function and the vertical lines
+df1 <- data.frame(x = zvals, y = zpdf)
+fig_A <- ggplot(df1, aes(x = x, y = y)) +
+  geom_smooth(color = "black") +
+  scale_x_continuous(limit = c(head(zvals, 1), tail(zvals, 1)), expand = c(0, 0)) +
+  scale_y_continuous(limit = c(0, .42), breaks = NULL, expand = c(0, 0)) +
+  labs(x = "", y = expression(paste("Prob. given ", "H"[0]))) +
+  theme_classic()
+
+# two-tailed p-values
+mn_idx <- which.min(zvals**2)
+pvalsL <- pnorm(zvals[1:mn_idx])
+pvalsR <- 1 - pnorm(zvals[(mn_idx + 1):length(zvals)])
+pvals2 <- 2 * c(pvalsL, pvalsR)
+
+# plot the probability function
+df2 <- data.frame(x = zvals, y = pvals2)
+fig_B <- ggplot(df2, aes(x = x, y = y)) +
+  geom_line(color = "black") +
+  geom_hline(yintercept = .05, color = "gray50", linetype = "dashed") +
+  scale_x_continuous(limit = c(head(zvals, 1), tail(zvals, 1)), expand = c(0, 0)) +
+  labs(x = "", y = "P-value") +
+  theme_classic()
+
+# draw vertical lines
+vline1 <- geom_vline(aes(xintercept = zvals[which.min((zvals - qnorm(.025))**2)]),
+  color = "darkgray",
+  linetype = "dotted", linewidth = .75
+)
+vline2 <- geom_vline(aes(xintercept = zvals[which.min((zvals - qnorm(.975))**2)]),
+  color = "darkgray",
+  linetype = "dotted", linewidth = .75
+)
+fig_A <- fig_A + vline1 + vline2
+fig_B <- fig_B + vline1 + vline2
+
+# draw patches for significant regions
+zidx <- which.min((zvals - qnorm(.025))**2)
+fig_A <- fig_A + geom_ribbon(data = subset(df1, x <= x[zidx]), aes(ymin = 0, ymax = y), alpha = .4)
+fig_B <- fig_B + geom_ribbon(data = subset(df2, x <= x[zidx]), aes(ymin = 0, ymax = y), alpha = .4)
+
+zidx <- which.min((zvals - qnorm(.975))**2)
+fig_A <- fig_A + geom_ribbon(data = subset(df1, x >= x[zidx]), aes(ymin = 0, ymax = y), alpha = .4)
+fig_B <- fig_B + geom_ribbon(data = subset(df2, x >= x[zidx]), aes(ymin = 0, ymax = y), alpha = .4)
+
+fig_C <- fig_B
+
+# indicators
+fig_A <- fig_A + annotate("text", x = 0, y = .3, label = '\"Not Significant\"') +
+  annotate("segment",
+    x = -2.35, xend = -2.2, y = .12, yend = .05, lwd = 1.25, linejoin = "mitre",
+    arrow = arrow(type = "closed", length = unit(.02, "npc"))
+  ) +
+  annotate("text", x = -2.375, y = .15, label = '\"Significant\"') +
+  annotate("segment",
+    x = 2.35, xend = 2.2, y = .12, yend = .05, lwd = 1.25, linejoin = "mitre",
+    arrow = arrow(type = "closed", length = unit(.02, "npc"))
+  ) +
+  annotate("text", x = 2.375, y = .15, label = '\"Significant\"')
+
+fig_B <- fig_B + annotate("text", x = 2.4, y = .12, label = "p=.05")
+fig_C <- fig_C + annotate("text", x = 2.4, y = .0975, label = "p=.05")
+
+# panel titles
+fig_A <- fig_A + ggtitle(expression(paste(bold("A)  "), "Test statistic distribution if ", "H"[0], " were true")))
+fig_B <- fig_B + ggtitle(expression(paste(bold("B)  "), "P-value for each test statistic")))
+fig_C <- fig_C + ggtitle(expression(paste(bold("C)  "), "Same as panel ", bold("B"), " but in log scale")))
+
+fig_B <- fig_B + scale_y_continuous(limits = c(0, 1.03), breaks = seq(0, 1, .5), expand = c(0, 0))
+fig_C <- fig_C + xlab("Test statistic (z-score)") +
+  scale_y_log10(labels = trans_format("log10", math_format(10^.x))) +
+  annotation_logticks(
+    sides = "l", outside = TRUE, size = .25,
+    short = unit(.075, "cm"), mid = unit(.125, "cm"), long = unit(.175, "cm")
+  ) +
+  coord_cartesian(clip = "off") +
+  theme(axis.ticks.y = element_blank())
+
+fig <- plot_grid(fig_A, fig_B, fig_C, ncol = 1, align = "v", axis = "l")
+
+fig
+ggsave(filename = "hyp_sigRegionsZandP.png", width = 7, height = 7, units = "in", dpi = 300)
+```
+
+```{r}
+# Apply FDR correction to the p-values using p.adjust()
+fdr_corrected_pvals <- p.adjust(pvals2, method = "BH")
+
+# Print FDR-corrected p-values
+cat("FDR-corrected p-values (Benjamini-Hochberg):\n")
+print(fdr_corrected_pvals)
+
+# Identify significant results (FDR-corrected p-values below 0.05)
+significant_idx <- which(fdr_corrected_pvals < 0.05)
+
+cat("Significant results (FDR-corrected p-value < 0.05):\n")
+print(significant_idx) # This was 0...not sure if it was expected.
+```
+
+
+```{r}
+#-------- Figure 10.6: H0 distribution with critical value ---------#
+#-------------------------------------------------------------------#
+# create a Gaussian probability curve
+x <- seq(-4, 4, length = 1001)
+gpdf <- dnorm(x)
+
+# the find the indices of the 95% of the distribution
+ubndi <- which.min(abs(x - qnorm(.95)))
+df <- data.frame(x = x, y = gpdf)
+fig_0 <- ggplot(df, aes(x = x, y = y)) +
+  geom_smooth(color = "black") +
+  scale_x_continuous(limits = c(head(x, 1), tail(x, 1)), expand = c(0, 0)) +
+  scale_y_continuous(limits = c(0, .42), expand = c(0, 0)) +
+  labs(x = "Test statistic", y = "Probability") +
+  theme_classic() +
+  theme(line = element_blank(), axis.text = element_blank())
+
+fig_A <- fig_0 + ggtitle(expression(paste(bold("A)  "), "One-tailed test")))
+
+# create patches for the significant area
+fig_A <- fig_A + geom_ribbon(
+  data = subset(df, x >= x[ubndi]),
+  aes(ymin = 0, ymax = y), alpha = .4
+)
+
+# annotations
+tailx <- which.min(abs(x - 2.2))
+fig_A <- fig_A + annotate("text", x = 2.72, y = .1, label = "5%") +
+  annotate("segment",
+    x = 2.55, xend = 2.2, y = 0.09, yend = 0.05, lwd = 1.5, linejoin = "mitre",
+    arrow = arrow(type = "closed", length = unit(.01, "npc"))
+  )
+
+# significance threshold line
+fig_A <- fig_A + geom_vline(xintercept = x[ubndi], linetype = "dashed", lwd = .75) +
+  annotate("text", x = x[ubndi] + .15, y = .25, size = 4, label = "Sig. threshold", angle = 90)
+
+# the find the indices of the 2.5% and 97.5%
+lbndi <- which.min(abs(x - qnorm(.025)))
+ubndi <- which.min(abs(x - qnorm(1 - .025)))
+
+# plot the probability function and the vertical lines
+fig_B <- fig_0 + ggtitle(expression(paste(bold("B)  "), "Two-tailed test")))
+
+
+# now create patches for the significant area
+fig_B <- fig_B + geom_ribbon(data = subset(df, x <= x[lbndi]), aes(ymin = 0, ymax = y), alpha = .4) +
+  geom_ribbon(data = subset(df, x >= x[ubndi]), aes(ymin = 0, ymax = y), alpha = .4)
+
+# significance threshold line
+fig_B <- fig_B + geom_vline(xintercept = x[lbndi], linetype = "dashed", lwd = .75) +
+  geom_vline(xintercept = x[ubndi], linetype = "dashed", lwd = .75)
+
+# annotations
+fig_B <- fig_B + annotate("text", x = x[lbndi] - .15, y = .25, size = 4, label = "Sig. threshold", angle = 90) +
+  annotate("text", x = x[ubndi] + .15, y = .25, size = 4, label = "Sig. threshold", angle = 90) +
+  annotate("text", x = -2.77, y = .105, label = "2.5%") +
+  annotate("segment",
+    x = -2.55, xend = -2.2, y = 0.09, yend = 0.05, lwd = 1.5, linejoin = "mitre",
+    arrow = arrow(type = "closed", length = unit(.01, "npc"))
+  ) +
+  annotate("text", x = 2.79, y = .105, label = "2.5%") +
+  annotate("segment",
+    x = 2.55, xend = 2.2, y = 0.09, yend = 0.05, lwd = 1.5, linejoin = "mitre",
+    arrow = arrow(type = "closed", length = unit(.01, "npc"))
+  )
+
+fig <- plot_grid(fig_A, fig_B, ncol = 1, align = "v")
+
+fig
+ggsave(filename = "hyp_tails.png", width = 7, height = 5, units = "in", dpi = 300)
+```
+
+
+start by creating a set of 100 random p-valuyes as p=u^2 using a threshold of .05 compute report percent of p-values that are subtreshold. 
+
+it should read:
+
+
+FDR led to X% significant tests.
+Bonferroni led to Z% significant tests.
+
+
+```{r}
+# Set the seed for reproducibility
+set.seed(123)
+
+# Generate 100 random p-values
+k <- 100
+u <- runif(k)
+pvals <- u^2
+
+# Define the threshold
+threshold <- 0.05
+
+# Compute percentage of p-values below the threshold
+percent_below_threshold <- sum(pvals < threshold) / k * 100
+
+# Apply FDR
+fdr_corrected_pvals <- p.adjust(pvals, method = "BH")
+percent_significant_fdr <- sum(fdr_corrected_pvals < threshold) / k * 100
+
+# Apply Bonferroni correction
+bonferroni_corrected_pvals <- p.adjust(pvals, method = "bonferroni")
+percent_significant_bonferroni <- sum(bonferroni_corrected_pvals < threshold) / k * 100
+
+# Output the results
+cat("FDR led to", round(percent_significant_fdr, 2), "% significant tests.\n")
+cat("Bonferroni led to", round(percent_significant_bonferroni, 2), "% significant tests.\n")
+```
+
+
+compute and report the mean and standard deviation portion subthreshold p-values.
+put the code into for loop over 100 iterations, creating 100 p-values
+
+FDR: mean of X% (str 1.23) significant tests
+Bonferroni: mean of Z% (str 1.23) significant tests
+
+
+```{r}
+# Set the number of iterations
+iterations <- 100
+
+# Initialize vectors to store the percentage of significant tests for each iteration
+fdr_percentages <- numeric(iterations)
+bonferroni_percentages <- numeric(iterations)
+
+# Run the simulation over 100 iterations
+set.seed(123) # For reproducibility
+for (i in 1:iterations) {
+  # Generate 100 random p-values
+  u <- runif(100)
+  pvals <- u^2
+
+  # Apply FDR correction using Benjamini-Hochberg method
+  fdr_corrected_pvals <- p.adjust(pvals, method = "BH")
+
+  # Apply Bonferroni correction
+  bonferroni_corrected_pvals <- p.adjust(pvals, method = "bonferroni")
+
+  # Compute percentage of significant tests (p < 0.05)
+  fdr_percentages[i] <- sum(fdr_corrected_pvals < 0.05) / length(pvals) * 100
+  bonferroni_percentages[i] <- sum(bonferroni_corrected_pvals < 0.05) / length(pvals) * 100
+}
+
+# Compute the mean and standard deviation for both methods
+mean_fdr <- mean(fdr_percentages)
+sd_fdr <- sd(fdr_percentages)
+mean_bonferroni <- mean(bonferroni_percentages)
+sd_bonferroni <- sd(bonferroni_percentages)
+
+# Report the results
+cat("FDR: mean of", round(mean_fdr, 2), "% significant tests (SD =", round(sd_fdr, 2), ")\n")
+cat("Bonferroni: mean of", round(mean_bonferroni, 2), "% significant tests (SD =", round(sd_bonferroni, 2), ")\n")
+```
+
+There is a difference between the two. What does the difference mean? Which method is more correct, or better?
+
+
+```{r}
+cat("FDR allows more significant tests but may accept more false positives.\n")
+cat("Bonferroni is more strict, leading to fewer significant tests but controlling false positives more strictly.\n")
+cat("There isn't a one-size fits all to make one better than the other. They are used in different contexts.\n")
+```
+
+
+Embed the code from exercise 6 with 100 repetitions in another for loop that varies the number of p-values in each set, from 2 to 500, logarithmetically spaced sets. Vizualize results in a plot.
+```{r}
+# Set the number of iterations for each set of p-values
+iterations <- 100
+
+# Set the number of p-values for each iteration, varying from 2 to 500 logarithmically spaced
+num_pvals <- round(10^(seq(log10(2), log10(500), length.out = 20)))
+
+# Initialize vectors to store the percentage of significant tests for each number of p-values
+fdr_percentages_all <- numeric(length(num_pvals))
+bonferroni_percentages_all <- numeric(length(num_pvals))
+
+# Loop through the different numbers of p-values
+for (j in 1:length(num_pvals)) {
+  # Initialize vectors to store the percentages for this specific number of p-values
+  fdr_percentages <- numeric(iterations)
+  bonferroni_percentages <- numeric(iterations)
+
+  for (i in 1:iterations) {
+    # Generate random p-values for the current number of p-values
+    pvals <- runif(num_pvals[j])^2
+
+    # Apply FDR correction using Benjamini-Hochberg method
+    fdr_corrected_pvals <- p.adjust(pvals, method = "BH")
+
+    # Apply Bonferroni correction
+    bonferroni_corrected_pvals <- p.adjust(pvals, method = "bonferroni")
+
+    # Compute percentage of significant tests (p < 0.05)
+    fdr_percentages[i] <- sum(fdr_corrected_pvals < 0.05) / length(pvals) * 100
+    bonferroni_percentages[i] <- sum(bonferroni_corrected_pvals < 0.05) / length(pvals) * 100
+  }
+
+  # Store the mean percentage for the current number of p-values
+  fdr_percentages_all[j] <- mean(fdr_percentages)
+  bonferroni_percentages_all[j] <- mean(bonferroni_percentages)
+}
+
+# Create a plot to visualize the results
+plot(num_pvals, fdr_percentages_all,
+  type = "b", col = "blue", pch = 19, xlab = "Number of P-values",
+  ylab = "Mean % Significant Tests", log = "x",
+  main = "FDR and Bonferroni Corrections with Varying P-values"
+)
+lines(num_pvals, bonferroni_percentages_all, type = "b", col = "red", pch = 19)
+legend("topright", legend = c("FDR", "Bonferroni"), col = c("blue", "red"), pch = 19)
+```
+
+The number of subthresholds drops with Bonferroni correction, while the number remains roughly constant for FDR. Why does this happen?
+
+
+```{r}
+# Note, my chart doesn't match the one from the book. While FDR lasts until 500, it is not consistent as it is in the book.
+print("Bonferroni correction is strict. As the number of tests increases, fewer p-values are significant.")
+print("FDR correction is more flexible. It allows more p-values to stay significant as the number of tests increases.")
+```
+
+
+
+```{r}
+#-------- Figure 10.8: p-z pairs ---------#
+#-----------------------------------------#
+# critical p-values to draw
+ps2draw <- c(.05, .01, .001)
+
+stds <- seq(-4, 4, length = 1001)
+probs <- dnorm(stds)
+
+# draw the lines
+fig_A <- ggplot(data.frame(x = stds, y = probs), aes(x = x, y = y)) +
+  geom_smooth(color = "black") +
+  scale_x_continuous(breaks = seq(head(stds, 1), tail(stds, 1), 1), expand = c(0, 0)) +
+  scale_y_continuous(limits = c(0, .42), expand = c(0, 0)) +
+  labs(x = "", y = "Probability") +
+  theme_classic() +
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank())
+
+fig_B <- fig_A
+
+
+## one-tailed
+styles <- c("dashed", "dotted", "dotdash")
+for (i in seq_along(ps2draw)) {
+  zval <- qnorm(1 - ps2draw[i])
+  c <- i / length(ps2draw) * .8
+  fig_A <- fig_A + geom_vline(xintercept = zval, color = rgb(c, c, c), lwd = .575, linetype = styles[i]) +
+    annotate("text",
+      x = 0, y = .2 - (i - 2) / 10, color = rgb(c, c, c),
+      label = glue("p=", ps2draw[i], ", z=", format(round(zval, 2), nsmall = 2))
+    ) +
+    annotate("segment",
+      x = .7 + (i - 1) * .02, xend = zval - .075, y = .2 - (i - 2) / 10, yend = .2 - (i - 2) / 10,
+      color = rgb(c, c, c), lwd = 2, linejoin = "mitre", arrow = arrow(type = "closed", length = unit(.01, "npc"))
+    )
+}
+
+## two-tailed
+for (i in seq_along(ps2draw)) {
+  # z-value for this p-value
+  zval <- qnorm(ps2draw[i] / 2)
+
+  # vertical line
+  c <- i / length(ps2draw) * .8 # line color
+  fig_B <- fig_B + geom_vline(xintercept = -zval, color = rgb(c, c, c), lwd = .575, linetype = styles[i]) +
+    geom_vline(xintercept = zval, color = rgb(c, c, c), lwd = .575, linetype = styles[i]) +
+    annotate("text",
+      x = 0, y = .2 - (i - 2) / 10, color = rgb(c, c, c),
+      label = glue("p=", ps2draw[i], ", z=|", format(round(abs(zval), 2), nsmall = 2), "|")
+    ) +
+    annotate("segment",
+      x = -.7 - (i - 1) * .02, xend = zval + .075, y = .2 - (i - 2) / 10, yend = .2 - (i - 2) / 10,
+      color = rgb(c, c, c), lwd = 2, linejoin = "mitre", arrow = arrow(type = "closed", length = unit(.01, "npc"))
+    ) +
+    annotate("segment",
+      x = .7 + (i - 1) * .02, xend = -zval - .075, y = .2 - (i - 2) / 10, yend = .2 - (i - 2) / 10,
+      color = rgb(c, c, c), lwd = 2, linejoin = "mitre", arrow = arrow(type = "closed", length = unit(.01, "npc"))
+    )
+}
+
+fig_A <- fig_A + ggtitle(expression(paste(bold("A)  "), "One-tailed ", italic(p), "-z pairs")))
+fig_B <- fig_B + labs(
+  title = expression(paste(bold("B)  "), "Two-tailed ", italic(p), "-z pairs")),
+  x = "Standard deviations (z)"
+)
+
+fig <- plot_grid(fig_A, fig_B, ncol = 1)
+
+fig
+ggsave(filename = "hyp_pz_combos2know.png", width = 7, height = 7, units = "in", dpi = 300)
+
+
+
+
+
+
+# Getting p-values from z-values
+zval <- 1
+pval <- pnorm(zval)
+glue("The p-value for z = ", format(round(zval, 2), nsmall = 2), " is p = ", round(1 - pval, 4), ".")
+```
+
+Generate a dataset of 5 numbers drawn from N(0,1) and perform a t-test against H0:u=0 using t.test()$p.value in R. The test should be non-significant because the numbers are randomly drawn from a distriubtion with population mean of zero. At each interation inside a while-loop, add three random numbers to the sample (thus the new sample will have N=8 in the first iteration), and run the t-test again. Record the p-value at each test. Then make a plot of the p-values as a function of the sample size.
+
+```{r}
+# Set the seed for reproducibility
+set.seed(123)
+
+# Start with 5 random numbers from N(0,1)
+sample_data <- rnorm(5)
+
+# Initialize vectors to store sample size and p-values
+sample_sizes <- length(sample_data)
+p_values <- t.test(sample_data, mu = 0)$p.value
+
+# Run a while-loop: keep adding 3 numbers each time
+while (length(sample_data) < 100) { # stop once sample size gets reasonably big
+  # Add 3 new random numbers
+  sample_data <- c(sample_data, rnorm(3))
+
+  # Perform t-test
+  p_val <- t.test(sample_data, mu = 0)$p.value
+
+  # Store results
+  sample_sizes <- c(sample_sizes, length(sample_data))
+  p_values <- c(p_values, p_val)
+}
+
+# Plot p-values vs sample size
+plot(sample_sizes, p_values,
+  type = "b", pch = 19, col = "blue",
+  xlab = "Sample Size", ylab = "P-value", main = "P-values vs Sample Size"
+)
+abline(h = 0.05, col = "red", lty = 2) # Add a horizontal line at 0.05
+```
+

@@ -1,0 +1,100 @@
+---
+title: "Week 8: T-Testing Testing"
+author: "Gabriel Vance"
+date: "April 28, 2025"
+output: html_document
+---
+
+
+# Imports
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+# import libraries
+library(cowplot)
+library(glue)
+library(pracma)
+library(reshape)
+library(scales)
+library(truncnorm)
+```
+A researcher hypothesizes that TV stimulation for kids will result in a decrease in the number of pieces of candy corn eaten. The kids are subjected to 5 hours of television. The number of candy corn candies consumed during a 10-minute period is counted both with and without TV. 
+
+Compute the appropriate t-test for the data provided below.
+
+With TV	Without TV
+12	8
+7	7
+3	4
+11	14
+8	6
+5	7
+14	12
+7	5
+9	5
+10	8
+
+```{r}
+# Make two vectors with different columns
+with_tv <- c(12, 7, 3, 11, 8, 5, 14, 7, 9, 10)
+without_tv <- c(8, 7, 4, 14, 6, 7, 12, 5, 5, 8)
+
+# Run a paired t-test
+t.test(with_tv, without_tv, paired = TRUE)
+```
+
+
+What is your computed answer for the following, based on the date in the table above?
+Mean =	Mean =
+S =	S =
+S2 =	S2 =
+```{r}
+mean(with_tv)
+mean(without_tv)
+
+sd(with_tv)
+sd(without_tv)
+
+var(with_tv)
+var(without_tv)
+```
+
+What is your computed t-test answer?
+
+```{r}
+t.test(with_tv, without_tv, paired = TRUE)
+```
+
+What is the null hypothesis in this study?
+
+```{r}
+cat("The null hypothesis in this study is that TV does not impact the number of candy corn eaten.")
+```
+
+What is the alternate hypothesis?
+
+```{r}
+cat("The alternative hypothesis in this study is that TV does make a difference on the number of candy corn eaten.")
+```
+What probability level did you choose and why?
+
+```{r}
+cat("The probability level we are using is alpha = 0.05. This means we're willing to accept a 5% chance of incorrectly rejecting null hypothesis, which is a standard value. Low alpha such as 0.01 would make it harder to detect real effects where as a alpha such as 0.1 would increase the risk of false positives.")
+```
+
+What are your degrees of freedom?
+
+```{r}
+cat("Degrees of freedom follows this formula: df = n - 1. Since we have 10 rows, our df would be 10-1. Therefore our degrees of freedom is 9.")
+```
+
+
+Is there a significant difference between the two testing conditions? Interpret your answer.
+
+```{r}
+# Just to test again
+t.test(with_tv, without_tv, paired = TRUE)
+
+cat("There is no statistically significant difference between the number of candy corn eaten with TV stimulation and without it (p = 0.2208 > 0.05). This means we fail to reject the null hypothesis. In this sample, watching TV does not appear to significantly affect candy corn consumption.")
+```

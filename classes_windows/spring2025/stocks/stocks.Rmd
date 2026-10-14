@@ -1,0 +1,48 @@
+---
+title: "Stock Metadata Example"
+output: html_document
+---
+
+```{r}
+library(tidyquant)
+library(quantmod)
+library(dplyr)
+library(TTR)  # Needed for RSI and MACD
+
+# Get stock data
+# stock <- tq_get("AAPL", from = "2000-01-01", to = "2023-12-31")
+stock <- tq_get("KUKE", from = "2000-01-01", to = "2023-12-31")
+
+
+# Calculate 5-day close-to-close percentage performance
+stock <- stock %>%
+  arrange(date) %>%
+  mutate(`5D Actual Perf` = (close / lag(close, 5) - 1) * 100)
+
+# Calculate RSI and MACD separately
+macd_vals <- MACD(stock$close, nFast = 12, nSlow = 26, nSig = 9)
+
+stock <- stock %>%
+  mutate(
+    RSI_14 = RSI(close, n = 14),
+    MACD = macd_vals[, "macd"],
+    MACD_signal = macd_vals[, "signal"]
+  )
+
+stock <- stock %>%
+  select(-adjusted)
+head(stock, 20)
+```
+
+```{r}
+
+library(ggplot2)
+
+ggplot(stock, aes(x = RSI_14, y = `5D Actual Perf`)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(method = "loess") +
+  labs(title = "RSI vs 5-Day Forward Performance",
+       x = "RSI (14)",
+       y = "5-Day Actual Performance (%)")
+
+```

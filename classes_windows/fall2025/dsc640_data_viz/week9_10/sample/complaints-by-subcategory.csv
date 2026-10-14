@@ -1,0 +1,101 @@
+pdf_report_date,airport,category,subcategory,year_month,count,clean_cat,clean_subcat,clean_cat_status,clean_subcat_status,is_category_prefix_removed
+2019-02,FAT,Persons w/ Disabilities (PWD),Cancer (general) Not Breast Cancer,2015-08,0,Persons w/ Disabilities (PWD),Cancer (general) Not Breast Cancer,original,original,False
+2024-02,BJI,Expedited Passenger Screening Program,Expedited Passenger Screening Program - TSA PreC,2023-09,0,Expedited Passenger Screening Program,*TSA PreCheck,original,imputed,True
+2024-02,VPS,Customer Service,Customer Service - TSO,2024-01,1,Customer Service,TSO,original,original,True
+2022-05,AVL,Persons w/ Disabilities (PWD),Persons w/ Disabilities (PWD) - Wheelchair/ Scooter/ Segway,2019-02,0,Persons w/ Disabilities (PWD),Wheelchair/ Scooter/ Segway,original,original,True
+2019-02,FAI,Mishandling of Passenger Property,Damaged/Missing Items--Checked Baggage,2015-08,6,Mishandling of Passenger Property,*Damaged/Missing Items--Checked Baggage,original,original,False
+2023-05,AKN,Mishandling of Passenger Property,Mishandling of Passenger Property - Damaged/Missing Items--Checked Baggage,2020-04,0,Mishandling of Passenger Property,*Damaged/Missing Items--Checked Baggage,original,original,True
+2019-12,LEX,Mishandling of Passenger Property,Mishandling of Passenger Property - Damaged/Missing Items--Checked Bag,2016-09,0,Mishandling of Passenger Property,*Damaged/Missing Items--Checked Baggage,original,imputed,True
+2024-02,BDL,Property - Special Handling,Property - Special Handling - Missing Items - Checke,2022-02,1,Property - Special Handling,*Missing Items - Checked,original,imputed,True
+2023-05,OKC,Mishandling of Passenger Property,Mishandling of Passenger Property - Damaged/Missing Items--Checked Baggage,2020-02,1,Mishandling of Passenger Property,*Damaged/Missing Items--Checked Baggage,original,original,True
+2024-02,GSO,Screening,Screening - Inconsistency,2023-10,1,Screening,Inconsistency,original,original,True
+2021-06,IFP,Patdown,Patdown - Flyer,2018-03,0,Patdown,Flyer,original,original,True
+2022-05,LIT,Property - Special Handling,Property - Special Handling - Missing Items - Carry-On,2019-04,0,Property - Special Handling,*Missing Items - Carry-On,original,original,True
+2021-06,RSW,Persons w/ Disabilities (PWD),Persons w/ Disabilities (PWD) - Mobility Disability (Not Wheelchair or Scooter),2018-01,0,Persons w/ Disabilities (PWD),Mobility Disability (Not Wheelchair or Scooter),original,original,True
+2023-05,XWA,Mishandling of Passenger Property,Mishandling of Passenger Property - Damaged/Missing Items--Checked Bag,2021-07,0,Mishandling of Passenger Property,*Damaged/Missing Items--Checked Baggage,original,imputed,True
+2023-05,GPT,Persons w/ Disabilities (PWD),Persons w/ Disabilities (PWD) - Autism Spectrum,2020-11,0,Persons w/ Disabilities (PWD),Autism Spectrum,original,original,True
+2021-06,STT,Patdown,Patdown - Flyer,2018-03,0,Patdown,Flyer,original,original,True
+2024-02,GRR,Persons w/ Disabilities (PWD),Persons w/ Disabilities (PWD) - Prosthesis/Amputees and Casts,2023-07,0,Persons w/ Disabilities (PWD),Prosthesis/Amputees and Casts,original,original,True
+2019-12,,Locks,Locks - General,2017-12,5,Locks,General,original,original,True
+2019-02,PWM,Patdown,Flyer,2015-09,0,Patdown,Flyer as Observer,original,imputed,False
+2024-02,MFR,Customer Service,Customer Service - TSO,2023-07,0,Customer Service,TSO,original,original,True
+2024-02,CMH,Prohibited & Permitted Items,Prohibited & Permitted Items - Beauty & Grooming Items,2022-02,0,Prohibited & Permitted Items,Beauty & Grooming Items,original,original,True
+2023-05,GTR,Screening,Screening - Lengthy Lines,2021-04,0,Screening,Lengthy Lines,original,original,True
+2023-05,MLB,Customer Service,Customer Service - TSO,2020-08,0,Customer Service,TSO,original,original,True
+2019-12,MKE,Identification (ID) Requirements,Identification (ID) Requirements - Domestic,2017-02,0,Identification (ID) Requirements,Domestic,original,original,True
+2024-02,TVC,Screening,Screening - Procedures/Process,2023-03,0,Screening,Procedures/Process,original,original,True
+2024-02,TUS,Mishandling of Passenger Property,Mishandling of Passenger Property - Disarrayed Items--Carry-on or Checked,2023-01,0,Mishandling of Passenger Property,Disarrayed Items--Carry-on or Checked,original,original,True
+2021-06,FNT,Property - Special Handling,Property - Special Handling - Missing Items - Checked,2018-04,1,Property - Special Handling,*Missing Items - Checked,original,original,True
+2023-05,GEG,Persons w/ Disabilities (PWD),Persons w/ Disabilities (PWD) - Metal Implants (joint),2021-04,0,Persons w/ Disabilities (PWD),Metal Implants (joint),original,original,True
+2019-12,HOU,Persons w/ Disabilities (PWD),Persons w/ Disabilities (PWD) - Wheelchair/ Scooter/ Segway,2017-06,0,Persons w/ Disabilities (PWD),Wheelchair/ Scooter/ Segway,original,original,True
+2024-02,HOU,Screening,Screening - Retrieving Abandoned/Confiscated Items,2023-11,0,Screening,Retrieving Abandoned/Confiscated Items,original,original,True
+2024-02,MDW,Persons w/ Disabilities (PWD),Persons w/ Disabilities (PWD) - Internal Medical Devices,2023-10,0,Persons w/ Disabilities (PWD),Internal Medical Devices,original,original,True
+2021-06,EWR,Mishandling of Passenger Property,Mishandling of Passenger Property - Disarrayed Items--Carry-on or Checked,2018-11,1,Mishandling of Passenger Property,Disarrayed Items--Carry-on or Checked,original,original,True
+2021-06,SJC,Screening,Screening - Inconsistency,2018-11,1,Screening,Inconsistency,original,original,True
+2019-02,DSM,Mishandling of Passenger Property,Damaged/Missing Items--Carry-on Luggage,2015-02,0,Mishandling of Passenger Property,*Damaged/Missing Items--Carry-on Luggage,original,original,False
+2019-12,KTN,Property - Special Handling,Property - Special Handling - Missing Items - Checked,2017-07,0,Property - Special Handling,*Missing Items - Checked,original,original,True
+2019-02,HNL,Locks,General,2015-01,0,Locks,General,original,original,False
+2024-02,LAX,Civil Rights,Civil Rights - Transgender Screening,2023-09,0,Civil Rights,Transgender Screening,original,original,True
+2023-05,PNS,Persons w/ Disabilities (PWD),Persons w/ Disabilities (PWD) - Autism Spectrum,2021-02,0,Persons w/ Disabilities (PWD),Autism Spectrum,original,original,True
+2021-06,FAI,Screening,Screening - Inconsistency,2018-07,1,Screening,Inconsistency,original,original,True
+2024-02,SEA,Patdown,Patdown - Flyer,2022-02,0,Patdown,Flyer,original,original,True
+2024-02,FLL,Civil Rights,Civil Rights - Race,2023-01,0,Civil Rights,Race,original,original,True
+2023-05,LAX,Civil Rights,Civil Rights - Sex/Gender/Gender Identity- Not Transgender,2020-09,1,Civil Rights,Sex/Gender/Gender Identity- Not Transgender,original,original,True
+2019-12,TPA,Customer Service,Customer Service - TSO,2016-05,5,Customer Service,TSO,original,original,True
+2021-06,MDW,Mishandling of Passenger Property,Mishandling of Passenger Property - Disarrayed Items--Carry-on or Checked,2018-12,2,Mishandling of Passenger Property,Disarrayed Items--Carry-on or Checked,original,original,True
+2024-02,GJT,Expedited Passenger Screening Program,Expedited Passenger Screening Program,2023-05,3,Expedited Passenger Screening Program,*,original,ambiguous,True
+2021-06,LAS,Property - Special Handling,Property - Special Handling - Damaged Items - Checked,2018-03,6,Property - Special Handling,*Damaged Items - Checked,original,original,True
+2019-12,LEX,Civil Rights,Civil Rights - Racial Profiling or Discrimination,2017-01,0,Civil Rights,Racial Profiling or Discrimination,original,original,True
+2019-12,SAV,Identification (ID) Requirements,Identification (ID) Requirements - Domestic,2016-10,0,Identification (ID) Requirements,Domestic,original,original,True
+2024-02,JFK,Property - Special Handling,Property - Special Handling - Damaged Ite,2021-12,3,Property - Special Handling,*Damaged Items,original,ambiguous,True
+2024-02,LIT,Customer Service,Customer Service - TSO,2023-06,0,Customer Service,TSO,original,original,True
+2021-06,SGF,Customer Service,Customer Service - TSO,2018-02,0,Customer Service,TSO,original,original,True
+2019-12,COU,Civil Rights,Civil Rights - Racial Profiling or Discrimina,2017-10,1,Civil Rights,Racial Profiling or Discrimination,original,imputed,True
+2019-02,PVU,Mishandling of Passenger Property,Damaged/Missing Items--Checked Baggage,2015-04,0,Mishandling of Passenger Property,*Damaged/Missing Items--Checked Baggage,original,original,False
+2019-02,,Persons w/ Disabilities (PWD),Wheelchair/ Scooter/ Segway,2015-01,0,Persons w/ Disabilities (PWD),Wheelchair/ Scooter/ Segway,original,original,False
+2024-02,RIC,Persons w/ Disabilities (PWD),Persons w/ Disabilities (PWD) - Diapers/Garments/Dressings/Ma,2022-07,0,Persons w/ Disabilities (PWD),Diapers/Garments/Dressings/Masks,original,imputed,True
+2021-06,BLV,Customer Service,Customer Service - Others,2018-03,1,Customer Service,Others,original,original,True
+2019-12,COD,Screening,Screening - Procedures/Process,2017-11,0,Screening,Procedures/Process,original,original,True
+2019-12,XNA,Screening,Screening - Procedures/Process,2017-12,0,Screening,Procedures/Process,original,original,True
+2024-02,MCI,Mishandling of Passenger Property,Mishandling of Passenger Property - Damaged/Missing Items--Carry-on Luggage,2023-06,2,Mishandling of Passenger Property,*Damaged/Missing Items--Carry-on Luggage,original,original,True
+2024-02,ABY,Patdown,Patdown - Flyer,2022-07,0,Patdown,Flyer,original,original,True
+2021-06,DCA,Civil Rights,Civil Rights - Hair Patdowns,2018-06,0,Civil Rights,Hair Patdowns,original,original,True
+2021-06,JAN,Property - Special Handling,Property - Special Handling - Damaged Items - Carry-On,2018-07,1,Property - Special Handling,*Damaged Items - Carry-On,original,original,True
+2024-02,ATL,Property - Special Handling,Property - Special Handling - Missing Item,2023-01,4,Property - Special Handling,*Missing Item,original,ambiguous,True
+2022-05,SDF,Property - Special Handling,Property - Special Handling - Missing Item,2019-10,4,Property - Special Handling,*Missing Item,original,ambiguous,True
+2021-06,PHL,Property - Special Handling,Property - Special Handling - Missing Items - Checked,2018-12,8,Property - Special Handling,*Missing Items - Checked,original,original,True
+2019-02,SJT,Mishandling of Passenger Property,Damaged/Missing Items--Checked Baggage,2015-08,0,Mishandling of Passenger Property,*Damaged/Missing Items--Checked Baggage,original,original,False
+2024-02,SYR,Property - Special Handling,Property - Special Handling - Missing Items - Carry-On,2022-10,0,Property - Special Handling,*Missing Items - Carry-On,original,original,True
+2019-12,LGB,Screening,Screening - Security Breach,2016-10,0,Screening,Security Breach,original,original,True
+2022-05,SFB,Screening,Screening - Lengthy Lines,2019-12,0,Screening,Lengthy Lines,original,original,True
+2019-12,DCA,Screening,Screening - Inconsistency,2016-05,1,Screening,Inconsistency,original,original,True
+2023-05,PBI,Patdown,Patdown - Flyer,2020-06,0,Patdown,Flyer,original,original,True
+2022-05,ONT,Screening,Screening - Retrieving Abandoned/Confiscated Items,2019-07,0,Screening,Retrieving Abandoned/Confiscated Items,original,original,True
+2019-12,TPA,Mishandling of Passenger Property,Mishandling of Passenger Property - Damaged/Missing Items--Checked Bag,2016-06,23,Mishandling of Passenger Property,*Damaged/Missing Items--Checked Baggage,original,imputed,True
+2024-02,PDX,Property - Special Handling,Property - Special Handling - Missing Item,2022-10,1,Property - Special Handling,*Missing Item,original,ambiguous,True
+2021-06,MDW,Mishandling of Passenger Property,Mishandling of Passenger Property - Damaged/Missing Items--Unspecified Luggage,2018-01,0,Mishandling of Passenger Property,*Damaged/Missing Items--Unspecified Luggage,original,original,True
+2019-12,OGG,Persons w/ Disabilities (PWD),Persons w/ Disabilities (PWD) - Medically Necessary Medication and Medical Supplies,2017-10,0,Persons w/ Disabilities (PWD),Medically Necessary Medication and Medical Supplies,original,original,True
+2024-02,SFO,Persons w/ Disabilities (PWD),Persons w/ Disabilities (PWD) - Diabetes,2023-01,0,Persons w/ Disabilities (PWD),Diabetes,original,original,True
+2019-12,OAK,Patdown,Patdown - Non-Flyer,2017-12,0,Patdown,Non-Flyer,original,original,True
+2019-12,SAN,Civil Rights,Civil Rights - Racial Profiling or Discrimination,2017-02,0,Civil Rights,Racial Profiling or Discrimination,original,original,True
+2024-02,STS,Persons w/ Disabilities (PWD),Persons w/ Disabilities (PWD) - Respiratory and Inhaler Equipment,2022-12,0,Persons w/ Disabilities (PWD),Respiratory and Inhaler Equipment,original,original,True
+2023-05,PIE,Property - Special Handling,Property - Special Handling - Damaged Items - Carry-On,2020-09,0,Property - Special Handling,*Damaged Items - Carry-On,original,original,True
+2019-12,BMI,Customer Service,Customer Service - TSO,2017-03,0,Customer Service,TSO,original,original,True
+2021-06,MIA,Prohibited & Permitted Items,Prohibited & Permitted Items - Alcohol and Tobacco,2018-07,0,Prohibited & Permitted Items,Alcohol and Tobacco,original,original,True
+2023-08,MSY,Customer Service,Customer Service - TSO,2021-09,3,Customer Service,TSO,original,original,True
+2024-02,SEA,Persons w/ Disabilities (PWD),Persons w/ Disabilities (PWD) - Medically,2021-10,2,Persons w/ Disabilities (PWD),Medically Necessary Medication and Medical Supplies,original,imputed,True
+2019-12,ANC,Screening,Screening - Retrieving Abandoned/Confiscated Items,2017-11,0,Screening,Retrieving Abandoned/Confiscated Items,original,original,True
+2019-12,PHL,Civil Rights,Civil Rights - Perceived Religion,2016-10,0,Civil Rights,Perceived Religion,original,original,True
+2019-02,TTN,Civil Rights,Racial Profiling or Discrimination,2015-04,0,Civil Rights,Racial Profiling or Discrimination,original,original,False
+2021-06,HOU,Persons w/ Disabilities (PWD),Persons w/ Disabilities (PWD) - Diabetes,2018-12,0,Persons w/ Disabilities (PWD),Diabetes,original,original,True
+2024-02,LGA,Mishandling of Passenger Property,Mishandling of Passenger Property - Disarrayed Items--Carry-on,2023-10,0,Mishandling of Passenger Property,Disarrayed Items--Carry-on or Checked,original,imputed,True
+2024-02,SNA,Mishandling of Passenger Property,Mishandling of Passenger Property - Disarrayed Items--Carry-on or Checked,2021-11,0,Mishandling of Passenger Property,Disarrayed Items--Carry-on or Checked,original,original,True
+2019-12,PHX,Screening,Screening - Security Breach,2016-07,2,Screening,Security Breach,original,original,True
+2024-02,HTS,Property - Special Handling,Property - Special Handling - Missing Items - Checked,2022-05,1,Property - Special Handling,*Missing Items - Checked,original,original,True
+2024-02,HOU,Airline,Airline - Policy/Regulations/Service,2022-03,0,Airline,Policy/Regulations/Service,original,original,True
+2022-05,BWI,Screening,Screening - Lengthy Lines,2019-01,1,Screening,Lengthy Lines,original,original,True
+2019-12,GRR,Persons w/ Disabilities (PWD),Persons w/ Disabilities (PWD) - Metal Implants (joint),2016-04,0,Persons w/ Disabilities (PWD),Metal Implants (joint),original,original,True
+2022-05,JFK,Persons w/ Disabilities (PWD),Persons w/ Disabilities (PWD) - Internal Medical Devices,2019-10,0,Persons w/ Disabilities (PWD),Internal Medical Devices,original,original,True
+2021-06,PDX,Screening,Screening - Retrieving Abandoned/Confiscated Items,2018-02,0,Screening,Retrieving Abandoned/Confiscated Items,original,original,True
+2022-05,BTV,Advanced Imaging Technology (AIT),Advanced Imaging Technology (AIT) - Flyer,2019-08,0,Advanced Imaging Technology (AIT),Flyer as Observer,original,imputed,True
+2023-05,CMI,Mishandling of Passenger Property,Mishandling of Passenger Property - Damaged/Missing Items--Checked Baggage,2020-08,1,Mishandling of Passenger Property,*Damaged/Missing Items--Checked Baggage,original,original,True

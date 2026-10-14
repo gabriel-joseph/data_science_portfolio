@@ -1,0 +1,101 @@
+pdf_report_date,airport,category,year_month,count,clean_cat,clean_cat_status
+2024-02,SBN,Mishandling of Passenger Property,2023-09,1,Mishandling of Passenger Property,original
+2023-05,PDX,Mishandling of Passenger Property,2021-06,2,Mishandling of Passenger Property,original
+2019-12,RAP,Property - Special Handling,2016-12,0,Property - Special Handling,original
+2024-02,LAS,Civil Rights,2023-03,3,Civil Rights,original
+2024-02,COS,No Jurisdiction,2022-01,0,No Jurisdiction,original
+2024-02,PVD,Locks,2023-04,0,Locks,original
+2019-12,YKM,Locks,2016-07,0,Locks,original
+2024-02,TLH,Screening,2022-09,1,Screening,original
+2024-02,CMH,Prohibited & Permitted Items,2022-07,0,Prohibited & Permitted Items,original
+2023-05,RSW,Lost and Found,2020-09,0,Lost and Found,original
+2024-02,MCI,Persons w/ Disabilities (PWD),2022-11,2,Persons w/ Disabilities (PWD),original
+2023-05,MSO,Property - Special Handling,2020-03,0,Property - Special Handling,original
+2024-02,RIC,Patdown,2023-10,0,Patdown,original
+2023-05,PNS,Customer Service,2020-01,0,Customer Service,original
+2023-05,CHS,Patdown,2020-02,4,Patdown,original
+2022-05,LSE,Locks,2019-04,0,Locks,original
+2019-12,NYL,Property - Special Handling,2017-04,1,Property - Special Handling,original
+2019-02,RNO,Locks,2015-07,0,Locks,original
+2019-12,MLI,Mishandling of Passenger Property,2017-08,1,Mishandling of Passenger Property,original
+2023-05,MEM,Persons w/ Disabilities (PWD),2020-09,1,Persons w/ Disabilities (PWD),original
+2019-12,MEM,Customer Service,2017-10,4,Customer Service,original
+2019-12,GCK,Locks,2016-11,0,Locks,original
+2024-02,LAS,Expedited Passenger Screening Program,2022-07,88,Expedited Passenger Screening Program,original
+2023-05,SLC,Property - Special Handling,2020-03,7,Property - Special Handling,original
+2019-02,MDW,Advanced Imaging Technology (AIT),2015-01,0,Advanced Imaging Technology (AIT),original
+2022-05,OKC,Civil Rights,2019-05,0,Civil Rights,original
+2022-05,GPI,Patdown,2019-09,1,Patdown,original
+2024-02,HOU,Mishandling of Passenger Property,2023-06,1,Mishandling of Passenger Property,original
+2024-02,PNS,Locks,2023-03,0,Locks,original
+2021-06,PVD,Screening,2018-04,1,Screening,original
+2022-05,ANC,Locks,2019-09,1,Locks,original
+2024-02,ROC,Expedited Passenger Screening Program,2023-09,11,Expedited Passenger Screening Program,original
+2019-12,SAT,Patdown,2016-10,0,Patdown,original
+2024-02,GSP,No Jurisdiction,2022-12,0,No Jurisdiction,original
+2019-12,TUS,Patdown,2016-03,0,Patdown,original
+2024-02,CMI,Property - Special Handling,2024-01,0,Property - Special Handling,original
+2023-05,BNA,Identification (ID) Requirements,2021-04,0,Identification (ID) Requirements,original
+2024-02,IDA,Screening,2022-12,0,Screening,original
+2019-12,ILM,Persons w/ Disabilities (PWD),2017-01,0,Persons w/ Disabilities (PWD),original
+2024-02,XNA,Expedited Passenger Screening Program,2023-11,8,Expedited Passenger Screening Program,original
+2021-06,LWB,Mishandling of Passenger Property,2018-12,0,Mishandling of Passenger Property,original
+2024-02,LWS,Expedited Passenger Screening Program,2022-08,0,Expedited Passenger Screening Program,original
+2024-02,SAN,Property - Special Handling,2022-04,4,Property - Special Handling,original
+2024-02,VPS,Civil Rights,2023-05,0,Civil Rights,original
+2023-05,SWO,Customer Service,2020-11,0,Customer Service,original
+2022-05,SEA,Request for Assistance,2019-04,0,Request for Assistance,original
+2019-02,CAE,Civil Rights,2015-12,0,Civil Rights,original
+2021-06,PPG,Mishandling of Passenger Property,2018-05,0,Mishandling of Passenger Property,original
+2022-05,PVC,Mishandling of Passenger Property,2019-06,0,Mishandling of Passenger Property,original
+2024-02,SBN,Property - Special Handling,2021-10,0,Property - Special Handling,original
+2019-02,HNL,TSA Contact Information,2015-11,0,TSA Contact Information,original
+2022-05,,TSA Contact Information,2019-12,1,TSA Contact Information,original
+2024-02,STL,Locks,2022-03,0,Locks,original
+2019-12,MSS,Mishandling of Passenger Property,2017-04,0,Mishandling of Passenger Property,original
+2021-06,JMS,Request for Assistance,2018-01,0,Request for Assistance,original
+2019-12,STL,Civil Rights,2017-07,1,Civil Rights,original
+2024-02,GSO,Expedited Passenger Screening Program,2021-11,7,Expedited Passenger Screening Program,original
+2023-05,MCO,Persons w/ Disabilities (PWD),2021-08,8,Persons w/ Disabilities (PWD),original
+2023-05,ATL,No Jurisdiction,2020-12,0,No Jurisdiction,original
+2023-05,SAV,Patdown,2021-03,0,Patdown,original
+2023-05,CEC,Expedited Passenger Screening Program,2021-06,1,Expedited Passenger Screening Program,original
+2023-05,MSO,Mishandling of Passenger Property,2020-07,0,Mishandling of Passenger Property,original
+2022-05,BLI,Customer Service,2019-11,0,Customer Service,original
+2021-06,FAY,Mishandling of Passenger Property,2018-08,0,Mishandling of Passenger Property,original
+2024-02,PBI,Mishandling of Passenger Property,2023-02,2,Mishandling of Passenger Property,original
+2019-12,ALW,Prohibited & Permitted Items,2017-01,0,Prohibited & Permitted Items,original
+2024-02,PGD,Property - Special Handling,2023-06,0,Property - Special Handling,original
+2019-02,PSP,Screening,2015-12,1,Screening,original
+2021-06,MSY,Customer Service,2018-07,13,Customer Service,original
+2023-05,MIA,Identification (ID) Requirements,2021-01,0,Identification (ID) Requirements,original
+2023-05,MSP,Patdown,2020-08,0,Patdown,original
+2024-02,ACV,Screening,2023-08,0,Screening,original
+2023-05,DCA,Patdown,2020-01,7,Patdown,original
+2024-02,SHD,Expedited Passenger Screening Program,2022-12,0,Expedited Passenger Screening Program,original
+2023-05,VLD,Screening,2021-01,0,Screening,original
+2021-06,HOU,Locks,2018-04,2,Locks,original
+2024-02,GJT,Mishandling of Passenger Property,2022-03,0,Mishandling of Passenger Property,original
+2023-05,RNO,Customer Service,2021-07,5,Customer Service,original
+2019-12,SYR,Mishandling of Passenger Property,2016-03,6,Mishandling of Passenger Property,original
+2019-12,STS,Customer Service,2016-02,0,Customer Service,original
+2024-02,HDN,Customer Service,2022-10,0,Customer Service,original
+2021-06,MIA,Lost and Found,2018-11,1,Lost and Found,original
+2024-02,BET,Patdown,2023-04,0,Patdown,original
+2021-06,RDU,Identification (ID) Requirements,2018-11,0,Identification (ID) Requirements,original
+2023-05,CAE,Customer Service,2021-06,3,Customer Service,original
+2021-06,BWI,Civil Rights,2018-08,2,Civil Rights,original
+2024-02,TWF,Property - Special Handling,2022-12,0,Property - Special Handling,original
+2024-02,SYR,Locks,2022-12,2,Locks,original
+2024-02,BTR,Customer Service,2021-11,0,Customer Service,original
+2022-05,TPA,Customer Service,2019-12,9,Customer Service,original
+2023-05,DSM,Patdown,2021-02,0,Patdown,original
+2024-02,BQN,Customer Service,2023-04,0,Customer Service,original
+2021-06,MGM,Customer Service,2018-05,0,Customer Service,original
+2023-05,CAE,Customer Service,2021-01,0,Customer Service,original
+2022-05,SDF,Persons w/ Disabilities (PWD),2019-08,0,Persons w/ Disabilities (PWD),original
+2019-12,MSY,Mishandling of Passenger Property,2016-04,21,Mishandling of Passenger Property,original
+2024-02,DUJ,Screening,2022-11,0,Screening,original
+2022-05,PDX,Customer Service,2019-06,4,Customer Service,original
+2024-02,STS,Civil Rights,2022-09,0,Civil Rights,original
+2019-12,CKB,Customer Service,2016-01,1,Customer Service,original
